@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="description" content="一篇学完 · 可交互知识复习系统，纯静态零依赖">
+<title>一篇学完 · 可交互知识库</title>
+<link rel="stylesheet" href="css/main.css?v=21">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="hamburger" id="hamburger" aria-label="打开侧边栏">☰</button>
+  <div class="brand">
+    <div class="brand-logo">篇</div>
+    <span class="brand-title">一篇学完</span>
+  </div>
+  <div class="search-wrap">
+    <div class="search-box" id="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="search-input" type="text" placeholder="搜索全部知识…" autocomplete="off" spellcheck="false">
+      <button class="search-clear" id="search-clear">✕</button>
+    </div>
+    <div class="search-panel" id="search-panel"></div>
+  </div>
+</header>
+<div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-top">
+        <span class="sidebar-title">知识库</span>
+        <button class="sidebar-collapse" id="sidebar-collapse" title="收起侧边栏" aria-label="收起侧边栏">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+      </div>
+      <nav class="tree" id="file-tree"></nav>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content" id="content"></div>
+  </main>
+  <aside class="toc" id="toc"></aside>
+</div>
+<button class="sidebar-expand" id="sidebar-expand" title="展开侧边栏" aria-label="展开侧边栏">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+</button>
+<div class="overlay" id="overlay"></div>
+
+<!-- ===== 基础层（固定，永不随文档增加而变） ===== -->
+<script src="js/core/registry.js?v=21"></script>
+<script src="data/manifest.js?v=21"></script>
+<!-- ===== 核心层 ===== -->
+<script src="js/core/markup.js?v=21"></script>
+<script src="js/core/highlight.js?v=21"></script>
+<script src="js/core/renderer.js?v=21"></script>
+<script src="js/core/sidebar.js?v=21"></script>
+<script src="js/core/search.js?v=21"></script>
+<!-- ===== 动画层 ===== -->
+<script src="js/animations/base.js?v=21"></script>
+<script src="js/animations/sort.js?v=21"></script>
+<script src="js/animations/tree.js?v=21"></script>
+<script src="js/animations/graph.js?v=21"></script>
+<script src="js/animations/huffman.js?v=21"></script>
+<script src="js/animations/kmp.js?v=21"></script>
+<script src="js/animations/os.js?v=21"></script>
+<script src="js/animations/network.js?v=21"></script>
+<script src="js/animations/factory.js?v=21"></script>
+<!-- ===== 应用入口 + 数据动态加载器（按 manifest 加载所有 data/*.js 后 init） ===== -->
+<script src="js/core/app.js?v=21"></script>
+<script src="js/core/loader.js?v=21"></script>
+</body>
+</html>

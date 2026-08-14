@@ -1,0 +1,13 @@
+{
+  "name": "yipian-xuewan-knowledgebase",
+  "version": "3.0.0",
+  "description": "一篇学完 · 可交互知识库（纯静态零依赖，教材/论文/笔记多资源复习系统）",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test": "node test/smoke.test.js",
+    "serve": "python3 -m http.server 8080"
+  },
+  "keywords": ["knowledge-base", "408", "data-structure", "kmp", "static-site"],
+  "license": "MIT"
+}

@@ -1,0 +1,93 @@
+/* ================================================================
+ * app.js —— 应用入口：初始化 + 文件树点击 + 学习目录/章导航 + resize
+ * ----------------------------------------------------------------
+ * 初始化顺序：
+ *   1. 渲染文件树（文件夹→文件 两级）
+ *   2. 绑定文件树点击（文件夹展开 / 文件加载）
+ *   3. 绑定内容区导航（学习目录跳章 / 上一章 / 下一章）
+ *   4. 搜索 / 进度条 / 收缩 / 抽屉 / 滚动定位
+ *   5. 默认加载第一个文件的第一个章节
+ *   6. resize 时统一重适配所有动画
+ * ================================================================ */
+(function(){
+  'use strict';
+
+  /* 加载文件（默认其第一章节；无章节则渲染空态） */
+  function loadFile(fileId, chapterId){
+    const file = KB.getFile(fileId);
+    if(!file) return;
+    /* 先渲染章节（内部会 setActiveFile），再重建树 → 激活文件所在目录链正确展开 */
+    KB.render.renderChapter(file, chapterId);
+    KB_UI.renderTree();
+  }
+
+  /* ---- 文件树点击委托：文件夹展开 / 文件加载 ---- */
+  function initTree(){
+    const tree = document.getElementById('file-tree');
+    tree.addEventListener('click', e=>{
+      /* 先命中文件：文件节点嵌套在父文件夹的 .ti-children 内，
+         closest('.ti.folder') 会先匹配到祖先文件夹，导致「点文件把目录收起来」 */
+      const fileEl = e.target.closest('.ti.file');
+      if(fileEl){
+        loadFile(fileEl.dataset.file);
+        return;
+      }
+      const fEl = e.target.closest('.ti.folder');
+      if(fEl){
+        /* 只切换自身展开/折叠，不动祖先与兄弟 —— 否则点 408 会把 11408 关掉导致 408 消失 */
+        fEl.classList.toggle('open');
+      }
+    });
+  }
+
+  /* ---- 内容区导航：上一章 / 下一章 ---- */
+  function initNav(){
+    const content = document.getElementById('content');
+    content.addEventListener('click', e=>{
+      const btn = e.target.closest('[data-nav]');
+      if(btn){
+        const file = KB.getActiveFile();
+        if(file) KB.render.renderChapter(file, btn.dataset.nav);
+      }
+    });
+  }
+
+  /* ---- 右侧文章目录（md 风格 TOC）点击跳章 ---- */
+  function initToc(){
+    const toc = document.getElementById('toc');
+    if(!toc) return;
+    toc.addEventListener('click', e=>{
+      const item = e.target.closest('.toc-item[data-nav]');
+      if(!item) return;
+      e.preventDefault();
+      const file = KB.getActiveFile();
+      if(file) KB.render.renderChapter(file, item.dataset.nav);
+    });
+  }
+
+  function init(){
+    if(!KB.listFiles().length) return;
+    KB_UI.renderTree();
+    initTree();
+    initNav();
+    initToc();
+    if(KB.search && KB.search.init) KB.search.init();
+    if(KB_UI.initProgressBar) KB_UI.initProgressBar();
+    if(KB_UI.initScrollSpy) KB_UI.initScrollSpy();
+    if(KB_UI.initCollapse) KB_UI.initCollapse();
+    if(KB_UI.initDrawer) KB_UI.initDrawer();
+
+    /* 默认加载第一个文件 */
+    loadFile(KB.listFiles()[0].id);
+
+    /* resize 防抖：所有动画统一重适配 */
+    let t;
+    window.addEventListener('resize', ()=>{
+      clearTimeout(t);
+      t = setTimeout(()=>{ if(KB_ANIM && KB_ANIM.refitAll) KB_ANIM.refitAll(); }, 120);
+    });
+  }
+
+  /* 暴露 init 供 loader.js 在数据加载完成后调用（不再自动 DOMContentLoaded） */
+  window.KB_APP = { init: init };
+})();
