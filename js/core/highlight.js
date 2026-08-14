@@ -10,17 +10,20 @@
   function highlightLine(code){
     if(!code) return '';
     const src = esc(code);
+    /* 四个捕获组：注释 / 字符串 / 关键字 / 数字
+       此前关键字用 (?:C_KEYWORDS) 非捕获组，导致 replace 回调第 5 个参数
+       (offset) 被误当成数字，关键字被替换成行内偏移数字；现改为捕获组，
+       回调参数 c/s/k/n 与组号一一对应，offset 不再被误用 */
     const re = new RegExp(
       '(\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/)|("(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\')|' +
-      '\\b(?:'+C_KEYWORDS+')\\b|\\b(int|float|double|char|void|long|short|unsigned|signed|bool|struct|typedef|const)\\b|' +
+      '\\b('+C_KEYWORDS+')\\b|' +
       '\\b(0[xX][0-9a-fA-F]+|\\d+\\.?\\d*)\\b',
       'g'
     );
-    return src.replace(re, (m, c, s, k, t, n)=>{
+    return src.replace(re, (m, c, s, k, n)=>{
       if(c) return '<span class="tok-c">'+c+'</span>';
       if(s) return '<span class="tok-s">'+s+'</span>';
       if(k) return '<span class="tok-k">'+k+'</span>';
-      if(t) return '<span class="tok-t">'+t+'</span>';
       if(n) return '<span class="tok-n">'+n+'</span>';
       return m;
     });
