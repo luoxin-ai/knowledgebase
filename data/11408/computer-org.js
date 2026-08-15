@@ -1,5 +1,6 @@
 KB.register({
   id: 'co',
+  quizFiles: ['quiz-co'],
   folder: '408',
   type: 'book',
   title: '计算机组成原理',
@@ -82,7 +83,7 @@ KB.register({
             { title: '把 MB 一律当成 1024 KB',
               wrong: '1 MB 恒等于 1024 KB。',
               right: '1 MB = 1000 KB（10 的幂），1 MiB = 1024 KiB（2 的幂），二者不相等。',
-              why: 'MB/MB 是十进制单位，MiB 才是二进制单位。主存、Cache 用 2 的幂，磁盘容量标注通常用 10 的幂。' },
+              why: 'MB/KB 是十进制单位，MiB 才是二进制单位。主存、Cache 用 2 的幂，磁盘容量标注通常用 10 的幂。' },
             { title: '混淆主频与时钟周期',
               wrong: '主频越高时钟周期越长。',
               right: '时钟周期 T = 1/主频 f，主频越高时钟周期越短、执行越快。',
@@ -157,7 +158,7 @@ KB.register({
             { h: '单符号位判断', body: '设最高位（符号位）进位 Cf，次高位（数值最高位）进位 Cs：Cf ⊕ Cs = 1 溢出，= 0 无溢出。' },
             { h: '双符号位判断', body: '用两位符号位：结果 00 表示正、11 表示负、01 表示**上溢**（正溢出）、10 表示**下溢**（负溢出）。双符号位法最直观。' },
             { h: '符号位直观法', body: '两正数相加结果为负 → 上溢；两负数相加结果为正 → 下溢；一正一负相加**必不溢出**。' },
-            { h: '例题', body: '8 位补码：0.1010 + 0.1100 结果为 1.0110（负数），两正数相加得负 → 上溢。' }
+            { h: '例题', body: '5 位定点小数补码：0.1010 + 0.1100 结果为 1.0110（负数），两正数相加得负 → 上溢。' }
           ]
         },
         { type: 'concept', title: '算术移位与逻辑移位',
@@ -254,6 +255,15 @@ KB.register({
             { h: 'Cache 性能来源', body: 'Cache 命中时访问时间远小于主存，只要命中率高，平均访问时间接近 Cache 访问时间。' }
           ]
         },
+        { type: 'animation', title: 'Cache 地址映射动画',
+          summary: '观察主存地址如何按直接 / 组相联 / 全相联映射到 Cache 行,tag 比对命中或装入。',
+          animType: 'cacheMap',
+          animConfig: { mode: 'direct', blocks: 8, addrs: [0, 8, 4, 12, 16, 24] },
+          animModes: [ {value:'direct', label:'直接'}, {value:'set', label:'组相联'}, {value:'assoc', label:'全相联'} ],
+          details: [
+            { h: '观察要点', body: '直接映射中地址 0 与 8 同余(mod 8)映射到同一行,tag 不同则冲突换出;全相联可放任意行,冲突最少但比较电路最贵。' }
+          ]
+        },
         { type: 'table', title: 'Cache 三种地址映射方式',
           headers: ['映射方式', '主存地址划分', '放置位置', '冲突与硬件', '替换算法'],
           rows: [
@@ -301,7 +311,7 @@ int lru_replace(int set, int way_num, long stamp){
           summary: '平均访问时间是 Cache 性能的核心计算题。',
           formula: '命中率 h = 命中次数 / 总访问次数\n平均访问时间 ta = h × tc + (1 - h) × tm\n（tc 为 Cache 访问时间，tm 为主存访问时间）',
           details: [
-            { h: '公式含义', body: '平均访问时间 = 命中概率 × Cache 时间 + 未命中概率 × 主存时间。当存在多级 Cache 时逐级展开：ta = h1×tc1 + (1-h1)×h2×tc2 + (1-h1)×(1-h2)×tm。' },
+            { h: '公式含义', body: '平均访问时间 = 命中概率 × Cache 时间 + 未命中概率 × 主存时间。当存在多级 Cache 时逐级展开：ta = h1·tc1 + (1-h1)·h2·(tc1+tc2) + (1-h1)·(1-h2)·(tc1+tc2+tm)(未命中时上级查找时间累加;若题目假设未命中不耗时则用逐级相乘的简化式)。' },
             { h: '性能提升', body: '若 Cache 访问时间为 tc、主存为 tm，则加速比 = tm / ta。命中率越高 ta 越接近 tc。' },
             { h: '例题', body: 'h = 0.95，tc = 10ns，tm = 100ns，则 ta = 0.95×10 + 0.05×100 = 9.5 + 5 = 14.5ns。' }
           ]
@@ -516,6 +526,14 @@ int lru_replace(int set, int way_num, long stamp){
             { h: '数据冒险', body: '后一条指令的源操作数是前一条指令的结果。解决：**转发（旁路）**——把 ALU 结果直接送到需要的输入端；转发仍不行则**插入气泡（暂停）**；也可由编译器插入空指令。' },
             { h: '控制冒险', body: '转移指令在译码/执行阶段才能确定是否转移，导致后续已取指令可能作废。解决：分支预测（静态/动态）、延迟槽（在转移指令后放一条不受影响的指令）、提前计算分支目标。' },
             { h: '数据相关分类', body: 'RAW（Read After Write，写后读）是**真相关**，必须等待前一条写完；WAR（Write After Read，读后写）与 WAW（Write After Write，写后写）是**伪相关**，仅由乱序执行引起，可用寄存器重命名消除。' }
+          ]
+        },
+        { type: 'animation', title: '指令流水线时空图',
+          summary: '五段流水线(IF/ID/EX/MEM/WB)逐拍推进,观察指令重叠执行与总拍数。',
+          animType: 'pipeline',
+          animConfig: { instructions: 5 },
+          details: [
+            { h: '观察要点', body: 'n 条指令理想情况下只需 n+4 拍(而非 5n):第一条走完全程后,每个时钟周期都有一条指令完成。加速比 = 5n/(n+4),n 越大越接近 5。' }
           ]
         },
         { type: 'formula', title: '流水线性能指标',

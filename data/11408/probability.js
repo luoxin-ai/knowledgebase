@@ -1,5 +1,6 @@
 KB.register({
   id: 'prob',
+  quizFiles: ['quiz-prob'],
   folder: 'math',
   type: 'book',
   title: '概率论与数理统计',

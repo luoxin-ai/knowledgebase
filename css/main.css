@@ -408,6 +408,22 @@ td.stable-no{color:var(--red);font-weight:600}
 }
 .qz-item.correct .qz-stem::after{content:"答对";color:var(--green)}
 .qz-item.wrong .qz-stem::after{content:"答错";color:var(--red)}
+/* ---- 多选题 ---- */
+.qz-multi-tag{
+  display:inline-flex;align-items:center;margin-right:8px;padding:1px 7px;
+  border:1px solid var(--accent);border-radius:999px;
+  font-size:10.5px;font-weight:600;color:var(--accent);vertical-align:2px;
+}
+.qz-item.multi .qz-letter{width:22px;font-size:13px}
+.qz-opt.picked{border-color:var(--accent);background:var(--accent-soft)}
+.qz-opt.picked .qz-letter{background:var(--accent);color:#fff}
+.qz-opt.picked:not(.is-answer):not(.is-picked){border-color:var(--accent)}
+.qz-submit-multi{
+  margin-top:8px;padding:6px 20px;border:1px solid var(--accent);border-radius:8px;
+  background:var(--accent);color:#fff;font-size:12.5px;font-weight:600;cursor:pointer;
+  transition:all .13s var(--ease);
+}
+.qz-submit-multi:hover{opacity:.88}
 .qz-explain{display:none;margin-top:11px;padding:11px 14px;background:var(--surface-2);border-radius:8px;font-size:13px;color:var(--text-2);line-height:1.75}
 .qz-explain.show{display:block;animation:fadeSlide .18s var(--ease)}
 .qz-explain::before{content:"解析";display:inline-block;font-size:11px;font-weight:700;color:var(--accent);margin-right:8px}
@@ -425,6 +441,15 @@ td.stable-no{color:var(--red);font-weight:600}
 .quiz-section summary:hover{background:var(--surface-2)}
 .qs-title{font-size:15px;font-weight:700;color:var(--text)}
 .qs-meta{font-size:12px;color:var(--text-3);font-weight:500}
+.qs-stat{font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-soft);
+  border-radius:6px;padding:2px 9px}
+.qs-stat.full{color:var(--green);background:var(--green-soft)}
+.ti.wrongbook .ti-head{padding-left:6px;margin-bottom:2px}
+.ti.wrongbook.active>.ti-head{background:var(--surface-3)}
+.ti.wrongbook .wb-count{
+  margin-left:auto;font-size:11px;font-weight:700;color:#fff;background:var(--red);
+  border-radius:999px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0 5px;
+}
 .quiz-section summary .chev{margin-left:auto;flex-shrink:0;color:var(--text-3);transition:transform .2s var(--ease)}
 .quiz-section[open] summary .chev{transform:rotate(90deg)}
 .quiz-section[open] summary{border-bottom:1px solid var(--border)}

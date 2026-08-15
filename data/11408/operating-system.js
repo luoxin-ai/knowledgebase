@@ -1,5 +1,6 @@
 KB.register({
   id: 'os',
+  quizFiles: ['quiz-os'],
   folder: '408',
   type: 'book',
   title: '操作系统',

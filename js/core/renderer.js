@@ -120,6 +120,8 @@
   /* ===================== 习题块 ===================== */
   /* 作答查表：block id + 题序 → 正确选项索引（DOM 不放明文答案，F12 不可见） */
   const quizAnswerMap = {};
+  /* 测验模式洗牌序：block id → [原始题索引按展示序] */
+  const quizOrderMap = {};
 
   function shuffle(arr){
     const a = arr.slice();
@@ -135,19 +137,28 @@
     const test = mode === 'test';   /* 测验模式：题序 + 选项乱序 */
     let order = qs.map((_,i)=>i);
     if(test) order = shuffle(order);
+    quizOrderMap[b.id] = order;
     const list = order.map((src,shown)=>{
       const q = qs[src];
+      const multi = !!q.multi;
       let optIdx = q.options.map((_,i)=>i);
       if(test) optIdx = shuffle(optIdx);
-      quizAnswerMap[b.id+'-'+shown] = optIdx.indexOf(String(q.answer).toLowerCase().charCodeAt(0)-97);
+      if(multi){
+        /* 多选：answer 如 'abd' → 各字母选项索引集合 */
+        const ansSet = new Set(String(q.answer).toLowerCase().split('').map(ch=>optIdx.indexOf(ch.charCodeAt(0)-97)));
+        quizAnswerMap[b.id+'-'+shown] = ansSet;
+      }else{
+        quizAnswerMap[b.id+'-'+shown] = optIdx.indexOf(String(q.answer).toLowerCase().charCodeAt(0)-97);
+      }
       const opts = optIdx.map((oi,pos)=>
         '<button class="qz-opt" data-q="'+shown+'" data-o="'+oi+'">'+
-        '<span class="qz-letter">'+String.fromCharCode(65+pos)+'</span>'+
+        '<span class="qz-letter">'+(multi?'☐':String.fromCharCode(65+pos))+'</span>'+
         '<span class="qz-text">'+inlineMarkup(q.options[oi])+'</span></button>'
       ).join('');
-      return '<div class="qz-item" data-q="'+shown+'">'+
-        '<div class="qz-stem">'+(shown+1)+'. '+inlineMarkup(q.stem)+'</div>'+
+      return '<div class="qz-item'+(multi?' multi':'')+'" data-q="'+shown+'">'+
+        '<div class="qz-stem">'+(multi?'<span class="qz-multi-tag">多选</span>':'')+(shown+1)+'. '+inlineMarkup(q.stem)+'</div>'+
         '<div class="qz-opts">'+opts+'</div>'+
+        (multi?'<button class="qz-submit-multi" data-q="'+shown+'">提交答案</button>':'')+
         '<div class="qz-explain">'+inlineMarkup(q.explain||'')+'</div>'+
         '</div>';
     }).join('');
@@ -180,25 +191,101 @@
         return;
       }
       const opt = e.target.closest('.qz-opt');
+      /* ---- 多选题：提交按钮判分 ---- */
+      const subBtn = e.target.closest('.qz-submit-multi');
+      if(subBtn){
+        const item = subBtn.closest('.qz-item');
+        const block = subBtn.closest('.block');
+        if(!item || !block || item.classList.contains('answered')) return;
+        const bId = block.id;
+        const shown = parseInt(item.dataset.q,10);
+        const key = bId+'-'+shown;
+        const ansSet = quizAnswerMap[key];
+        if(!ansSet) return;
+        const pickedSet = new Set(
+          Array.from(item.querySelectorAll('.qz-opt.picked')).map(el=>parseInt(el.dataset.o,10))
+        );
+        if(pickedSet.size===0) return;   /* 未选任何项，忽略 */
+        const correct = pickedSet.size===ansSet.size &&
+          [...ansSet].every(i=>pickedSet.has(i));
+        item.classList.add('answered');
+        item.classList.add(correct ? 'correct' : 'wrong');
+        item.querySelectorAll('.qz-opt').forEach(el=>{
+          const oi = parseInt(el.dataset.o,10);
+          if(ansSet.has(oi)) el.classList.add('is-answer');
+          else if(el.classList.contains('picked')) el.classList.add('is-picked');
+          el.disabled = true;
+        });
+        subBtn.remove();
+        item.querySelector('.qz-explain').classList.add('show');
+        if(window.KB_PROGRESS){
+          const entry = KB.blockById(bId);
+          const q = entry && entry.questions && (entry.questions[shownQIndex(bId, shown)] || null);
+          if(q && q.qid){
+            const pickStr = Array.from(item.querySelectorAll('.qz-opt'))
+              .sort((a,c)=>parseInt(a.dataset.o,10)-parseInt(c.dataset.o,10))
+              .filter(el=>el.classList.contains('picked'))
+              .map(el=>String.fromCharCode(97+parseInt(el.dataset.o,10))).join('');
+            KB_PROGRESS.recordAnswer(q.qid, pickStr, correct);
+            if(typeof KB_UI !== 'undefined' && KB_UI.renderTree && !KB.state.refreshLock){
+              KB.state.refreshLock = true;
+              requestAnimationFrame(()=>{ KB_UI.renderTree(); KB.state.refreshLock = false; });
+            }
+          }
+        }
+        updateQuizScore(block);
+        return;
+      }
+      /* ---- 多选题：选项点选（勾选/取消，不判分） ---- */
+      if(opt){
+        const item = opt.closest('.qz-item');
+        if(item && item.classList.contains('multi') && !item.classList.contains('answered')){
+          opt.classList.toggle('picked');
+          const letter = opt.querySelector('.qz-letter');
+          letter.textContent = opt.classList.contains('picked') ? '☑' : '☐';
+          return;
+        }
+      }
       if(!opt) return;
       const item = opt.closest('.qz-item');
       const block = opt.closest('.block');
       if(!item || !block || item.classList.contains('answered')) return;
       const bId = block.id;
-      const key = bId+'-'+item.dataset.q;
+      const shown = parseInt(item.dataset.q,10);
+      const key = bId+'-'+shown;
       const ansIdx = quizAnswerMap[key];
       if(ansIdx === undefined) return;
       const picked = parseInt(opt.dataset.o,10);
+      const correct = picked===ansIdx;
       item.classList.add('answered');
-      item.classList.add(picked===ansIdx ? 'correct' : 'wrong');
+      item.classList.add(correct ? 'correct' : 'wrong');
       item.querySelectorAll('.qz-opt').forEach(el=>{
         if(parseInt(el.dataset.o,10)===ansIdx) el.classList.add('is-answer');
-        if(el===opt && picked!==ansIdx) el.classList.add('is-picked');
+        if(el===opt && !correct) el.classList.add('is-picked');
         el.disabled = true;
       });
       item.querySelector('.qz-explain').classList.add('show');
+      /* 记录作答进度（qid 为稳定标识，与乱序无关） */
+      if(window.KB_PROGRESS){
+        const entry = KB.blockById(bId);
+        const q = entry && entry.questions && (entry.questions[shownQIndex(bId, shown)] || null);
+        /* 洗牌时 shown → 原始索引需要顺序表;复习模式两者一致 */
+        if(q && q.qid){
+          const pickLetter = opt.querySelector('.qz-letter').textContent.trim();
+          KB_PROGRESS.recordAnswer(q.qid, pickLetter, correct);
+          /* 错题计数实时更新侧边栏 */
+          if(typeof KB_UI !== 'undefined' && KB_UI.renderTree && !KB.state.refreshLock){
+            KB.state.refreshLock = true;
+            requestAnimationFrame(()=>{ KB_UI.renderTree(); KB.state.refreshLock = false; });
+          }
+        }
+      }
       updateQuizScore(block);
     });
+  }
+  /* 测验模式下 shown 序号 → 原始题索引（复习模式恒等） */
+  function shownQIndex(bId, shown){
+    return quizOrderMap[bId] ? quizOrderMap[bId][shown] : shown;
   }
   function updateQuizScore(block){
     if(!block) return;
@@ -271,22 +358,36 @@
     const prev = idx>0 ? file.chapters[idx-1] : null;
     const next = idx<file.chapters.length-1 ? file.chapters[idx+1] : null;
 
-    /* 章末课后练习：按「教材文件 + 章号」找到对应习题章，默认收起，展开即练 */
+    /* 章末课后练习：按「教材文件 + 章号」找到对应习题章（可能多个，如马原单选+多选），默认收起 */
     let quizSection = '';
-    const qch = KB.quizChapterFor(file.id, ch.num);
-    if(qch){
+    const qchs = KB.quizChaptersFor(file.id, ch.num);
+    if(qchs.length){
+      quizSection = qchs.map((qch,qi2)=>{
+      const qOwner = (KB.listFiles().find(f=>f.quizFor && f.quizFor.book===file.id && (f.chapters||[]).includes(qch))||{}).id || 'q'+qi2;
       const qBlocks = (qch.blocks||[]).map((b, bi)=>{
-        b.id = b.id || ('blk-'+file.id+'-'+ch.id+'-quiz'+bi);
+        b.id = b.id || ('blk-'+file.id+'-'+ch.id+'-quiz-'+qOwner+'-'+bi);
         const r = BlockRenderers[b.type];
         return r ? '<article class="block t-'+b.type+'" id="'+b.id+'" data-block="'+b.id+'">'+r(b)+'</article>' : '';
       }).join('');
       const qCount = (qch.blocks||[]).reduce((s,b)=>s+((b.questions&&b.questions.length)||0),0);
-      quizSection =
+      const hasMulti = (qch.blocks||[]).some(b=>(b.questions||[]).some(q=>q.multi));
+      const quizLabel = qOwner.indexOf('multi')>=0 ? '课后练习 · 多选' : (qOwner.indexOf('single')>=0 ? '课后练习 · 单选' : '课后练习');
+      /* 历史掌握度（localStorage 聚合），有作答才显示 */
+      let statTxt = '';
+      if(window.KB_PROGRESS){
+        const st = KB_PROGRESS.chapterStats(file.id, ch.num);
+        if(st && st.done>0){
+          const pct = (st.right/st.done*100).toFixed(0);
+          statTxt = '<span class="qs-stat'+(st.done>=st.total?' full':'')+'">上次 '+st.done+'/'+st.total+' · 正确率 '+pct+'%</span>';
+        }
+      }
+      return
         '<details class="quiz-section">'+
-        '<summary><span class="qs-title">课后练习</span>'+
-        '<span class="qs-meta">'+qCount+' 题 · 点击展开，选完即时判分</span>'+
+        '<summary><span class="qs-title">'+esc(quizLabel)+'</span>'+
+        '<span class="qs-meta">'+qCount+' 题'+(hasMulti?'（含多选）':'')+' · 点击展开，选完即时判分</span>'+statTxt+
         '<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></summary>'+
         '<div class="qs-body">'+qBlocks+'</div></details>';
+      }).join('');
     }
 
     const nav =
@@ -340,6 +441,54 @@
     setTimeout(()=>node.classList.remove('flash'), 1500);
   }
 
+  /* 错题本页面：聚合全部错题渲染成一张卷，答对自动移出（localStorage 由判分回调维护） */
+  function renderWrongBook(){
+    const el = document.getElementById('content');
+    if(!el) return;
+    KB.setActiveFile('wrongbook');
+    KB.setActiveChapter(null);
+    const list = (window.KB_PROGRESS ? KB_PROGRESS.wrongList() : []);
+    let body = '';
+    if(!list.length){
+      body = '<section class="chapter empty-state">'+
+        '<h2 class="empty-title">错题本</h2>'+
+        '<p class="empty-text">还没有错题记录。</p>'+
+        '<p class="empty-sub">做题答错的题会自动收进来，重做答对后自动移出。</p></section>';
+    } else {
+      /* 按文件分组渲染 quiz 块（借 renderQuiz 的机制，临时块 id 用 wrongbook） */
+      const groups = {};
+      list.forEach(it=>{
+        const k = it.file.id;
+        (groups[k] = groups[k] || []).push(it);
+      });
+      const secs = Object.keys(groups).map(fid=>{
+        const f = KB.getFile(fid);
+        const qs = groups[fid].map(it=>it.question);
+        const tmpBlock = { type:'quiz', id:'wrongbook-'+fid, title:(f?f.title:fid)+' · 错题',
+          summary:'共 '+qs.length+' 道错题，答对自动移出错题本。',
+          questions:qs };
+        quizOrderMap[tmpBlock.id] = qs.map((_,i)=>i);
+        qs.forEach((q,shown)=>{
+          quizAnswerMap[tmpBlock.id+'-'+shown] = q.options.map((_,i)=>i).indexOf(String(q.answer).toLowerCase().charCodeAt(0)-97);
+        });
+        return '<article class="block t-quiz" id="'+tmpBlock.id+'">'+renderQuiz(tmpBlock,'review')+'</article>';
+      }).join('');
+      body = '<section class="chapter"><div class="chapter-head">'+
+        '<h1 class="ch-title">错题重做</h1>'+
+        '<p class="ch-summary">共 '+list.length+' 道错题。答对后自动移出错题本；想清空全部进度请清浏览器 localStorage 的 kb: 前缀键。</p>'+
+        '</div><div class="blocks">'+secs+'</div></section>';
+    }
+    el.innerHTML = body;
+    renderToc({ title:'错题本', chapters:[] }, null);
+    window.scrollTo({top:0, left:0, behavior:'auto'});
+    KB_UI.renderTree();
+    /* 答对移出后刷新入口计数 */
+    if(window.KB_PROGRESS && list.length){
+      const orig = KB_PROGRESS.recordAnswer;
+      /* 下次点击判分时由 initQuiz 调 recordAnswer；本页只负责展示，计数实时性靠 renderTree 刷新 */
+    }
+  }
+
   window.KB = window.KB || {};
-  KB.render = { renderChapter, flashBlock, initQuiz };
+  KB.render = { renderChapter, flashBlock, initQuiz, renderWrongBook };
 })();

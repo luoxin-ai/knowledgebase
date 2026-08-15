@@ -81,14 +81,20 @@ const files = [
   'js/core/registry.js',
   'data/11408/_index.js', 'data/11408/data-structure.js',
   'data/11408/quiz-ds-a.js', 'data/11408/quiz-ds-b.js',
+  'data/11408/quiz-co.js', 'data/11408/quiz-os.js', 'data/11408/quiz-cn.js',
+  'data/11408/quiz-hm.js', 'data/11408/quiz-la.js', 'data/11408/quiz-prob.js',
   'data/11408/computer-org.js', 'data/11408/operating-system.js', 'data/11408/computer-network.js',
   'data/11408/higher-math.js', 'data/11408/linear-algebra.js', 'data/11408/probability.js',
   'data/papers/_index.js', 'data/papers/kmp-paper.js',
+  'data/politics/_index.js', 'data/politics/maoyuan.js',
+  'data/politics/quiz-maoyuan-single.js', 'data/politics/quiz-maoyuan-multi.js',
+  'data/english/_index.js', 'data/english/writing.js',
+  'data/english/vocab.js', 'data/english/reading-simu.js',
   'js/core/markup.js', 'js/core/highlight.js', 'js/core/renderer.js',
   'js/core/sidebar.js', 'js/core/search.js',
   'js/animations/base.js', 'js/animations/sort.js', 'js/animations/tree.js',
   'js/animations/graph.js', 'js/animations/huffman.js', 'js/animations/kmp.js',
-  'js/animations/os.js', 'js/animations/network.js',
+  'js/animations/os.js', 'js/animations/network.js', 'js/animations/extra.js',
   'js/animations/factory.js', 'js/core/app.js'
 ];
 for(const f of files){
@@ -105,14 +111,14 @@ function ok(name, cond, extra){
 /* ---------------- 1. 注册表结构 ---------------- */
 console.log('\n[1] 注册表结构');
 const folderIds = KB.listFolders().map(f=>f.id).sort();
-ok('文件夹注册：11408/408/math/papers', JSON.stringify(folderIds) === JSON.stringify(['11408','408','math','papers']), folderIds);
+ok('文件夹注册：11408/408/math/papers/politics/english', JSON.stringify(folderIds) === JSON.stringify(['11408','408','english','math','papers','politics']), folderIds);
 const roots = KB.rootFolders().map(f=>f.id).sort();
-ok('顶层目录：11408 + papers', JSON.stringify(roots) === JSON.stringify(['11408','papers']), roots);
+ok('顶层目录：11408 + papers + politics + english', JSON.stringify(roots) === JSON.stringify(['11408','english','papers','politics']), roots);
 const subs = KB.childFolders('11408').map(f=>f.id).sort();
 ok('11408 下 2 个子科目：408 + math', JSON.stringify(subs) === JSON.stringify(['408','math']), subs);
 const fileIds = KB.listFiles().map(f=>f.id).sort();
-ok('文件注册：10 个文件', JSON.stringify(fileIds) === JSON.stringify(['cn','co','ds','hm','kmp-paper','la','os','prob','quiz-ds-a','quiz-ds-b']), fileIds);
-ok('侧边栏可见 8 个文件（习题 hidden）', KB.listVisibleFiles().length === 8, KB.listVisibleFiles().length);
+ok('文件注册：22 个文件', fileIds.length===22, fileIds);
+ok('侧边栏可见 12 个文件（习题 hidden）', KB.listVisibleFiles().length === 12, KB.listVisibleFiles().length);
 ok('408 科目含 4 个可见文件（四门课）', KB.filesInFolder('408').length === 4);
 ok('math 科目含 3 个文件（高数/线代/概率）', KB.filesInFolder('math').length === 3);
 ok('papers 文件夹含 1 个文件', KB.filesInFolder('papers').length === 1);
@@ -128,20 +134,26 @@ console.log('\n[2] 块数据完整性');
 const all = KB.allBlocks();
 ok('全库块数量 ≥ 60', all.length >= 60, all.length);
 const typeSet = [...new Set(all.map(x=>x.block.type))].sort();
-ok('七种可见块类型齐全（quiz 经章末注入渲染）', JSON.stringify(typeSet) === JSON.stringify(['animation','code','concept','error','formula','keypoint','table']), typeSet);
+ok('可见块类型集合（vocab/reading 直接以 quiz 块入库）', JSON.stringify(typeSet) === JSON.stringify(['animation','code','concept','error','formula','keypoint','quiz','table']), typeSet);
 let bad = 0;
 for(const {block} of all){ if(!block.title || !block.type) bad++; }
 ok('每块都有 title + type', bad === 0, bad);
-/* 习题块数据校验（hidden 文件不入 allBlocks，直接从注册表取）：200 题、4 选项、answer ∈ abcd、分布均衡 */
-const quizQs = ['quiz-ds-a','quiz-ds-b']
-  .flatMap(id => KB.getFile(id).chapters)
+/* 习题块数据校验（hidden 文件不入 allBlocks，直接从注册表取）：
+   408+数学 8 个 quiz 文件共 900 题;每题 4 选项、answer ∈ abcd、解析含「故选X」 */
+const quizIds = ['quiz-ds-a','quiz-ds-b','quiz-co','quiz-os','quiz-cn','quiz-hm','quiz-la','quiz-prob'];
+const quizQs = quizIds
+  .map(id => KB.getFile(id))
+  .filter(Boolean)
+  .flatMap(f => f.chapters)
   .flatMap(ch => ch.blocks)
   .filter(b => b.type==='quiz')
   .flatMap(b => b.questions||[]);
-ok('习题共 200 题', quizQs.length === 200, quizQs.length);
+ok('408+数学习题共 960 题', quizQs.length === 960, quizQs.length);
 ok('每题 4 个选项', quizQs.every(q=>Array.isArray(q.options) && q.options.length===4));
 ok('answer 均为 abcd', quizQs.every(q=>'abcd'.includes(String(q.answer).toLowerCase())));
 ok('每题都有解析', quizQs.every(q=>typeof q.explain==='string' && q.explain.length>=8));
+ok('每题都有稳定 qid', quizQs.every(q=>typeof q.qid==='string' && q.qid.length>=6));
+ok('qid 无重复', new Set(quizQs.map(q=>q.qid)).size === quizQs.length);
 /* 解析中「选 X」与 answer 一致（拦截誊写错位）。
    只认肯定的「选 X」，排除「错选/误选/会选/而选/就选」等否定或假设表述 */
 const mism = [];
@@ -155,13 +167,36 @@ quizQs.forEach((q,i)=>{
 ok('解析「选X」与 answer 一致', mism.length===0, mism.slice(0,6));
 const dist = quizQs.reduce((m,q)=>{ m[q.answer]=(m[q.answer]||0)+1; return m; },{});
 const dv = Object.values(dist);
-ok('答案分布均衡（每种 30~70）', dv.length===4 && dv.every(n=>n>=30 && n<=70), dist);
-/* 章末课后练习映射：数据结构 8 章每章都能找到对应习题章 */
-const quizMapOk = [1,2,3,4,5,6,7,8].every(n=>{
-  const qc = KB.quizChapterFor('ds', n);
-  return qc && qc.blocks && qc.blocks.some(b=>b.type==='quiz');
+ok('答案分布大致均衡（每种 ≥180）', dv.length===4 && dv.every(n=>n>=180), dist);
+/* 章末课后练习映射：全部 7 本教材的每一章都能找到对应习题章 */
+const books = [['ds',8],['co',6],['os',5],['cn',6],['hm',8],['la',6],['prob',7]];
+const quizMapBad = [];
+books.forEach(([bid,n])=>{
+  for(let i=1;i<=n;i++){
+    const qc = KB.quizChapterFor(bid, i);
+    if(!(qc && qc.blocks && qc.blocks.some(b=>b.type==='quiz'))) quizMapBad.push(bid+'-ch'+i);
+  }
 });
-ok('数据结构 8 章均有对应课后练习', quizMapOk);
+ok('7 本教材 46 章均有课后练习', quizMapBad.length===0, quizMapBad);
+/* 政治：马原单选+多选 100 题，多选 multi 校验 */
+const myQs = ['quiz-maoyuan-single','quiz-maoyuan-multi']
+  .map(id=>KB.getFile(id))
+  .filter(Boolean)
+  .flatMap(f=>f.chapters)
+  .flatMap(c=>c.blocks||[])
+  .filter(b=>b.type==='quiz')
+  .flatMap(b=>b.questions||[]);
+ok('马原习题共 100 题', myQs.length===100, myQs.length);
+ok('马原单选无 multi、多选全有 multi 且 answer 合法', myQs.every(q=>{
+  const a = String(q.answer||'').toLowerCase();
+  if(a.length===1) return !q.multi && /^[a-d]$/.test(a);
+  return !!q.multi && /^[a-d]{2,4}$/.test(a) && a===[...a].sort().join('');
+}));
+const myMap = [1,2,3,4,5,6,7,8].every(n=>{
+  const qc = KB.quizChapterFor('maoyuan', n);
+  return !qc || (qc.blocks && qc.blocks.some(b=>b.type==='quiz'));
+});
+ok('马原 8 章习题映射有效', myMap);
 ok('搜索数据源不含 hidden 习题', all.every(x=>!x.file.hidden));
 /* P8 数据校验：animation 块的 animType 必须在 factory 注册表中 */
 const registeredAnims = Object.keys(KB_ANIM.AnimationFactories);
@@ -172,8 +207,8 @@ const idCounts = {};
 KB.listFiles().forEach(f=>{ idCounts[f.id]=(idCounts[f.id]||0)+1; });
 ok('文件 id 全局唯一', Object.values(idCounts).every(n=>n===1), idCounts);
 const animTypes = all.filter(x=>x.block.type==='animation').map(x=>x.block.animType).sort();
-ok('11 类动画数据齐备', JSON.stringify(animTypes) ===
-  JSON.stringify(['bubbleSort','graphTraversal','heapSort','huffman','kmp','mergeSort','pageReplace','processSchedule','quickSort','slidingWindow','treeTraversal']), animTypes);
+ok('15 类动画数据齐备', JSON.stringify(animTypes) ===
+  JSON.stringify(['bubbleSort','cacheMap','graphTraversal','heapSort','huffman','kmp','matrixMul','mergeSort','pageReplace','pipeline','processSchedule','quickSort','riemann','slidingWindow','treeTraversal']), animTypes);
 
 /* ---------------- 3. 渲染管线 ---------------- */
 console.log('\n[3] 渲染管线');

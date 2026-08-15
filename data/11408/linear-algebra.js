@@ -1,5 +1,6 @@
 KB.register({
   id: 'la',
+  quizFiles: ['quiz-la'],
   folder: 'math',
   type: 'book',
   title: '线性代数',
@@ -166,6 +167,16 @@ KB.register({
       titleEn: 'Matrices',
       summary: '围绕矩阵的运算、逆、伴随、秩四大主题展开,初等变换是贯穿全章的通用工具。',
       blocks: [
+        {
+          type: 'animation',
+          title: '矩阵乘法逐元素计算',
+          summary: '逐个计算 C 的每个元素,高亮参与运算的 A 行与 B 列,直观理解「行乘列」规则。',
+          animType: 'matrixMul',
+          animConfig: { A: [[1,2],[3,4]], B: [[5,6],[7,8]] },
+          details: [
+            { h: '观察要点', body: 'C[i][j] = A 的第 i 行与 B 的第 j 列对应相乘再求和。步进时看蓝色高亮的行与列如何组合出 C 的当前元素;C 的行列数由「左行 × 右列」决定。' }
+          ]
+        },
         {
           type: 'concept',
           title: '矩阵基本运算',

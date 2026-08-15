@@ -20,7 +20,11 @@
     kmp:             (c,cfg)=>new KB_ANIM.KMPAnimation(c,cfg),
     pageReplace:     (c,cfg)=>new KB_ANIM.PageReplaceAnimation(c,cfg),
     processSchedule: (c,cfg)=>new KB_ANIM.ProcessScheduleAnimation(c,cfg),
-    slidingWindow:   (c,cfg)=>new KB_ANIM.SlidingWindowAnimation(c,cfg)
+    slidingWindow:   (c,cfg)=>new KB_ANIM.SlidingWindowAnimation(c,cfg),
+    cacheMap:        (c,cfg)=>new KB_ANIM.CacheMapAnimation(c,cfg),
+    pipeline:        (c,cfg)=>new KB_ANIM.PipelineAnimation(c,cfg),
+    riemann:         (c,cfg)=>new KB_ANIM.RiemannAnimation(c,cfg),
+    matrixMul:       (c,cfg)=>new KB_ANIM.MatrixMulAnimation(c,cfg)
   };
 
   function initAnimations(){

@@ -18,7 +18,15 @@ window.KB_UI = (function(){
     root.querySelectorAll('.ti.folder.open').forEach(el=>{
       if(!KB.folderContainsActive(el.dataset.folder)) manual.add(el.dataset.folder);
     });
-    root.innerHTML = KB.rootFolders().map(f=>renderFolderNode(f)).join('');
+    /* 错题本入口：有错题时显示计数 */
+    let wrongBtn = '';
+    if(window.KB_PROGRESS){
+      const n = KB_PROGRESS.wrongQids().length;
+      wrongBtn = '<div class="ti wrongbook'+(KB.state.activeFile==='wrongbook'?' active':'')+'" data-file="wrongbook">'+
+        '<div class="ti-head"><span class="ti-name">错题重做</span>'+
+        (n>0?'<span class="wb-count">'+n+'</span>':'')+'</div></div>';
+    }
+    root.innerHTML = wrongBtn + KB.rootFolders().map(f=>renderFolderNode(f)).join('');
     syncSidebarActive(manual);
   }
 

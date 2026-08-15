@@ -59,15 +59,21 @@ window.KB = (function(){
        教材文件用 quizFiles: ['quiz-ds-a','quiz-ds-b'] 声明数据源；
        各习题文件用 quizFor: { book:'ds', fromNum:1 } 声明自己覆盖教材的第几章起 */
     quizChapterFor(bookId, num){
+      const all = this.quizChaptersFor(bookId, num);
+      return all.length ? all[0] : null;
+    },
+    /* 同一教材章可能有多个习题文件覆盖（如马原的单选 + 多选）：返回全部命中的习题章 */
+    quizChaptersFor(bookId, num){
       const target = files[bookId];
-      if(!target || !target.quizFiles) return null;
+      if(!target || !target.quizFiles) return [];
+      const out = [];
       for(const qid of target.quizFiles){
         const qf = files[qid];
         if(!qf || !qf.quizFor || qf.quizFor.book !== bookId) continue;
         const idx = num - (qf.quizFor.fromNum||1);
-        if(idx >= 0 && idx < (qf.chapters||[]).length) return qf.chapters[idx];
+        if(idx >= 0 && idx < (qf.chapters||[]).length) out.push(qf.chapters[idx]);
       }
-      return null;
+      return out;
     },
     /* 判断激活文件是否属于某文件夹（含其子孙文件夹） */
     folderContainsActive(folderId){
