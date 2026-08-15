@@ -1,9 +1,12 @@
 /* ================================================================
  * data/11408/_index.js —— 11408 考研目录 + 其下的科目
  * ----------------------------------------------------------------
- * 层级：目录(11408) → 大科目(408 计算机基础 / 数学一) → 小科目(文件)
+ * 层级：目录(11408) → 大科目(408 计算机基础 / 301 数学一 /
+ *       101 政治 / 201 英语一) → 小科目(文件)
  * 新增科目：在此定义子 folder（带 parent:'11408'），再写对应文件。
  * ================================================================ */
-KB.defineFolder({ id: '11408', title: '11408 考研', icon: '📚' });
-KB.defineFolder({ id: '408',   title: '408 计算机基础', icon: '🖥️', parent: '11408' });
-KB.defineFolder({ id: 'math',  title: '数学一', icon: '➗', parent: '11408' });
+KB.defineFolder({ id: '11408',   title: '11408 考研', icon: '📚' });
+KB.defineFolder({ id: '408',     title: '408 计算机基础', icon: '🖥️', parent: '11408' });
+KB.defineFolder({ id: 'math',    title: '301 数学一', icon: '➗', parent: '11408' });
+KB.defineFolder({ id: 'politics', title: '101 政治', icon: '📕', parent: '11408' });
+KB.defineFolder({ id: 'english',  title: '201 英语一', icon: '📘', parent: '11408' });

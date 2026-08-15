@@ -75,14 +75,17 @@ python3 -m http.server 8080
 ├── data/                   # 数据层（只加文件，不改引擎）
 │   ├── manifest.js         # ★ 数据文件清单（新增文档只改这里）
 │   ├── 11408/
-│   │   ├── _index.js       # 文件夹定义：11408 → 408 计算机基础 / 数学一
+│   │   ├── _index.js       # 文件夹定义：11408 → 408 / 301 数学一 / 101 政治 / 201 英语一
 │   │   ├── data-structure.js   # 数据结构（8 章 70 块）
 │   │   ├── computer-org.js     # 计算机组成原理（6 章 41 块）
 │   │   ├── operating-system.js # 操作系统（5 章 36 块）
 │   │   ├── computer-network.js # 计算机网络（6 章 44 块）
 │   │   ├── higher-math.js      # 高等数学（8 章 60 块）
 │   │   ├── linear-algebra.js   # 线性代数（6 章 40 块）
-│   │   └── probability.js      # 概率论与数理统计（7 章 46 块）
+│   │   ├── probability.js      # 概率论与数理统计（7 章 46 块）
+│   │   ├── quiz-*.js           # 各科章末习题（hidden，quizFor 映射注入章末）
+│   ├── politics/               # 101 政治（隶属 11408）
+│   ├── english/                # 201 英语一（隶属 11408）
 │   └── papers/
 │       ├── _index.js       # 文件夹定义：论文 / 文献
 │       └── kmp-paper.js    # KMP 论文精读（示例）
