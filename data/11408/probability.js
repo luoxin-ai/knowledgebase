@@ -17,6 +17,7 @@ KB.register({
         {
           type: 'concept',
           title: '样本空间与随机事件',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 4 分' },
           summary: '随机试验的所有可能结果构成样本空间,随机事件是样本空间的子集。',
           points: [
             '随机试验:可在相同条件下重复进行、结果不止一个且事先不能确定、但所有可能结果已知的试验。',
@@ -32,6 +33,7 @@ KB.register({
         {
           type: 'concept',
           title: '事件的关系与运算',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 4 分' },
           summary: '事件间的关系与运算是概率计算的语法,必须熟练转化为集合运算。',
           points: [
             '包含 A⊂B:A 发生必导致 B 发生。',
@@ -51,6 +53,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '古典概型与几何概型',
+          exam: { freq: '中频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '等可能性的两种计数模型,核心是数清「有利结果数」与「总结果数」。',
           points: [
             '古典概型:P(A)=A 含样本点数 / S 含样本点总数,要求有限且等可能。',
@@ -67,6 +70,7 @@ KB.register({
         {
           type: 'formula',
           title: '条件概率与乘法公式',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4-10 分' },
           summary: '条件概率是「在已知 A 发生」前提下重新度量 B 的概率;乘法公式由它直接推出。',
           formula: 'P(B|A) = P(AB) / P(A),   (P(A) > 0)',
           details: [
@@ -79,6 +83,7 @@ KB.register({
         {
           type: 'formula',
           title: '全概率公式',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '把复杂事件 A 按完备事件组「分块」再求和,是「由因求果」的工具。',
           formula: 'P(A) = Σᵢ P(Bᵢ)·P(A|Bᵢ)',
           details: [
@@ -90,6 +95,7 @@ KB.register({
         {
           type: 'formula',
           title: '贝叶斯公式',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '在已知结果 A 发生的条件下反推各「原因」Bᵢ 的概率,是「由果溯因」的工具。',
           formula: 'P(Bᵢ|A) = P(Bᵢ)·P(A|Bᵢ) / Σⱼ P(Bⱼ)·P(A|Bⱼ)',
           details: [
@@ -101,6 +107,7 @@ KB.register({
         {
           type: 'concept',
           title: '事件的独立性',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 4 分' },
           summary: '独立性是概率论最重要的概念之一,刻画「一个事件的发生不影响另一个事件的概率」。',
           points: [
             '定义:P(AB)=P(A)·P(B),则称 A、B 相互独立。',
@@ -135,6 +142,7 @@ KB.register({
         {
           type: 'concept',
           title: '随机变量与分布函数',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '分布函数完整刻画随机变量的概率规律,是连接概率与统计的桥梁。',
           points: [
             '随机变量:定义在样本空间上的实值函数,把随机结果数量化。',
@@ -181,6 +189,7 @@ KB.register({
         {
           type: 'formula',
           title: '正态分布与标准正态化',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '正态分布是概率论与数理统计的核心分布,标准正态化是处理一切正态问题的钥匙。',
           formula: 'X~N(μ,σ²):  f(x) = (1/(σ√(2π)))·e^(−(x−μ)²/(2σ²));  标准正态 N(0,1):  φ(x) = (1/√(2π))·e^(−x²/2)',
           details: [
@@ -194,6 +203,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '随机变量函数的分布',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '已知 X 的分布,求 Y=g(X) 的分布,是本章核心考点,分离散与连续两种方法。',
           points: [
             '离散型:逐点计算 Y=g(X) 的可能取值,把相同取值的概率相加(合并同类项)。',
@@ -218,6 +228,7 @@ KB.register({
         {
           type: 'code',
           title: '二项分布与泊松近似计算',
+          exam: { freq: '偶考', forms: ['选择题'], score: '约 4 分' },
           summary: '用 C 语言计算二项分布概率,并演示 n 大 p 小时用泊松分布近似。',
           lang: 'C',
           code: '#include <stdio.h>\n#include <math.h>\n\nlong double comb(int n, int k) {\n    long double r = 1.0L;\n    if (k > n - k) k = n - k;\n    for (int i = 0; i < k; i++) r = r * (n - i) / (i + 1);\n    return r;\n}\n\nlong double binom(int n, int k, double p) {\n    return comb(n, k) * powl(p, k) * powl(1 - p, n - k);\n}\n\nlong double poisson(int k, double lambda) {\n    return powl(lambda, k) * expl(-lambda) / tgamma(k + 1);\n}\n\nint main(void) {\n    printf("P(X=2) binom  = %.6Lf\\n", binom(100, 2, 0.02));\n    printf("P(X=2) poisson= %.6Lf\\n", poisson(2, 2.0));\n    return 0;\n}',
@@ -244,6 +255,7 @@ KB.register({
         {
           type: 'concept',
           title: '二维随机变量与联合分布',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '二维随机变量 (X,Y) 的分布规律由联合分布函数或联合密度/分布律完整描述。',
           points: [
             '联合分布函数:F(x,y)=P(X≤x,Y≤y),表示 (X,Y) 落在左下无穷矩形区域的概率。',
@@ -259,6 +271,7 @@ KB.register({
         {
           type: 'concept',
           title: '边缘分布',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '由联合分布求单个变量的分布,即「消去」另一个变量。',
           points: [
             '边缘分布函数:F_X(x)=F(x,+∞),F_Y(y)=F(+∞,y)。',
@@ -273,6 +286,7 @@ KB.register({
         {
           type: 'concept',
           title: '条件分布',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '在已知一个变量取值的条件下,研究另一个变量的分布。',
           points: [
             '离散型条件分布律:P(Y=yⱼ|X=xᵢ)=pᵢⱼ/P(X=xᵢ)=pᵢⱼ/pᵢ·(要求 pᵢ·>0)。',
@@ -287,6 +301,7 @@ KB.register({
         {
           type: 'concept',
           title: '随机变量的独立性',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: 'X 与 Y 独立当且仅当联合分布等于边缘分布的乘积。',
           points: [
             '定义:X、Y 独立 ⇔ F(x,y)=F_X(x)·F_Y(y) 对一切 x,y 成立。',
@@ -302,6 +317,7 @@ KB.register({
         {
           type: 'concept',
           title: '二维均匀分布与二维正态分布',
+          exam: { freq: '中频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '两个重要的二维连续型分布,性质特殊,常单独命题。',
           points: [
             '二维均匀分布:若 (X,Y) 在有界区域 G 上均匀分布,则 f(x,y)=1/S(G),(x,y)∈G;概率与区域面积成正比。',
@@ -317,6 +333,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '两个随机变量函数的分布(和与极值)',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '求 Z=X+Y、Z=max(X,Y)、Z=min(X,Y) 的分布,是本章计算量最大的考点。',
           points: [
             '和的分布(卷积):f_Z(z)=∫(−∞→+∞)f(x,z−x)dx;独立时 f_Z(z)=∫f_X(x)f_Y(z−x)dx。',
@@ -352,6 +369,7 @@ KB.register({
         {
           type: 'concept',
           title: '数学期望',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '期望刻画随机变量取值的「平均位置」,是概率意义下的加权平均。',
           points: [
             '离散型:E(X)=Σᵢxᵢ·pᵢ(要求级数绝对收敛)。',
@@ -367,6 +385,7 @@ KB.register({
         {
           type: 'formula',
           title: '方差与标准差',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '方差刻画随机变量取值偏离其均值的平均平方偏差,反映波动大小。',
           formula: 'D(X) = E{[X−E(X)]²} = E(X²) − [E(X)]²',
           details: [
@@ -398,6 +417,7 @@ KB.register({
         {
           type: 'concept',
           title: '协方差与相关系数',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '协方差与相关系数刻画两个随机变量之间的线性相关程度。',
           points: [
             '协方差:Cov(X,Y)=E{[X−E(X)][Y−E(Y)]}=E(XY)−E(X)E(Y)。',
@@ -413,6 +433,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '数字特征的计算方法与性质',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '综合运用期望、方差、协方差的性质快速计算复合随机变量的数字特征。',
           points: [
             '线性与和差:E(ΣaᵢXᵢ)=ΣaᵢE(Xᵢ);D(ΣaᵢXᵢ)=Σaᵢ²D(Xᵢ)+2ΣΣaᵢaⱼCov(Xᵢ,Xⱼ)。',
@@ -447,6 +468,7 @@ KB.register({
         {
           type: 'formula',
           title: '切比雪夫不等式',
+          exam: { freq: '中频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '仅用期望与方差就能对随机变量偏离均值的概率给出估计,无需知道具体分布。',
           formula: 'P{|X−E(X)| ≥ ε} ≤ D(X)/ε²;   等价地  P{|X−E(X)| < ε} ≥ 1 − D(X)/ε²',
           details: [
@@ -458,6 +480,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '大数定律',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 4 分' },
           summary: '大量独立(或同分布)随机变量的算术平均依概率收敛于期望,即「频率稳定于概率」的理论依据。',
           points: [
             '切比雪夫大数定律:两两不相关、方差一致有界时,样本均值依概率收敛于均值平均。',
@@ -473,6 +496,7 @@ KB.register({
         {
           type: 'formula',
           title: '中心极限定理(独立同分布情形)',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4 分' },
           summary: '大量独立同分布随机变量之和经标准化后近似服从标准正态分布,这是「正态分布普遍存在」的根源。',
           formula: '设 X₁,…,Xₙ 独立同分布,E(Xᵢ)=μ,D(Xᵢ)=σ²>0,则 (ΣXᵢ − nμ)/(σ√n) → N(0,1)',
           details: [
@@ -484,6 +508,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '中心极限定理的应用',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 4-10 分' },
           summary: '用正态分布近似大量随机变量之和的概率,解决实际求和、保险、误差等问题。',
           points: [
             '标准化后查标准正态表:先把 ΣXᵢ 标准化为 Z=(ΣXᵢ−nμ)/(σ√n),再用 Φ(x) 计算概率。',
@@ -517,6 +542,7 @@ KB.register({
         {
           type: 'concept',
           title: '总体与样本',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 4 分' },
           summary: '总体是研究对象的全体,样本是总体的独立同分布代表。',
           points: [
             '总体:研究对象的某项数量指标取值的全体,可视为一个随机变量 X 及其分布。',
@@ -531,6 +557,7 @@ KB.register({
         {
           type: 'concept',
           title: '统计量',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '统计量是样本的函数且不含未知参数,是推断的载体。',
           points: [
             '定义:不含任何未知参数的样本函数 g(X₁,…,Xₙ)。',
@@ -551,7 +578,7 @@ KB.register({
           rows: [
             ['χ² 分布', 'χ²=X₁²+…+Xₙ²,Xᵢ~N(0,1) 独立', 'n', 'n / 2n', '可加性:χ²(m)+χ²(n)=χ²(m+n)'],
             ['t 分布', 'T=X/√(Y/n),X~N(0,1),Y~χ²(n) 独立', 'n', '0(n>1) / n/(n−2)(n>2)', '关于 0 对称,n→∞ 趋于标准正态'],
-            ['F 分布', 'F=(X/m)/(Y/n),X~χ²(m),Y~χ²(n) 独立', '(m,n)', 'n/(n−2) / —', '1/F ~ F(n,m);t²(n) ~ F(1,n)']
+            ['F 分布', 'F=(X/m)/(Y/n),X~χ²(m),Y~χ²(n) 独立', '(m,n)', 'n/(n−2)(n>2) / —', '1/F ~ F(n,m);t²(n) ~ F(1,n)']
           ],
           note: '上 α 分位点满足:P(χ²>χ²_α(n))=α,P(T>t_α(n))=α,P(F>F_α(m,n))=α。t 分布对称:t_α(n)=−t_{1−α}(n)。',
           details: [
@@ -561,6 +588,7 @@ KB.register({
         {
           type: 'formula',
           title: '正态总体的抽样分布定理',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '正态总体下样本均值与样本方差的精确分布,是区间估计与检验的直接依据。',
           formula: 'X̄ ~ N(μ, σ²/n);   (n−1)S²/σ² ~ χ²(n−1);   (X̄−μ)/(S/√n) ~ t(n−1);   X̄ 与 S² 相互独立',
           details: [
@@ -591,6 +619,7 @@ KB.register({
         {
           type: 'concept',
           title: '点估计',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 4 分' },
           summary: '用样本统计量给出未知参数的一个具体估计值,是参数估计的基础。',
           points: [
             '点估计:构造统计量 θ̂=θ̂(X₁,…,Xₙ) 作为未知参数 θ 的估计量。',
@@ -605,6 +634,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '矩估计法',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '用样本矩代替总体矩解出参数,思想直观、计算简单。',
           points: [
             '思想:令样本 k 阶矩 Aₖ=(1/n)ΣXᵢᵏ 等于总体 k 阶矩 μₖ=E(Xᵏ),建立方程。',
@@ -619,6 +649,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '极大似然估计法',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '选取使样本出现概率最大的参数值作为估计,是理论上最优、考试最常考的估计方法。',
           points: [
             '似然函数:L(θ)=Πᵢf(xᵢ;θ)(连续)或 L(θ)=ΠᵢP(X=xᵢ;θ)(离散)。',
@@ -659,6 +690,7 @@ KB.register({
         {
           type: 'formula',
           title: '区间估计',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '在给定置信度下构造包含未知参数的区间,给出估计的精度与可靠度。',
           formula: 'σ² 已知,μ 的置信区间:  (X̄ − z_{α/2}·σ/√n,  X̄ + z_{α/2}·σ/√n)',
           details: [
@@ -671,6 +703,7 @@ KB.register({
         {
           type: 'concept',
           title: '假设检验',
+          exam: { freq: '中频', forms: ['选择题', '解答题'], score: '约 4 分' },
           summary: '根据样本判断关于总体的某个假设是否成立,核心是显著性检验。',
           points: [
             '原假设 H₀ 与备择假设 H₁:把要检验的假设置于 H₀(通常含等号)。',

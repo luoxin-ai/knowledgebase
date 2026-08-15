@@ -63,6 +63,13 @@ a{color:var(--accent);text-decoration:none}
   font-size:16px;color:var(--text-2);
 }
 .hamburger:hover{background:var(--surface-3)}
+/* 顶栏刷题按钮 */
+.drill-btn{
+  margin-left:10px;flex-shrink:0;height:32px;padding:0 16px;border-radius:8px;
+  background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;
+  transition:all .15s var(--ease);
+}
+.drill-btn:hover{background:#006edb}
 /* 搜索 */
 .search-wrap{position:relative;margin-left:auto;flex-shrink:0}
 .search-box{
@@ -424,6 +431,27 @@ td.stable-no{color:var(--red);font-weight:600}
   transition:all .13s var(--ease);
 }
 .qz-submit-multi:hover{opacity:.88}
+/* ---- 填空题 ---- */
+.qz-fill-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.qz-fill-input{
+  flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border);
+  border-radius:8px;font-size:14px;font-family:inherit;background:var(--surface);
+  color:var(--text);outline:none;transition:border-color .13s var(--ease);
+}
+.qz-fill-input:focus{border-color:var(--accent)}
+.qz-fill-input:disabled{background:var(--surface-2);color:var(--text-2)}
+.qz-submit-fill{
+  padding:8px 20px;border:1px solid var(--accent);border-radius:8px;
+  background:var(--accent);color:#fff;font-size:12.5px;font-weight:600;cursor:pointer;
+  transition:all .13s var(--ease);
+}
+.qz-submit-fill:hover{opacity:.88}
+.qz-fill-answer{
+  margin-top:10px;padding:8px 12px;border-radius:8px;
+  background:var(--surface-2);font-size:13px;font-weight:600;color:var(--text);
+}
+/* ---- 判断题 ---- */
+.qz-opt.tf .qz-letter{width:22px;font-size:13px;font-weight:700}
 .qz-explain{display:none;margin-top:11px;padding:11px 14px;background:var(--surface-2);border-radius:8px;font-size:13px;color:var(--text-2);line-height:1.75}
 .qz-explain.show{display:block;animation:fadeSlide .18s var(--ease)}
 .qz-explain::before{content:"解析";display:inline-block;font-size:11px;font-weight:700;color:var(--accent);margin-right:8px}
@@ -450,10 +478,31 @@ td.stable-no{color:var(--red);font-weight:600}
   margin-left:auto;font-size:11px;font-weight:700;color:#fff;background:var(--red);
   border-radius:999px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0 5px;
 }
+.ti.wrongbook .wb-count.due{background:var(--accent)}
 .quiz-section summary .chev{margin-left:auto;flex-shrink:0;color:var(--text-3);transition:transform .2s var(--ease)}
 .quiz-section[open] summary .chev{transform:rotate(90deg)}
 .quiz-section[open] summary{border-bottom:1px solid var(--border)}
 .qs-body{padding:20px 20px 24px;background:var(--surface-2)}
+
+/* ================= 刷题模式 ================= */
+.drill-subject{margin-top:26px}
+.drill-sub-title{font-size:17px;font-weight:700;color:var(--text);margin:8px 0 4px}
+.drill-file{font-size:12.5px;font-weight:600;color:var(--text-3);margin:12px 0 8px}
+.drill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.drill-card{
+  display:flex;flex-direction:column;gap:5px;padding:13px 15px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);text-decoration:none;
+  transition:all .14s var(--ease);
+}
+.drill-card:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 3px 10px rgba(10,108,220,.08)}
+.dc-num{font-size:11px;font-weight:700;color:var(--accent)}
+.dc-title{font-size:13.5px;font-weight:600;color:var(--text);line-height:1.45}
+.dc-meta{font-size:11.5px;color:var(--text-3);display:flex;flex-direction:column;gap:3px}
+.dc-stat{color:var(--accent);font-weight:600}
+.dc-stat.done{color:var(--green)}
+/* 错题本/待复习的科目分组标题 */
+.group-sub-title{font-size:16px;font-weight:700;color:var(--text);margin:28px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.group-sub-title:first-child{margin-top:8px}
 
 /* ================= 章导航 ================= */
 .ch-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}

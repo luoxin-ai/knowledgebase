@@ -27,7 +27,7 @@ KB.register({
             '第二段（2~3 句）：展开要点（理由 / 细节 / 安排），用 First / Moreover / Finally 串联',
             '第三段（1~2 句）：礼貌收尾 —— 致谢 / 期待回复 / 表达愿望'
           ],
-          summary: '小作文得分核心是==格式正确 + 目的明确 + 要点覆盖==，10 分中语言占 6.5、格式与内容占 3.5。',
+          summary: '小作文得分核心是==格式正确 + 目的明确 + 要点覆盖==，评分按语言、内容、格式综合把握。',
           details: [
             { h: '第一段：开门见山', body: 'I am Li Ming, ____. I am writing this letter to ____ (express my gratitude / extend my sincere invitation / offer my suggestions regarding ____). [[口诀]] 目的句 I am writing to 一把梭，自我介绍看身份。' },
             { h: '第二段：要点展开', body: '万能串联词：To begin with, ____. Moreover, ____. Finally, ____. 每个要点 1~2 句即可，切忌堆砌。若题目给两个要点（如建议信「提出建议 + 说明理由」），必须==全部覆盖==，漏点是硬伤。' },

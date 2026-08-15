@@ -91,6 +91,7 @@ const files = [
   'data/english/vocab.js', 'data/english/reading-simu.js',
   'js/core/markup.js', 'js/core/highlight.js', 'js/core/renderer.js',
   'js/core/sidebar.js', 'js/core/search.js',
+  'js/core/progress.js',
   'js/animations/base.js', 'js/animations/sort.js', 'js/animations/tree.js',
   'js/animations/graph.js', 'js/animations/huffman.js', 'js/animations/kmp.js',
   'js/animations/os.js', 'js/animations/network.js', 'js/animations/extra.js',
@@ -100,6 +101,18 @@ for(const f of files){
   const code = fs.readFileSync(path.join(ROOT, f), 'utf8');
   (0, eval)(code); // eslint-disable-line no-eval
 }
+/* 内存 localStorage（progress.js 需要） */
+const _mem = {};
+global.localStorage = {
+  getItem: k=>Object.prototype.hasOwnProperty.call(_mem,k) ? _mem[k] : null,
+  setItem: (k,v)=>{ _mem[k]=String(v); },
+  removeItem: k=>{ delete _mem[k]; },
+  get length(){ return Object.keys(_mem).length; },
+  key: i=>Object.keys(_mem)[i] || null
+};
+/* progress.js 在 localStorage 之前装载会静默失败（read/write 包了 try-catch），
+   这里重新装载一次保证 KB_PROGRESS 就绪 */
+(0, eval)(fs.readFileSync(path.join(ROOT, 'js/core/progress.js'), 'utf8'));
 
 let passed = 0, failed = 0;
 function ok(name, cond, extra){
@@ -198,6 +211,37 @@ const myMap = [1,2,3,4,5,6,7,8].every(n=>{
 });
 ok('马原 8 章习题映射有效', myMap);
 ok('搜索数据源不含 hidden 习题', all.every(x=>!x.file.hidden));
+/* 新题型：填空/判断 —— 构造四题型块走一遍 renderChapter，验证渲染不炸且标记齐全 */
+{
+  const tmp = { id:'__typecheck__', folder:'408', type:'book', title:'题型自检', hidden:true,
+    chapters:[{ id:'ch1', num:1, title:'题型自检', blocks:[
+      { type:'quiz', id:'__tc__', questions:[
+        { qid:'__tc-f1__', type:'fill', stem:'1+1=?', answer:['2'], explain:'基础' },
+        { qid:'__tc-t1__', type:'tf', stem:'对的事', answer:'t', explain:'对' },
+        { qid:'__tc-t2__', type:'tf', stem:'错的事', answer:'f', explain:'错' },
+        { qid:'__tc-s1__', stem:'单选', options:['a1','b1','c1','d1'], answer:'b', explain:'故选 B' }
+      ]}
+    ]}]};
+  KB.register(tmp);
+  KB_PENDING_ANIMS.length = 0;
+  KB.render.renderChapter(tmp, 'ch1', { silent:true });
+  const tHtml = doc.getElementById('content')._innerHTML;
+  ok('四题型（fill/tf/单选）渲染不炸', typeof tHtml === 'string' && tHtml.length > 0);
+  ok('填空题渲染出输入框', tHtml.includes('qz-fill-input'));
+  ok('判断题渲染出对/错按钮', tHtml.includes('qz-opt tf'));
+  ok('单选题渲染出 ABCD 选项', tHtml.includes('qz-opt'));
+  /* 遗忘曲线：档位演进 + 错题本进出 */
+  KB_PROGRESS.recordAnswer('__tc-f1__','3',false);
+  ok('答错进错题本', KB_PROGRESS.wrongQids().includes('__tc-f1__'));
+  ok('刚答完未到期', KB_PROGRESS.isDue('__tc-f1__')===false);
+  KB_PROGRESS.recordAnswer('__tc-f1__','2',true);
+  ok('答对升档 stage=2', KB_PROGRESS.getAnswer('__tc-f1__').stage===2);
+  KB_PROGRESS.recordAnswer('__tc-f1__','2',true);
+  KB_PROGRESS.recordAnswer('__tc-f1__','2',true);
+  ok('连对到最高档移出错题本', !KB_PROGRESS.wrongQids().includes('__tc-f1__'));
+  ok('dueCount 归零', KB_PROGRESS.dueCount()===0);
+  /* __typecheck__ 为 hidden 文件，不影响后续断言（listFiles 走 visible 过滤） */
+}
 /* P8 数据校验：animation 块的 animType 必须在 factory 注册表中 */
 const registeredAnims = Object.keys(KB_ANIM.AnimationFactories);
 const badAnim = all.filter(x=>x.block.type==='animation' && registeredAnims.indexOf(x.block.animType)<0).map(x=>x.block.animType);

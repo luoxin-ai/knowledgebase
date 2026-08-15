@@ -19,6 +19,11 @@
       KB.render.renderWrongBook();
       return;
     }
+    /* 今日待复习虚拟入口（遗忘曲线到期错题卷） */
+    if(fileId === 'duetoday'){
+      KB.render.renderDueToday();
+      return;
+    }
     const file = KB.getFile(fileId);
     if(!file || file.hidden) return;
     /* 先渲染章节（内部会 setActiveFile），再重建树 → 激活文件所在目录链正确展开 */
@@ -38,6 +43,14 @@
       const fileEl = e.target.closest('.ti.file');
       if(fileEl){
         loadFile(fileEl.dataset.file);
+        closeDrawer();
+        return;
+      }
+      /* 虚拟入口（错题重做 / 今日待复习）：不带 .file/.folder class，单独命中 */
+      const vEl = e.target.closest('.ti.wrongbook[data-file]');
+      if(vEl){
+        loadFile(vEl.dataset.file);
+        closeDrawer();
         return;
       }
       const fEl = e.target.closest('.ti.folder');
@@ -46,6 +59,13 @@
         fEl.classList.toggle('open');
       }
     });
+  }
+  /* 移动端抽屉：选中内容后收起（桌面端 sidebar 常驻，此函数无副作用） */
+  function closeDrawer(){
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('overlay');
+    if(sb && sb.classList.contains('open')) sb.classList.remove('open');
+    if(ov && ov.classList.contains('show')) ov.classList.remove('show');
   }
 
   /* ---- URL 路由：#<fileId>/<chId>，刷新恢复位置、链接可分享 ---- */
@@ -94,6 +114,25 @@
     });
   }
 
+  /* ---- 刷题模式：顶栏按钮 + 卡片点击直达章节练习 ---- */
+  function initDrill(){
+    const btn = document.getElementById('drill-btn');
+    if(btn){
+      btn.addEventListener('click', ()=>{
+        if(KB.render && KB.render.renderDrill) KB.render.renderDrill();
+      });
+    }
+    const content = document.getElementById('content');
+    if(content){
+      content.addEventListener('click', e=>{
+        const card = e.target.closest('[data-drill-file]');
+        if(!card) return;
+        e.preventDefault();
+        if(KB.render && KB.render.drillGo) KB.render.drillGo(card.dataset.drillFile, card.dataset.drillCh);
+      });
+    }
+  }
+
   function init(){
     if(!KB.listVisibleFiles().length) return;
     KB_UI.renderTree();
@@ -102,6 +141,7 @@
     initToc();
     if(KB.search && KB.search.init) KB.search.init();
     if(KB.render && KB.render.initQuiz) KB.render.initQuiz();
+    initDrill();
     if(KB_UI.initProgressBar) KB_UI.initProgressBar();
     if(KB_UI.initScrollSpy) KB_UI.initScrollSpy();
     if(KB_UI.initCollapse) KB_UI.initCollapse();

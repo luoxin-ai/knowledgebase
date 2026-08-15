@@ -17,6 +17,7 @@ KB.register({
         {
           type: 'concept',
           title: '函数概念与基本性质',
+          exam: { freq: '中频', forms: ['选择题', '填空题'], score: '约 4 分' },
           points: ['有界性', '单调性', '奇偶性', '周期性', '复合函数与反函数'],
           summary: '函数的两大要素是定义域与对应法则;基本性质是后续一切定理的前提。',
           details: [
@@ -31,6 +32,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '极限定义与运算法则',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4-10 分' },
           summary: '数列极限用 ε-N 语言,函数极限用 ε-δ 语言;极限运算法则要求各极限都存在。',
           points: ['lim(x→x0) f(x) = A 的 ε-δ 定义', '极限四则运算法则', '夹逼准则', '单调有界准则'],
           details: [
@@ -45,6 +47,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '无穷小与等价无穷小替换',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '无穷小的比较有高阶、低阶、同阶、等价四种;等价替换只能用于乘除因子。',
           points: ['无穷小比较', '等价无穷小( x→0 )', '替换的使用条件'],
           details: [
@@ -57,6 +60,7 @@ KB.register({
         {
           type: 'formula',
           title: '两个重要极限',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '第一个重要极限处理 0/0 型三角函数,第二个处理 1^∞ 型。',
           formula: 'lim(x→0) sin x / x = 1;lim(x→∞) (1 + 1/x)^x = e,亦写为 lim(x→0) (1 + x)^(1/x) = e',
           details: [
@@ -69,6 +73,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '七种未定式及其处理',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '0/0 与 ∞/∞ 是基本型,其余五种都要化为基本型处理。',
           points: ['0/0 与 ∞/∞', '0·∞', '∞ − ∞', '1^∞、∞^0、0^0'],
           details: [
@@ -82,6 +87,7 @@ KB.register({
         {
           type: 'concept',
           title: '连续性与间断点分类',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           points: ['连续的定义', '间断点分类', '连续函数运算'],
           summary: '连续要求左极限、右极限、函数值三者相等;间断点分第一类与第二类。',
           details: [
@@ -95,6 +101,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '闭区间上连续函数的性质',
+          exam: { freq: '中频', forms: ['选择题', '解答题'], score: '约 4-10 分' },
           summary: '有界性、最值、介值、零点四大定理是证明题的重要工具。',
           points: ['有界性定理', '最值定理', '介值定理', '零点定理'],
           details: [
@@ -128,6 +135,7 @@ KB.register({
         {
           type: 'concept',
           title: '导数定义与几何意义',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           points: ['导数定义', '可导与连续的关系', '几何意义与切线法线'],
           summary: '导数是函数变化率的极限,几何意义是切线的斜率。',
           details: [
@@ -141,6 +149,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '求导法则与高阶导数',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '四则求导、链式法则与莱布尼茨公式是高阶导数的核心工具。',
           points: ['四则求导', '链式法则', '高阶导数与莱布尼茨公式'],
           details: [
@@ -154,6 +163,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '隐函数与参数方程求导',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '隐函数用两边求导并解出 dy/dx;参数方程用 dy/dx = (dy/dt)/(dx/dt)。',
           points: ['隐函数求导', '参数方程一阶导', '参数方程二阶导'],
           details: [
@@ -167,6 +177,7 @@ KB.register({
         {
           type: 'concept',
           title: '微分及其几何意义',
+          exam: { freq: '中频', forms: ['选择题', '填空题'], score: '约 4 分' },
           points: ['微分的定义', '可微与可导等价', '微分的几何意义', '近似计算'],
           summary: '一元函数可微与可导等价,dy = f′(x)dx 是切线纵坐标的增量。',
           details: [
@@ -179,6 +190,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '微分中值定理',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10-15 分' },
           summary: '罗尔、拉格朗日、柯西三大定理是微分学证明题的理论根基。',
           points: ['罗尔定理', '拉格朗日中值定理', '柯西中值定理'],
           details: [
@@ -192,6 +204,7 @@ KB.register({
         {
           type: 'formula',
           title: '泰勒公式与麦克劳林公式',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '用多项式逼近函数,余项分皮亚诺型(定性)与拉格朗日型(定量)。',
           formula: 'f(x) = f(x0) + f′(x0)(x−x0) + f″(x0)(x−x0)²/2! + … + f⁽ⁿ⁾(x0)(x−x0)ⁿ/n! + Rₙ(x)',
           details: [
@@ -204,6 +217,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '洛必达法则',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '0/0 与 ∞/∞ 型可对分子分母分别求导再取极限,但要先验证条件。',
           points: ['适用条件', '0/0 与 ∞/∞ 型', '其他未定式的转化'],
           details: [
@@ -216,6 +230,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '单调性、极值、凹凸性、拐点与渐近线',
+          exam: { freq: '高频', forms: ['选择题', '填空题', '解答题'], score: '约 4-10 分' },
           summary: '用一阶导数判单调与极值,用二阶导数判凹凸与拐点,渐近线分三种。',
           points: ['单调性与极值', '最值', '凹凸性与拐点', '渐近线'],
           details: [
@@ -239,6 +254,7 @@ KB.register({
         {
           type: 'concept',
           title: '不定积分的概念',
+          exam: { freq: '中频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           points: ['原函数', '不定积分', '基本积分公式', '线性性质'],
           summary: '不定积分是求导的逆运算,结果为一族相差常数的函数。',
           details: [
@@ -251,6 +267,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '换元积分法与分部积分法',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '第一类换元凑微分,第二类换元去根号;分部积分处理两类函数乘积。',
           points: ['第一类换元(凑微分)', '第二类换元', '分部积分法', '分部积分选 u 的次序'],
           details: [
@@ -274,6 +291,7 @@ KB.register({
         {
           type: 'concept',
           title: '定积分的定义与性质',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4-10 分' },
           points: ['定积分定义', '可积条件', '定积分性质', '积分中值定理'],
           summary: '定积分是分割、近似、求和、取极限的极限值,与积分变量符号无关。',
           details: [
@@ -287,6 +305,7 @@ KB.register({
         {
           type: 'formula',
           title: '牛顿-莱布尼茨公式',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '定积分等于原函数在上下限的差,是计算定积分的基本公式。',
           formula: '∫[a,b] f(x)dx = F(b) − F(a),其中 F′(x) = f(x)',
           details: [
@@ -299,6 +318,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '定积分的换元法与分部积分法',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '定积分换元必须同步换限,并利用对称性简化计算。',
           points: ['定积分换元法', '定积分分部积分', '奇偶性与对称区间', '周期函数性质'],
           details: [
@@ -316,7 +336,7 @@ KB.register({
           headers: ['类型', '定义/形式', '收敛条件', '发散条件'],
           rows: [
             ['无穷区间 ∫[1,+∞) 1/x^p dx', '上限为正无穷的积分', 'p > 1 收敛', 'p ≤ 1 发散'],
-            ['无穷区间 ∫[a,+∞) 1/(x ln^p x) dx', '对数型无穷积分', 'p > 1 收敛', 'p ≤ 1 发散'],
+            ['无穷区间 ∫[a,+∞) 1/(x ln^p x) dx (a>1)', '对数型无穷积分', 'p > 1 收敛', 'p ≤ 1 发散'],
             ['无界函数 ∫[0,1] 1/x^p dx', 'x = 0 为瑕点', 'p < 1 收敛', 'p ≥ 1 发散'],
             ['无穷区间 ∫[−∞,+∞) f(x)dx', '双侧无穷积分', '拆为 ∫[−∞,c] + ∫[c,+∞] 均收敛', '任一部分发散即发散'],
             ['瑕积分 ∫[a,b] f(x)dx', '区间端点或内部为瑕点', '各瑕积分分别收敛', '任一瑕积分发散即发散']
@@ -332,6 +352,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '定积分的应用',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '平面面积、旋转体体积与弧长是几何应用三大核心。',
           points: ['平面图形面积', '旋转体体积', '平面曲线弧长'],
           details: [
@@ -365,6 +386,7 @@ KB.register({
         {
           type: 'concept',
           title: '向量及其线性运算',
+          exam: { freq: '中频', forms: ['填空题'], score: '约 4 分' },
           points: ['向量的模', '方向余弦', '线性运算', '共线与共面'],
           summary: '向量是既有大小又有方向的量,线性运算遵循平行四边形法则。',
           details: [
@@ -377,6 +399,7 @@ KB.register({
         {
           type: 'formula',
           title: '数量积、向量积与混合积',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '点积判垂直、叉积求法向量、混合积求体积。',
           formula: 'a·b = |a||b|cosθ = a1b1 + a2b2 + a3b3;a×b 的模为 |a||b|sinθ;[a b c] = a·(b×c)',
           details: [
@@ -389,6 +412,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '平面方程',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4 分' },
           summary: '平面的特征量是法向量,点法式是最基本形式。',
           points: ['点法式', '一般式', '截距式', '两平面夹角与位置关系'],
           details: [
@@ -402,6 +426,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '直线方程',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4 分' },
           summary: '直线的特征量是方向向量,点向式与参数式最常用。',
           points: ['点向式(对称式)', '参数式', '一般式(两平面交线)', '两直线夹角'],
           details: [
@@ -415,6 +440,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '点、线、面之间的距离与位置关系',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4 分' },
           summary: '点到平面、点到直线、异面直线距离公式是常考点。',
           points: ['点到平面距离', '点到直线距离', '两异面直线距离'],
           details: [
@@ -427,6 +453,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '旋转曲面与二次曲面',
+          exam: { freq: '中频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '曲线绕坐标轴旋转得旋转曲面;二次曲面由标准方程识别。',
           points: ['旋转曲面', '柱面', '常见二次曲面'],
           details: [
@@ -448,6 +475,7 @@ KB.register({
         {
           type: 'concept',
           title: '多元函数的极限与连续',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 4 分' },
           points: ['二重极限', '累次极限的区别', '连续性', '有界闭区域连续性质'],
           summary: '二重极限要求沿任意路径趋近都相等,连续性类比一元但更严格。',
           details: [
@@ -461,6 +489,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '偏导数与全微分',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4-10 分' },
           summary: '偏导数是一元求导的推广;全微分刻画可微性,比偏导存在更强。',
           points: ['偏导数定义', '高阶偏导数', '全微分定义', '可微的判定'],
           details: [
@@ -475,6 +504,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '复合函数求导(链式法则)',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 4-10 分' },
           summary: '多元复合函数求导是「对各中间变量求偏导再乘以中间变量的偏导」并求和。',
           points: ['二元复合', '全导数', '抽象复合函数'],
           details: [
@@ -487,6 +517,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '隐函数求导',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '由方程确定的隐函数,可用公式法或两边求导法求偏导。',
           points: ['二元隐函数 dy/dx', '三元隐函数求偏导', '隐函数存在定理'],
           details: [
@@ -500,6 +531,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '方向导数与梯度',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4 分' },
           summary: '方向导数沿单位方向求导,梯度指向函数增长最快的方向。',
           points: ['方向导数', '梯度', '梯度与方向导数的关系'],
           details: [
@@ -512,6 +544,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '多元函数的极值与最值',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '驻点 + 二阶判别式 AC − B² 判定极值,最值要比较驻点与边界。',
           points: ['极值必要条件', '极值充分条件', '最值求法'],
           details: [
@@ -524,6 +557,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '条件极值与拉格朗日乘子法',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '在约束条件下求极值,构造拉格朗日函数后按无条件极值处理。',
           points: ['拉格朗日乘子法', '两个约束条件', '几何意义'],
           details: [
@@ -556,6 +590,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '二重积分',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '直角坐标用 X 型/Y 型区域定限,极坐标适用于圆域与扇形域。',
           points: ['直角坐标计算', '极坐标计算', '积分次序交换', '对称性'],
           details: [
@@ -569,6 +604,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '三重积分',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '直角坐标「先一后二」或「先二后一」;柱面坐标与球面坐标处理对称区域。',
           points: ['直角坐标', '柱面坐标', '球面坐标'],
           details: [
@@ -581,6 +617,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '两类曲线积分',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '第一类对弧长积分与方向无关,第二类对坐标积分与方向有关。',
           points: ['第一类曲线积分(对弧长)', '第二类曲线积分(对坐标)', '两类之间的联系'],
           details: [
@@ -593,6 +630,7 @@ KB.register({
         {
           type: 'formula',
           title: '格林公式',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '把平面闭曲线积分转化为二重积分,注意取正向。',
           formula: '∮[L] P dx + Q dy = ∬[D] (∂Q/∂x − ∂P/∂y) dxdy',
           details: [
@@ -606,6 +644,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '两类曲面积分',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '第一类对面积积分与侧无关,第二类对坐标积分与侧有关。',
           points: ['第一类曲面积分(对面积)', '第二类曲面积分(对坐标)', '两类之间的联系'],
           details: [
@@ -618,6 +657,7 @@ KB.register({
         {
           type: 'formula',
           title: '高斯公式(散度定理)',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '把闭曲面积分转化为三重积分,取外侧。',
           formula: '∯[Σ] P dydz + Q dzdx + R dxdy = ∭[Ω] (∂P/∂x + ∂Q/∂y + ∂R/∂z) dV',
           details: [
@@ -630,6 +670,7 @@ KB.register({
         {
           type: 'formula',
           title: '斯托克斯公式',
+          exam: { freq: '中频', forms: ['解答题'], score: '约 10 分' },
           summary: '把空间闭曲线积分转化为曲面积分,是格林公式的空间推广。',
           formula: '∮[L] P dx + Q dy + R dz = ∬[Σ] (∂R/∂y − ∂Q/∂z)dydz + (∂P/∂z − ∂R/∂x)dzdx + (∂Q/∂x − ∂P/∂y)dxdy',
           details: [
@@ -651,6 +692,7 @@ KB.register({
         {
           type: 'concept',
           title: '常数项级数的敛散性',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 4 分' },
           points: ['级数收敛定义', '收敛的必要条件', '级数基本性质'],
           summary: '级数收敛即部分和数列收敛,收敛的必要条件是通项趋于零。',
           details: [
@@ -663,6 +705,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '正项级数审敛法',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4-10 分' },
           summary: '正项级数(各项非负)可用比较、比值、根值三种方法判敛。',
           points: ['比较判别法', '极限形式比较', '比值判别法', '根值判别法'],
           details: [
@@ -676,6 +719,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '交错级数与莱布尼茨判别法',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4 分' },
           summary: '交错级数满足通项单调递减趋于零则收敛。',
           points: ['交错级数形式', '莱布尼茨判别法', '绝对收敛与条件收敛'],
           details: [
@@ -688,6 +732,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '幂级数的收敛半径与收敛域',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '用比值或根值法求收敛半径,再单独检验端点确定收敛域。',
           points: ['收敛半径', '收敛区间与收敛域', '阿贝尔定理'],
           details: [
@@ -700,6 +745,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '函数展开成幂级数',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '借助常见麦克劳林展开,通过代换、求导、积分间接展开。',
           points: ['常见展开式', '间接展开法', '幂级数逐项求导与积分'],
           details: [
@@ -712,6 +758,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '傅里叶级数',
+          exam: { freq: '中频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '周期函数展开为正弦、余弦的无穷和,系数由积分确定。',
           points: ['傅里叶系数', '狄利克雷收敛定理', '奇偶延拓', '正弦/余弦级数'],
           details: [
@@ -764,6 +811,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '可分离变量方程与齐次方程',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '分离变量后两边积分;齐次方程用代换 y = ux 化为可分离变量。',
           points: ['可分离变量方程', '齐次方程'],
           details: [
@@ -776,6 +824,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '一阶线性方程与伯努利方程',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '一阶线性用积分因子公式;伯努利方程代换 z = y^(1−n) 化为线性。',
           points: ['一阶线性方程通解公式', '伯努利方程'],
           details: [
@@ -788,6 +837,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '可降阶的高阶方程',
+          exam: { freq: '中频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '三类可降阶方程分别用直接积分、换元 p = y′、换元 p = y′(视 y 为自变量)。',
           points: ['y⁽ⁿ⁾ = f(x)', 'y″ = f(x, y′)', 'y″ = f(y, y′)'],
           details: [
@@ -800,6 +850,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '二阶常系数线性齐次方程',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '特征方程的两根类型决定通解结构。',
           points: ['特征方程', '两个相异实根', '二重根', '共轭复根'],
           details: [
@@ -813,6 +864,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '二阶常系数线性非齐次方程',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '通解 = 对应齐次通解 + 一个特解,特解用待定系数法。',
           points: ['解的结构', 'f(x) = Pm(x)e^(λx) 型', 'f(x) = e^(αx)(A cos βx + B sin βx) 型', '叠加原理'],
           details: [
@@ -826,6 +878,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '欧拉方程',
+          exam: { freq: '偶考', forms: ['解答题'], score: '约 10 分' },
           summary: '变系数方程,通过代换 x = e^t 化为常系数线性方程。',
           points: ['欧拉方程形式', '代换 x = e^t', '通解结构'],
           details: [

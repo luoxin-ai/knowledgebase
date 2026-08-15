@@ -17,6 +17,7 @@ KB.register({
         {
           type: 'concept',
           title: '行列式定义与性质',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: 'n 阶行列式是 n² 个数按一定规则算出的一个数,是后续矩阵、方程组的基石。',
           points: [
             '二阶行列式: |a b; c d| = ad − bc;三阶按对角线法则展开',
@@ -40,6 +41,7 @@ KB.register({
         {
           type: 'formula',
           title: '按行(列)展开定理',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4 分' },
           summary: '降阶计算的核心工具,把 n 阶行列式化为 n−1 阶。',
           formula: '|A| = aᵢ₁Aᵢ₁ + aᵢ₂Aᵢ₂ + … + aᵢₙAᵢₙ (按第 i 行展开)',
           details: [
@@ -60,6 +62,7 @@ KB.register({
         {
           type: 'formula',
           title: '特殊行列式',
+          exam: { freq: '中频', forms: ['填空题', '解答题'], score: '约 4 分' },
           summary: '上三角、对角、范德蒙德等特殊形式有现成结论,考试常考直接套用。',
           formula: '上(下)三角行列式 = 主对角线元素之积: |A| = a₁₁a₂₂…aₙₙ',
           details: [
@@ -80,6 +83,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '代数余子式与伴随矩阵的联系',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '代数余子式拼成的伴随矩阵 A*,与行列式、逆矩阵深度绑定。',
           points: [
             'A* 的第 i 行第 j 列元素 = Aⱼᵢ(注意转置位置,是 A 的第 j 行第 i 列的代数余子式)',
@@ -102,6 +106,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '克拉默法则',
+          exam: { freq: '中频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: 'n 元 n 方程线性方程组当系数行列式非零时的唯一解公式。',
           points: [
             '适用条件: 方程组 Ax = b 中 A 为 n 阶方阵,且 |A| ≠ 0',
@@ -125,7 +130,7 @@ KB.register({
           rows: [
             ['化为三角', '元素有规律、可消元', '倍加变换把主对角线以下化为 0'],
             ['按行(列)展开', '某行(列)零元多', '选零最多的行展开降阶'],
-            ['加边法', '各行(列)元素之和相同', '加一行一列后统一消元'],
+            ['行(列)和法', '各行(列)元素之和相同', '各列加到第一列提出公因子'],
             ['递推法', '三对角等可递推结构', '按首行展开建立 Dₙ 与 Dₙ₋₁ 关系'],
             ['数学归纳法', '结构随阶数变化有规律', '猜想结论后归纳证明'],
             ['拆行拆列', '某行(列)可拆为两数和', '拆成多个简单行列式求和'],
@@ -180,6 +185,7 @@ KB.register({
         {
           type: 'concept',
           title: '矩阵基本运算',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '加法、数乘、乘法、转置四大运算,乘法不满足交换律与消去律。',
           points: [
             '加法: 同型矩阵对应元素相加,满足交换律与结合律',
@@ -203,6 +209,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '逆矩阵及其求法',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '可逆的充要条件 |A| ≠ 0,求逆两条路:伴随矩阵法与初等变换法。',
           points: [
             '定义: 若 AB = BA = E,则称 B 为 A 的逆,记 B = A⁻¹',
@@ -226,6 +233,7 @@ KB.register({
         {
           type: 'formula',
           title: '伴随矩阵公式集',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '伴随矩阵 A* 与逆、行列式、秩环环相扣。',
           formula: 'AA* = A*A = |A|E,从而 A⁻¹ = A*/|A|',
           details: [
@@ -242,6 +250,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '矩阵的秩',
+          exam: { freq: '高频', forms: ['选择题', '填空题', '解答题'], score: '约 4-10 分' },
           summary: '秩是非零子式的最高阶数,是方程组与向量组理论的统一桥梁。',
           points: [
             '定义: A 中不等于 0 的子式的最高阶数,记 r(A)',
@@ -265,6 +274,7 @@ KB.register({
         {
           type: 'concept',
           title: '初等变换与初等矩阵',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4-10 分' },
           summary: '三种初等行(列)变换对应三种初等矩阵,左乘行变、右乘列变。',
           points: [
             '三种初等变换: 交换两行(列)、某行(列)乘非零 k、某行(列)的 k 倍加到另一行(列)',
@@ -288,6 +298,7 @@ KB.register({
         {
           type: 'formula',
           title: '分块矩阵',
+          exam: { freq: '中频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '把大矩阵分块后按块运算,能简化行列式、逆与乘法的计算。',
           formula: '分块对角阵: |diag(A₁,…,Aₛ)| = ∏|Aᵢ|,其逆 = diag(A₁⁻¹,…,Aₛ⁻¹)',
           details: [
@@ -338,6 +349,7 @@ KB.register({
         {
           type: 'concept',
           title: '线性组合与线性表示',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4-10 分' },
           summary: '一个向量能否被一组向量线性表示,是相关性理论的起点。',
           points: [
             '定义: β = k₁α₁ + k₂α₂ + … + kₛαₛ,称 β 是 α₁,…,αₛ 的线性组合',
@@ -360,6 +372,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '线性相关与线性无关',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4-10 分' },
           summary: '核心是「不全为零的组合能否凑出零向量」,判定手段多样。',
           points: [
             '线性相关: 存在不全为零的 k₁,…,kₛ,使 k₁α₁ + … + kₛαₛ = 0',
@@ -383,6 +396,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '向量组的秩',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '极大无关组所含向量个数,与矩阵秩一一对应。',
           points: [
             '定义: 向量组的秩 = 其极大线性无关组所含向量的个数',
@@ -401,6 +415,7 @@ KB.register({
         {
           type: 'concept',
           title: '极大线性无关组',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '从向量组中挑出的「最多且无关」的代表元,其余向量都可由它表示。',
           points: [
             '定义: 向量组的一个部分组,本身线性无关,且再添入原组任一向量就相关',
@@ -423,6 +438,7 @@ KB.register({
         {
           type: 'concept',
           title: '向量空间与基',
+          exam: { freq: '中频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '由基、维数、坐标、过渡矩阵构成的抽象空间语言。',
           points: [
             '向量空间 V: 对加法和数乘封闭的非空向量集合',
@@ -442,6 +458,7 @@ KB.register({
         {
           type: 'code',
           title: '施密特正交化',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '把线性无关向量组化为正交(规范正交)向量组的算法,正交对角化的必备工具。',
           lang: 'C',
           code: '// 输入: 线性无关向量组 a[1..s](列向量)\n// 输出: 正交向量组 b[1..s],再单位化得规范正交组 e[1..s]\nb[1] = a[1];\nfor (k = 2; k <= s; k++) {\n    b[k] = a[k];\n    for (i = 1; i < k; i++) {\n        coef = dot(a[k], b[i]) / dot(b[i], b[i]); // 投影系数\n        b[k] = b[k] - coef * b[i];              // 减去在 b[i] 上的投影\n    }\n}\nfor (k = 1; k <= s; k++)\n    e[k] = b[k] / norm(b[k]);                    // 单位化',
@@ -500,6 +517,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '齐次方程组解的结构',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: 'Ax = 0 的解集构成向量空间,维数 = n − r(A)。',
           points: [
             'Ax = 0 必有零解;有非零解 ⟺ r(A) < n(未知数个数)',
@@ -522,6 +540,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '非齐次方程组解的结构',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '通解 = 一个特解 + 对应齐次方程组的基础解系线性组合。',
           points: [
             'Ax = b 有解 ⟺ r(A) = r(A | b)(系数矩阵秩 = 增广矩阵秩)',
@@ -544,6 +563,7 @@ KB.register({
         {
           type: 'concept',
           title: '基础解系与通解',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '基础解系是解空间的一组基,通解就是基的线性组合。',
           points: [
             '基础解系要求: 解向量之间线性无关,且任一解都可由它们线性表示',
@@ -575,6 +595,7 @@ KB.register({
         {
           type: 'code',
           title: '高斯消元法',
+          exam: { freq: '中频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '通过初等行变换把增广矩阵化为行阶梯形,再回代求通解。',
           lang: 'C',
           code: '// 输入: 增广矩阵 Ab[m][n+1](n 个未知数, m 个方程)\n// 输出: 化为行阶梯形后,判断解并回代\nfor (k = 0; k < min(m, n); k++) {      // 逐列消元\n    pivot_row = argmax(|Ab[i][k]|, i >= k); // 选主元(列主元)\n    swap(Ab[k], Ab[pivot_row]);\n    if (Ab[k][k] == 0) continue;         // 该列全 0,跳过\n    for (i = k + 1; i < m; i++) {        // 消去下方各行\n        f = Ab[i][k] / Ab[k][k];\n        for (j = k; j <= n; j++)\n            Ab[i][j] -= f * Ab[k][j];\n    }\n}\n// 回代: 从最后一行向上,把主元变量用自由变量表示\n// 若出现 [0 ... 0 | c](c != 0) 行,则无解',
@@ -645,6 +666,7 @@ KB.register({
         {
           type: 'concept',
           title: '特征值与特征向量的定义与求法',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4-10 分' },
           summary: '从 Aα = λα 出发,特征值由特征方程决定,特征向量是齐次方程组解。',
           points: [
             '定义: 若存在非零向量 α 和数 λ 使 Aα = λα,则 λ 是特征值,α 是属于 λ 的特征向量',
@@ -668,6 +690,7 @@ KB.register({
         {
           type: 'formula',
           title: '特征值的重要结论',
+          exam: { freq: '高频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '特征值之和等于迹,之积等于行列式,是高频考点。',
           formula: 'Σλᵢ = tr(A) = Σaᵢᵢ,Πλᵢ = |A|',
           details: [
@@ -684,6 +707,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '相似矩阵与相似对角化',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 10 分' },
           summary: '相似是「同一线性变换在不同基下」的关系,对角化是终极目标。',
           points: [
             '相似: 存在可逆矩阵 P 使 P⁻¹AP = B,称 A 相似于 B',
@@ -707,6 +731,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '实对称矩阵的性质与正交对角化',
+          exam: { freq: '高频', forms: ['解答题'], score: '约 10 分' },
           summary: '实对称矩阵特征值全实、特征向量可正交,必能正交对角化。',
           points: [
             '实对称矩阵(满足 Aᵀ = A)的特征值全为实数',
@@ -777,6 +802,7 @@ KB.register({
         {
           type: 'concept',
           title: '二次型与对称矩阵的对应',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 4 分' },
           summary: '二次型 f = xᵀAx 与实对称矩阵 A 一一对应,交叉项系数平分。',
           points: [
             'n 元二次型: f(x₁,…,xₙ) = ΣΣ aᵢⱼxᵢxⱼ,可写成 f = xᵀAx',
@@ -800,6 +826,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '合同变换',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 4 分' },
           summary: '合同变换是不改变二次型本质(正负惯性指数)的可逆线性替换。',
           points: [
             '定义: 若存在可逆矩阵 C 使 B = CᵀAC,称 A 与 B 合同(记 A ≃ B)',
@@ -818,6 +845,7 @@ KB.register({
         {
           type: 'formula',
           title: '化二次型为标准形',
+          exam: { freq: '高频', forms: ['填空题', '解答题'], score: '约 10 分' },
           summary: '配方法与正交变换法两条路径,正交变换法保持几何性质。',
           formula: '正交变换 x = Qy ⇒ f = λ₁y₁² + λ₂y₂² + … + λₙyₙ²(λᵢ 为特征值)',
           details: [
@@ -838,6 +866,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '惯性定理',
+          exam: { freq: '中频', forms: ['选择题', '填空题'], score: '约 4 分' },
           summary: '不论用何种可逆替换,标准形中正、负项个数恒定。',
           points: [
             '惯性定理: 二次型的标准形中,正平方项个数 p、负平方项个数 q 由二次型唯一确定',
@@ -856,6 +885,7 @@ KB.register({
         {
           type: 'keypoint',
           title: '正定二次型的判定',
+          exam: { freq: '高频', forms: ['选择题', '解答题'], score: '约 4-10 分' },
           summary: '正定等价于「特征值全正、顺序主子式全正、正惯性指数 = n」三条。',
           points: [
             '定义: 对任意 x ≠ 0,恒有 f(x) = xᵀAx > 0,称 f 正定,A 正定矩阵',

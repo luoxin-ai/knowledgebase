@@ -25,6 +25,13 @@ window.KB_UI = (function(){
       wrongBtn = '<div class="ti wrongbook'+(KB.state.activeFile==='wrongbook'?' active':'')+'" data-file="wrongbook">'+
         '<div class="ti-head"><span class="ti-name">错题重做</span>'+
         (n>0?'<span class="wb-count">'+n+'</span>':'')+'</div></div>';
+      /* 今日待复习入口：遗忘曲线调度到期数（无到期不显示） */
+      const due = KB_PROGRESS.dueCount();
+      if(due > 0){
+        wrongBtn += '<div class="ti wrongbook'+(KB.state.activeFile==='duetoday'?' active':'')+'" data-file="duetoday">'+
+          '<div class="ti-head"><span class="ti-name">今日待复习</span>'+
+          '<span class="wb-count due">'+due+'</span></div></div>';
+      }
     }
     root.innerHTML = wrongBtn + KB.rootFolders().map(f=>renderFolderNode(f)).join('');
     syncSidebarActive(manual);

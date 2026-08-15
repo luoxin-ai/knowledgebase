@@ -88,7 +88,7 @@ KB.register({
             { qid: 'en-r-1-q3', stem: `It can be inferred from Paragraph 4 that defenders of personalization believe`,
               options: [`algorithms should be prohibited from ranking news content`, `libraries remain the best source of knowledge for ordinary people`, `public discourse has already been elevated by personalized feeds`, `the fault lies in the incentive structure, not in the technology itself`],
               answer: 'd',
-              explain: `解析:Para 4 第 3 口:The problem...lies not with algorithms themselves but with the advertising model that rewards attention rather than judgment,即问题在激励机制而非技术本身,选 D。A 与辩护立场相反;B 偷换概念,原文说个性化让知识对「不进图书馆的人」可达,并非主张图书馆最好;C 程度失当,「提升公共话语」是虚拟语气 Change the incentives 之后的可能性,不是已发生的事实。` },
+              explain: `解析:Para 4 第 3 句:The problem...lies not with algorithms themselves but with the advertising model that rewards attention rather than judgment,即问题在激励机制而非技术本身,选 D。A 与辩护立场相反;B 偷换概念,原文说个性化让知识对「不进图书馆的人」可达,并非主张图书馆最好;C 程度失当,「提升公共话语」是虚拟语气 Change the incentives 之后的可能性,不是已发生的事实。` },
             { qid: 'en-r-1-q4', stem: `The word "habituated" (Paragraph 3) is closest in meaning to`,
               options: [`accustomed`, `confined`, `attracted`, `exposed`],
               answer: 'a',
@@ -96,7 +96,7 @@ KB.register({
             { qid: 'en-r-1-q5', stem: `Toward the design of recommendation systems, the author's attitude can best be described as`,
               options: [`indifferent to its social consequences`, `skeptical of any attempt to regulate it`, `supportive of the advertising model behind it`, `concerned about its ethical implications`],
               answer: 'd',
-              explain: `解析:Para 5 第 3 口:its design becomes an ethical question, as unavoidable as the safety of a bridge,作者明确将其设计上升为伦理问题,态度是关切,选 D。A 与全文批评立场相反;B 无中生有,作者未讨论监管;C 张冠李戴,广告模式是 Para 4 辩护方的分析对象,作者并非支持。` }
+              explain: `解析:Para 5 第 3 句:its design becomes an ethical question, as unavoidable as the safety of a bridge,作者明确将其设计上升为伦理问题,态度是关切,选 D。A 与全文批评立场相反;B 无中生有,作者未讨论监管;C 张冠李戴,广告模式是 Para 4 辩护方的分析对象,作者并非支持。` }
           ]
         },
 
@@ -170,11 +170,11 @@ KB.register({
             { qid: 'en-r-2-q1', stem: `The word "Luddite" (Paragraph 1) originated with workers who`,
               options: [`composed prose and drafted contracts`, `destroyed the machinery replacing them`, `predicted mass unemployment in offices`, `refused to be retrained for new occupations`],
               answer: 'b',
-              explain: `解析:Para 1 第 1 口:framework knitters...smashed the machines that had begun to replace them, giving the English language the word "Luddite",即捣毁替代自己的机器的工人,选 B。A 张冠李戴,撰写文章起草合同是「当今的机器」;C 张冠李戴,预测失业的是「后来的预言家」;D 无中生有,原文未提拒绝再培训。` },
+              explain: `解析:Para 1 第 1 句:framework knitters...smashed the machines that had begun to replace them, giving the English language the word "Luddite",即捣毁替代自己的机器的工人,选 B。A 张冠李戴,撰写文章起草合同是「当今的机器」;C 张冠李戴,预测失业的是「后来的预言家」;D 无中生有,原文未提拒绝再培训。` },
             { qid: 'en-r-2-q2', stem: `The author mentions the accountant and bookkeeping (Paragraph 3) to illustrate that`,
               options: [`bookkeeping no longer requires professional training`, `cognitive work is better paid than routine work`, `entry-level tasks that once trained beginners are being automated`, `accountants are the profession most threatened by AI`],
               answer: 'c',
-              explain: `解析:Para 3 第 4 口指出职业阶梯 losing its lower rungs,第 5 句用会计做例证:过去从记账起步的会计如今已无记账可做,说明入门级任务正被自动化,选 C。A 偷换概念,问题在于入门台阶消失而非不需要训练;B 无中生有,此处未做薪酬比较;D 程度失当,会计只是例子,非「受威胁最大」。` },
+              explain: `解析:Para 3 第 4 句指出职业阶梯 losing its lower rungs,第 5 句用会计做例证:过去从记账起步的会计如今已无记账可做,说明入门级任务正被自动化,选 C。A 偷换概念,问题在于入门台阶消失而非不需要训练;B 无中生有,此处未做薪酬比较;D 程度失当,会计只是例子,非「受威胁最大」。` },
             { qid: 'en-r-2-q3', stem: `The phrase "losing its lower rungs" (Paragraph 3) suggests that`,
               options: [`professional ladders are becoming safer to climb`, `the starting positions for career advancement are disappearing`, `workers are refusing bottom-level occupations`, `wages have fallen across all skill levels`],
               answer: 'b',
@@ -182,11 +182,11 @@ KB.register({
             { qid: 'en-r-2-q4', stem: `According to Paragraph 4, employment growth since 2000 in advanced economies`,
               options: [`has occurred at both ends of the skill distribution`, `has fallen in total volume of work`, `has concentrated in routine middle occupations`, `has reduced bargaining power for high-paid professionals`],
               answer: 'a',
-              explain: `解析:Para 4 第 2 口:employment growth...has concentrated at the two ends of the skill distribution—high-paid professional work and low-paid personal services,选 A。B 与第 4 句 the total volume of work has held up 相反;C 与原文相反,收缩的恰是中间层;D 张冠李戴,原文说议价能力 attached to each slot 整体发生转移,未指高端议价能力下降。` },
+              explain: `解析:Para 4 第 2 句:employment growth...has concentrated at the two ends of the skill distribution—high-paid professional work and low-paid personal services,选 A。B 与第 4 句 the total volume of work has held up 相反;C 与原文相反,收缩的恰是中间层;D 张冠李戴,原文说议价能力 attached to each slot 整体发生转移,未指高端议价能力下降。` },
             { qid: 'en-r-2-q5', stem: `The author concludes that the real question raised by automation is`,
               options: [`how many jobs will survive the transition`, `whether algorithms can settle political disputes`, `why anxiety about technology is foolish`, `how the gains from machines will be distributed`],
               answer: 'd',
-              explain: `解析:Para 5 第 3 口:The urgent question is not how many jobs will survive, but who will own the machines...and how the gains...will be shared,真正问题是收益归属与分配,选 D。A 与 not 后的内容一致,恰是作者否定的问题;B 程度失当,作者说 no algorithm will answer it,意在强调这是政治问题,而非讨论算法能否调解纠纷;C 相反,作者明言 anxiety is not foolish。` }
+              explain: `解析:Para 5 第 3 句:The urgent question is not how many jobs will survive, but who will own the machines...and how the gains...will be shared,真正问题是收益归属与分配,选 D。A 与 not 后的内容一致,恰是作者否定的问题;B 程度失当,作者说 no algorithm will answer it,意在强调这是政治问题,而非讨论算法能否调解纠纷;C 相反,作者明言 anxiety is not foolish。` }
           ]
         },
 
@@ -260,11 +260,11 @@ KB.register({
             { qid: 'en-r-3-q1', stem: `In the puzzle experiments (Paragraph 2), children praised for being smart`,
               options: [`performed better on insoluble puzzles`, `worked harder to justify the praise`, `tended to choose easier tasks and give up sooner`, `refused to attempt any further puzzles`],
               answer: 'c',
-              explain: `解析:Para 2 第 3 口:Those told they were "smart" tended to pick the easy task,第 4 口:the "smart" children abandoned it sooner,即倾向于选易题且放弃更早,选 C。A 与第 4 句 enjoyed it less、sooner abandoned 相反;B 相反,坚持更久的是受表扬努力的孩子;D 程度失当,是「更早放弃」而非「拒绝尝试」。` },
+              explain: `解析:Para 2 第 3 句:Those told they were "smart" tended to pick the easy task,第 4 句:the "smart" children abandoned it sooner,即倾向于选易题且放弃更早,选 C。A 与第 4 句 enjoyed it less、sooner abandoned 相反;B 相反,坚持更久的是受表扬努力的孩子;D 程度失当,是「更早放弃」而非「拒绝尝试」。` },
             { qid: 'en-r-3-q2', stem: `It can be inferred from Paragraph 3 that students with a fixed mindset avoid asking for help because`,
               options: [`teachers respond poorly to their questions`, `they expect interventions to solve their problems`, `online sessions discourage interaction`, `admitting confusion threatens how they see themselves`],
               answer: 'd',
-              explain: `解析:Para 3 第 3 口:fixed-mindset students conceal confusion, because admitting it threatens their identity,隐瞒困惑是因为承认困惑威胁其自我认同,选 D。A 无中生有;B 张冠李戴,interventions 是外部研究手段而非学生的期待;C 无中生有,原文未说在线课程抑制互动。` },
+              explain: `解析:Para 3 第 3 句:fixed-mindset students conceal confusion, because admitting it threatens their identity,隐瞒困惑是因为承认困惑威胁其自我认同,选 D。A 无中生有;B 张冠李戴,interventions 是外部研究手段而非学生的期待;C 无中生有,原文未说在线课程抑制互动。` },
             { qid: 'en-r-3-q3', stem: `The word "tempered" (Paragraph 4) is closest in meaning to`,
               options: [`moderated`, `confirmed`, `dismissed`, `strengthened`],
               answer: 'a',
@@ -272,11 +272,11 @@ KB.register({
             { qid: 'en-r-3-q4', stem: `The author's attitude toward growth-mindset theory is one of`,
               options: [`outright skepticism about its scientific basis`, `enthusiasm for its classroom applications`, `qualified acceptance of its limited but real value`, `indifference to the replication debate`],
               answer: 'c',
-              explain: `解析:Para 5 第 1 口:neither dismissal nor devotion,第 3 口:more modest than the posters claim but still valuable,作者的态度是有保留的接受,选 C。A 程度失当,作者承认效应 real;B 程度失当,作者明确与海报式热情保持距离;D 相反,Para 4 整段讨论重复实验,作者并非漠然。` },
+              explain: `解析:Para 5 第 1 句:neither dismissal nor devotion,第 3 句:more modest than the posters claim but still valuable,作者的态度是有保留的接受,选 C。A 程度失当,作者承认效应 real;B 程度失当,作者明确与海报式热情保持距离;D 相反,Para 4 整段讨论重复实验,作者并非漠然。` },
             { qid: 'en-r-3-q5', stem: `Which of the following best summarizes the text?`,
               options: [`Praising effort rather than intelligence guarantees academic success`, `Large-scale replications have disproven growth-mindset theory`, `Teachers' daily language matters more than students' beliefs`, `Mindset is one contributing factor among several, with modest effects`],
               answer: 'd',
-              explain: `解析:Para 5 第 2 口:Mindset is one strand in a braid that includes prior attainment, home circumstances, and instruction quality,且效应 real but small,即「多因素之一、效应有限」,选 D。A 程度失当,guarantees 过于绝对,原文只说 can bend the explanation;B 程度失当,重复实验未推翻理论,只是效应小;C 无中生有,原文未做此比较。` }
+              explain: `解析:Para 5 第 2 句:Mindset is one strand in a braid that includes prior attainment, home circumstances, and instruction quality,且效应 real but small,即「多因素之一、效应有限」,选 D。A 程度失当,guarantees 过于绝对,原文只说 can bend the explanation;B 程度失当,重复实验未推翻理论,只是效应小;C 无中生有,原文未做此比较。` }
           ]
         },
 
@@ -350,11 +350,11 @@ KB.register({
             { qid: 'en-r-4-q1', stem: `According to Paragraph 3, algorithmic management on platforms is characterized by`,
               options: [`negotiated changes to pay formulas`, `discipline exercised through ratings and metrics`, `managers who handle workers' appeals`, `stable income guaranteed across demand cycles`],
               answer: 'b',
-              explain: `解析:Para 3 第 3 口:deactivate workers whose ratings slip...discipline is exercised by numbers,即以评分与数字实施纪律,选 B。A 与第 4 口 which workers discover rather than negotiate 相反;C 与 appeal is difficult 相反;D 与 Income fluctuates with demand 相反。` },
+              explain: `解析:Para 3 第 3 句:deactivate workers whose ratings slip...discipline is exercised by numbers,即以评分与数字实施纪律,选 B。A 与第 4 句 which workers discover rather than negotiate 相反;C 与 appeal is difficult 相反;D 与 Income fluctuates with demand 相反。` },
             { qid: 'en-r-4-q2', stem: `Surveys cited in Paragraph 2 indicate that many platform workers`,
               options: [`value flexibility more than higher wages`, `prefer conventional employment when available`, `are excluded from ordinary family life`, `consider gig work a temporary stage`],
               answer: 'a',
-              explain: `解析:Para 2 第 3 口:a majority of platform workers value flexibility above higher pay,多数人把灵活性置于更高报酬之上,选 A。B 相反,许多人 report satisfaction with work they could not otherwise have combined with other obligations;C 相反,正是能兼顾家庭才满意;D 无中生有,原文未涉「过渡性」。` },
+              explain: `解析:Para 2 第 3 句:a majority of platform workers value flexibility above higher pay,多数人把灵活性置于更高报酬之上,选 A。B 相反,许多人 report satisfaction with work they could not otherwise have combined with other obligations;C 相反,正是能兼顾家庭才满意;D 无中生有,原文未涉「过渡性」。` },
             { qid: 'en-r-4-q3', stem: `The word "unilateral" (Paragraph 3) suggests that changes to the pay formula are made`,
               options: [`in consultation with workers`, `at random intervals`, `with regulatory approval`, `by the platforms alone`],
               answer: 'd',
@@ -362,11 +362,11 @@ KB.register({
             { qid: 'en-r-4-q4', stem: `The author implies that the popularity of gig work`,
               options: [`reflects a deliberate trade of security for autonomy`, `results from workers' ignorance of their rights`, `will fade once regulations take effect`, `proves contracting is superior to employment`],
               answer: 'a',
-              explain: `解析:Para 5 第 1-2 口:cannot be dismissed as false consciousness. It reflects a sober trade: certainty surrendered for autonomy,零工的流行反映的是以确定性换自主权的清醒权衡,选 A。B 与 not false consciousness 相反;C 无中生有;D 程度失当,作者只承认 trade 合理性,未判孰优。` },
+              explain: `解析:Para 5 第 1-2 句:cannot be dismissed as false consciousness. It reflects a sober trade: certainty surrendered for autonomy,零工的流行反映的是以确定性换自主权的清醒权衡,选 A。B 与 not false consciousness 相反;C 无中生有;D 程度失当,作者只承认 trade 合理性,未判孰优。` },
             { qid: 'en-r-4-q5', stem: `The author suggests that the proper policy response to gig work is to`,
               options: [`abolish platform work in favor of standard employment`, `extend existing office regulations to remote work`, `leave the terms of gig work to market forces`, `attach protections and transparency to gig work`],
               answer: 'd',
-              explain: `解析:Para 5 第 3 口:The task for policy is not to abolish the trade but to reprice it—to attach portable benefits, earnings floors, and transparent algorithms to work...,即附着保障与透明度而非取缔,选 D。A 与 not to abolish 相反;B 偷换概念,议题是平台零工而非远程办公;C 相反,作者主张政策介入 reprice。` }
+              explain: `解析:Para 5 第 3 句:The task for policy is not to abolish the trade but to reprice it—to attach portable benefits, earnings floors, and transparent algorithms to work...,即附着保障与透明度而非取缔,选 D。A 与 not to abolish 相反;B 偷换概念,议题是平台零工而非远程办公;C 相反,作者主张政策介入 reprice。` }
           ]
         },
 
@@ -444,19 +444,19 @@ KB.register({
             { qid: 'en-r-5-q2', stem: `Many museums keep control over images of very old objects (Paragraph 3) because`,
               options: [`the images are too fragile to distribute`, `copyright law forbids any reproduction`, `licensing such images generates income`, `online visitors prefer low-resolution scans`],
               answer: 'c',
-              explain: `解析:Para 3 第 4 口:museums control images...precisely because those images are a source of revenue,控制图像正是因为它们是收入来源,选 C。A 偷换概念,脆弱的是实物而非图像;B 张冠李戴,whose creators have been dead for centuries 说明版权早已过期,博物馆仍控制是出于收入动机而非法律强制;D 无中生有。` },
+              explain: `解析:Para 3 第 4 句:museums control images...precisely because those images are a source of revenue,控制图像正是因为它们是收入来源,选 C。A 偷换概念,脆弱的是实物而非图像;B 张冠李戴,whose creators have been dead for centuries 说明版权早已过期,博物馆仍控制是出于收入动机而非法律强制;D 无中生有。` },
             { qid: 'en-r-5-q3', stem: `Digitization has strengthened restitution claims (Paragraph 4) because`,
               options: [`digital copies are now indistinguishable from originals`, `claimant countries lack the technology to display images`, `museums have promised to return photographed objects`, `widespread online viewing weakens the argument for physical retention`],
               answer: 'd',
-              explain: `解析:Para 4 第 2 口:an object can now be seen everywhere, so why must it remain in London or Paris?,物品随处可看,「必须留在伦敦或巴黎」的论证被削弱,选 D。A 相反,Para 3 明确 a reproduction...is not an encounter,复制品不能替代原作;B 无中生有;C 无中生有,博物馆并未作此承诺。` },
+              explain: `解析:Para 4 第 2 句:an object can now be seen everywhere, so why must it remain in London or Paris?,物品随处可看,「必须留在伦敦或巴黎」的论证被削弱,选 D。A 相反,Para 3 明确 a reproduction...is not an encounter,复制品不能替代原作;B 无中生有;C 无中生有,博物馆并未作此承诺。` },
             { qid: 'en-r-5-q4', stem: `The word "successive" (Paragraph 5) implies that digital and physical museums`,
               options: [`compete for the same audience`, `will eventually merge into one institution`, `form connected stages in a single experience`, `serve entirely separate purposes`],
               answer: 'c',
-              explain: `解析:Para 5 第 3 口:successive rooms of the same building—each doing what the other cannot,同一建筑中相连展厅、各展所长,successive 取「相衔接、相继承」义,选 C。A 相反,原文说 not as rivals;B 程度失当,是分工而非合并;D 相反,同属 one building 而非彼此割裂。` },
+              explain: `解析:Para 5 第 3 句:successive rooms of the same building—each doing what the other cannot,同一建筑中相连展厅、各展所长,successive 取「相衔接、相继承」义,选 C。A 相反,原文说 not as rivals;B 程度失当,是分工而非合并;D 相反,同属 one building 而非彼此割裂。` },
             { qid: 'en-r-5-q5', stem: `Toward the future of museums, the author's attitude is`,
               options: [`optimistic that the two forms can complement each other`, `pessimistic about the survival of physical galleries`, `critical of institutions that invest in digitization`, `uncertain whether museums will retain their audiences`],
               answer: 'a',
-              explain: `解析:Para 5 第 3 口:The institutions that flourish will be those that treat the two not as rivals but as successive rooms,作者认为善用两种形态者将兴盛,态度乐观且指向互补,选 A。B 相反,实体馆 preserves the irreplaceable experience of presence,地位不可替代;C 相反,作者肯定数字化是最廉价的 outreach;D 无中生有。` }
+              explain: `解析:Para 5 第 3 句:The institutions that flourish will be those that treat the two not as rivals but as successive rooms,作者认为善用两种形态者将兴盛,态度乐观且指向互补,选 A。B 相反,实体馆 preserves the irreplaceable experience of presence,地位不可替代;C 相反,作者肯定数字化是最廉价的 outreach;D 无中生有。` }
           ]
         },
 

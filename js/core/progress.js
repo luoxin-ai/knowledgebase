@@ -29,15 +29,43 @@ window.KB_PROGRESS = (function(){
   /* ---- 作答记录 ---- */
   function getAnswer(qid){ return read(KEY_ANS+qid, null); }
   function recordAnswer(qid, pick, correct){
-    write(KEY_ANS+qid, { pick, correct, ts: Date.now() });
+    /* 遗忘曲线调度：错题答对升级 stage（1→3→7→15 天），15 天档答对即移出错题本（掌握）；
+       答错重置 stage=1。老数据无 stage 的错题首次答对视为 stage 1。 */
+    const prev = getAnswer(qid);
+    let stage = 1;
+    if(prev && prev.stage){
+      stage = correct ? Math.min(prev.stage + 1, REVIEW_INTERVALS.length) : 1;
+    }
+    write(KEY_ANS+qid, { pick, correct, ts: Date.now(), stage });
     let wrong = read(KEY_WRONG, []);
     if(correct){
       const i = wrong.indexOf(qid);
-      if(i >= 0){ wrong.splice(i,1); write(KEY_WRONG, wrong); }
+      /* 连续答对到最高档才移出错题本 */
+      if(i >= 0 && stage >= REVIEW_INTERVALS.length){ wrong.splice(i,1); write(KEY_WRONG, wrong); }
     } else if(wrong.indexOf(qid) < 0){
       wrong.push(qid); write(KEY_WRONG, wrong);
     }
   }
+
+  /* ---- 遗忘曲线复习调度（简化 SM2：1/3/7/15 天间隔重推） ---- */
+  const REVIEW_INTERVALS = [1, 3, 7, 15];
+  function daysToNextMs(a){
+    const days = a && a.stage ? (REVIEW_INTERVALS[a.stage-1] || 15) : 1;
+    return days * 86400000;
+  }
+  /* 某题当前是否到期应复习（仅针对错题本中的题） */
+  function isDue(qid){
+    const wrong = read(KEY_WRONG, []);
+    if(wrong.indexOf(qid) < 0) return false;
+    const a = getAnswer(qid);
+    if(!a || !a.ts) return true;   /* 老数据无时间戳，视为到期 */
+    return Date.now() >= a.ts + daysToNextMs(a);
+  }
+  /* 全部到期错题（供"今日待复习"入口） */
+  function dueList(){
+    return read(KEY_WRONG, []).filter(isDue).map(lookup).filter(Boolean);
+  }
+  function dueCount(){ return read(KEY_WRONG, []).filter(isDue).length; }
 
   /* ---- 题目索引：qid → { file, chapter, block, question, qIndex } ---- */
   let qIndex = null;
@@ -113,5 +141,6 @@ window.KB_PROGRESS = (function(){
   }
 
   return { recordAnswer, getAnswer, lookup, chapterStats, wrongQids, wrongList,
-           markBlock, blockState, masters, resetAll };
+           markBlock, blockState, masters, resetAll,
+           isDue, dueList, dueCount, REVIEW_INTERVALS };
 })();

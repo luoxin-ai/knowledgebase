@@ -141,6 +141,31 @@
     const list = order.map((src,shown)=>{
       const q = qs[src];
       const multi = !!q.multi;
+      const fill = q.type === 'fill';
+      const tf = q.type === 'tf';
+      if(fill){
+        /* 填空题：answer 为可接受答案数组（任意一个命中即算对），大小写不敏感、去空格 */
+        quizAnswerMap[b.id+'-'+shown] = Array.isArray(q.answer) ? q.answer.map(s=>String(s)) : [String(q.answer)];
+        return '<div class="qz-item fill" data-q="'+shown+'">'+
+          '<div class="qz-stem"><span class="qz-multi-tag">填空</span>'+(shown+1)+'. '+inlineMarkup(q.stem)+'</div>'+
+          '<div class="qz-fill-row"><input class="qz-fill-input" data-q="'+shown+'" type="text" autocomplete="off" placeholder="输入答案后回车">'+
+          '<button class="qz-submit-fill" data-q="'+shown+'">提交</button></div>'+
+          '<div class="qz-explain">'+inlineMarkup(q.explain||'')+'</div>'+
+          '</div>';
+      }
+      if(tf){
+        /* 判断题：answer 't'/'f' */
+        quizAnswerMap[b.id+'-'+shown] = String(q.answer).toLowerCase()==='t';
+        const opts = [['t','对','✓'],['f','错','✕']].map(p=>
+          '<button class="qz-opt tf" data-q="'+shown+'" data-o="'+p[0]+'">'+
+          '<span class="qz-letter">'+p[2]+'</span><span class="qz-text">'+p[1]+'</span></button>'
+        ).join('');
+        return '<div class="qz-item tf" data-q="'+shown+'">'+
+          '<div class="qz-stem"><span class="qz-multi-tag">判断</span>'+(shown+1)+'. '+inlineMarkup(q.stem)+'</div>'+
+          '<div class="qz-opts">'+opts+'</div>'+
+          '<div class="qz-explain">'+inlineMarkup(q.explain||'')+'</div>'+
+          '</div>';
+      }
       let optIdx = q.options.map((_,i)=>i);
       if(test) optIdx = shuffle(optIdx);
       if(multi){
@@ -191,6 +216,88 @@
         return;
       }
       const opt = e.target.closest('.qz-opt');
+      /* ---- 填空题：提交按钮判分（关键词匹配） ---- */
+      const fillBtn = e.target.closest('.qz-submit-fill');
+      if(fillBtn){
+        const item = fillBtn.closest('.qz-item');
+        const block = fillBtn.closest('.block');
+        if(!item || !block || item.classList.contains('answered')) return;
+        const bId = block.id;
+        const shown = parseInt(item.dataset.q,10);
+        const key = bId+'-'+shown;
+        const accepts = quizAnswerMap[key];
+        if(!accepts) return;
+        const input = item.querySelector('.qz-fill-input');
+        const val = (input.value||'').trim();
+        if(!val) return;
+        /* 归一化：去空格、转小写、全角转半角（含 −→-、′→'） */
+        const norm = s => String(s).trim().toLowerCase()
+          .replace(/\s+/g,'')
+          .replace(/−/g,'-').replace(/–/g,'-').replace(/—/g,'-')
+          .replace(/′/g,"'").replace(/’/g,"'")
+          .replace(/[（）]/g, m => m==='（'?'(':')')
+          .replace(/[：]/g,':').replace(/[，]/g,',');
+        const correct = accepts.some(a=>norm(a)===norm(val));
+        item.classList.add('answered');
+        item.classList.add(correct ? 'correct' : 'wrong');
+        if(!correct){
+          /* 显示标准答案 */
+          const ref = document.createElement('div');
+          ref.className = 'qz-fill-answer';
+          ref.textContent = '标准答案：' + accepts.join(' 或 ');
+          item.insertBefore(ref, item.querySelector('.qz-explain'));
+        }
+        input.disabled = true;
+        fillBtn.remove();
+        item.querySelector('.qz-explain').classList.add('show');
+        if(window.KB_PROGRESS){
+          const entry = KB.blockById(bId);
+          const q = entry && entry.questions && (entry.questions[shownQIndex(bId, shown)] || null);
+          if(q && q.qid){
+            KB_PROGRESS.recordAnswer(q.qid, val, correct);
+            if(typeof KB_UI !== 'undefined' && KB_UI.renderTree && !KB.state.refreshLock){
+              KB.state.refreshLock = true;
+              requestAnimationFrame(()=>{ KB_UI.renderTree(); KB.state.refreshLock = false; });
+            }
+          }
+        }
+        updateQuizScore(block);
+        return;
+      }
+      /* ---- 判断题：对/错按钮判分 ---- */
+      if(opt && opt.classList.contains('tf')){
+        const item = opt.closest('.qz-item');
+        const block = opt.closest('.block');
+        if(!item || !block || item.classList.contains('answered')) return;
+        const bId = block.id;
+        const shown = parseInt(item.dataset.q,10);
+        const key = bId+'-'+shown;
+        const ansBool = quizAnswerMap[key];
+        if(typeof ansBool !== 'boolean') return;
+        const picked = opt.dataset.o === 't';
+        const correct = picked === ansBool;
+        item.classList.add('answered');
+        item.classList.add(correct ? 'correct' : 'wrong');
+        item.querySelectorAll('.qz-opt.tf').forEach(el=>{
+          if(el.dataset.o === (ansBool?'t':'f')) el.classList.add('is-answer');
+          if(el===opt && !correct) el.classList.add('is-picked');
+          el.disabled = true;
+        });
+        item.querySelector('.qz-explain').classList.add('show');
+        if(window.KB_PROGRESS){
+          const entry = KB.blockById(bId);
+          const q = entry && entry.questions && (entry.questions[shownQIndex(bId, shown)] || null);
+          if(q && q.qid){
+            KB_PROGRESS.recordAnswer(q.qid, picked?'对':'错', correct);
+            if(typeof KB_UI !== 'undefined' && KB_UI.renderTree && !KB.state.refreshLock){
+              KB.state.refreshLock = true;
+              requestAnimationFrame(()=>{ KB_UI.renderTree(); KB.state.refreshLock = false; });
+            }
+          }
+        }
+        updateQuizScore(block);
+        return;
+      }
       /* ---- 多选题：提交按钮判分 ---- */
       const subBtn = e.target.closest('.qz-submit-multi');
       if(subBtn){
@@ -281,6 +388,15 @@
         }
       }
       updateQuizScore(block);
+    });
+    /* 填空题：输入框回车提交（委托 keydown） */
+    content.addEventListener('keydown', e=>{
+      if(e.key !== 'Enter') return;
+      const input = e.target.closest('.qz-fill-input');
+      if(!input) return;
+      e.preventDefault();
+      const btn = input.closest('.qz-item') && input.closest('.qz-item').querySelector('.qz-submit-fill');
+      if(btn) btn.click();
     });
   }
   /* 测验模式下 shown 序号 → 原始题索引（复习模式恒等） */
@@ -445,6 +561,9 @@
   function renderWrongBook(){
     const el = document.getElementById('content');
     if(!el) return;
+    /* 销毁上一章遗留动画实例，避免 innerHTML 替换后 resize 命中已脱离 DOM 的实例 */
+    if(typeof KB_ANIM !== 'undefined' && KB_ANIM.disposeAll) KB_ANIM.disposeAll();
+    KB_PENDING_ANIMS.length = 0;
     KB.setActiveFile('wrongbook');
     KB.setActiveChapter(null);
     const list = (window.KB_PROGRESS ? KB_PROGRESS.wrongList() : []);
@@ -455,28 +574,34 @@
         '<p class="empty-text">还没有错题记录。</p>'+
         '<p class="empty-sub">做题答错的题会自动收进来，重做答对后自动移出。</p></section>';
     } else {
-      /* 按文件分组渲染 quiz 块（借 renderQuiz 的机制，临时块 id 用 wrongbook） */
+      /* 按「科目 folder → 文件」两级分组渲染 quiz 块 */
       const groups = {};
       list.forEach(it=>{
-        const k = it.file.id;
-        (groups[k] = groups[k] || []).push(it);
+        const fo = KB.getFolder(it.file.folder);
+        const sid = fo ? fo.id : 'other';
+        const key = sid+'/'+it.file.id;
+        (groups[key] = groups[key] || { subject: fo?fo.title:'其他', file: it.file, items: [] }).items.push(it);
       });
-      const secs = Object.keys(groups).map(fid=>{
-        const f = KB.getFile(fid);
-        const qs = groups[fid].map(it=>it.question);
-        const tmpBlock = { type:'quiz', id:'wrongbook-'+fid, title:(f?f.title:fid)+' · 错题',
-          summary:'共 '+qs.length+' 道错题，答对自动移出错题本。',
-          questions:qs };
-        quizOrderMap[tmpBlock.id] = qs.map((_,i)=>i);
-        qs.forEach((q,shown)=>{
-          quizAnswerMap[tmpBlock.id+'-'+shown] = q.options.map((_,i)=>i).indexOf(String(q.answer).toLowerCase().charCodeAt(0)-97);
-        });
-        return '<article class="block t-quiz" id="'+tmpBlock.id+'">'+renderQuiz(tmpBlock,'review')+'</article>';
-      }).join('');
+      /* 按科目插入分组标题(直接在循环里构建,不用 split) */
+      let html = '';
+      let last = null;
+      Object.keys(groups).forEach(k=>{
+        const g = groups[k];
+        if(g.subject!==last){
+          last = g.subject;
+          html += '<h2 class="group-sub-title">'+esc(g.subject)+'</h2>';
+        }
+        const qs2 = g.items.map(it=>it.question);
+        const tb = { type:'quiz', id:'wrongbook-'+g.file.id, title:g.file.title+' · 错题',
+          summary:'共 '+qs2.length+' 道错题，答对自动移出错题本。',
+          questions:qs2 };
+        virtualBlocks[tb.id] = tb;
+        html += '<article class="block t-quiz" id="'+tb.id+'">'+renderQuiz(tb,'review')+'</article>';
+      });
       body = '<section class="chapter"><div class="chapter-head">'+
         '<h1 class="ch-title">错题重做</h1>'+
-        '<p class="ch-summary">共 '+list.length+' 道错题。答对后自动移出错题本；想清空全部进度请清浏览器 localStorage 的 kb: 前缀键。</p>'+
-        '</div><div class="blocks">'+secs+'</div></section>';
+        '<p class="ch-summary">共 '+list.length+' 道错题，按科目分组。答对后自动移出错题本；想清空全部进度请清浏览器 localStorage 的 kb: 前缀键。</p>'+
+        '</div><div class="blocks">'+html+'</div></section>';
     }
     el.innerHTML = body;
     renderToc({ title:'错题本', chapters:[] }, null);
@@ -489,6 +614,148 @@
     }
   }
 
+  /* 虚拟块表：错题本/今日待复习页的临时 quiz 块（id 不在注册表），
+     供 initQuiz 判分回调经 KB.blockById 找回 questions 数据 */
+  const virtualBlocks = {};
+
+  /* 今日待复习页面：遗忘曲线调度到期（1/3/7/15 天）的错题渲染成一张卷
+   * 答对升级间隔档；连续答对到 15 天档即移出错题本 */
+  function renderDueToday(){
+    const el = document.getElementById('content');
+    if(!el) return;
+    /* 销毁上一章遗留动画实例（同 renderWrongBook） */
+    if(typeof KB_ANIM !== 'undefined' && KB_ANIM.disposeAll) KB_ANIM.disposeAll();
+    KB_PENDING_ANIMS.length = 0;
+    KB.setActiveFile('duetoday');
+    KB.setActiveChapter(null);
+    const list = (window.KB_PROGRESS ? KB_PROGRESS.dueList() : []);
+    let body = '';
+    if(!list.length){
+      body = '<section class="chapter empty-state">'+
+        '<h2 class="empty-title">今日待复习</h2>'+
+        '<p class="empty-text">今天没有到期的错题。</p>'+
+        '<p class="empty-sub">错题按 1 / 3 / 7 / 15 天间隔安排复习，到期会自动出现在这里。</p></section>';
+    } else {
+      const groups = {};
+      list.forEach(it=>{
+        const k = it.file.id;
+        (groups[k] = groups[k] || []).push(it);
+      });
+      const secs = Object.keys(groups).map(fid=>{
+        const f = KB.getFile(fid);
+        const qs = groups[fid].map(it=>it.question);
+        const tmpBlock = { type:'quiz', id:'duetoday-'+fid, title:(f?f.title:fid)+' · 待复习',
+          summary:'共 '+qs.length+' 道到期错题。',
+          questions:qs };
+        virtualBlocks[tmpBlock.id] = tmpBlock;
+        return '<article class="block t-quiz" id="'+tmpBlock.id+'">'+renderQuiz(tmpBlock,'review')+'</article>';
+      }).join('');
+      body = '<section class="chapter"><div class="chapter-head">'+
+        '<h1 class="ch-title">今日待复习</h1>'+
+        '<p class="ch-summary">共 '+list.length+' 道错题到期。间隔重复节奏：答错重置为 1 天档；答对升级到 3 / 7 / 15 天档；15 天档答对即移出错题本。</p>'+
+        '</div><div class="blocks">'+secs+'</div></section>';
+    }
+    el.innerHTML = body;
+    renderToc({ title:'今日待复习', chapters:[] }, null);
+    window.scrollTo({top:0, left:0, behavior:'auto'});
+    KB_UI.renderTree();
+  }
+
+  /* blockById 兜底：真实注册表找不到时查虚拟块表（给判分回调用）。
+     用 defineProperty 只挂一次，避免覆盖 registry 原实现 */
+  if(!KB.__virtualBlockHook){
+    const orig = KB.blockById.bind(KB);
+    KB.blockById = function(id){
+      return orig(id) || virtualBlocks[id] || null;
+    };
+    KB.__virtualBlockHook = true;
+  }
+
+  /* ============ 刷题模式：按科目分组的章节练习入口 ============ */
+  /* fileId → (科目 folder 标题 → [带 quiz 的章节]) 的聚合 */
+  function quizChaptersOf(fileId){
+    const f = KB.getFile(fileId);
+    if(!f) return [];
+    return (f.chapters||[]).filter(ch=>{
+      const qc = KB.quizChapterFor(fileId, ch.num);
+      return qc && (qc.blocks||[]).some(b=>b.type==='quiz');
+    }).map(ch=>{
+      const st = window.KB_PROGRESS ? KB_PROGRESS.chapterStats(fileId, ch.num) : null;
+      const qc = KB.quizChapterFor(fileId, ch.num);
+      const cnt = (qc.blocks||[]).reduce((s,b)=>s+((b.questions&&b.questions.length)||0),0);
+      return { ch, cnt, st };
+    });
+  }
+  /* 科目(=folder)维度的聚合：subject 标题 + 该科目下所有教材章节 */
+  function subjectsWithQuiz(){
+    const out = [];
+    KB.listVisibleFiles().forEach(f=>{
+      const chs = quizChaptersOf(f.id);
+      if(!chs.length) return;
+      const fo = KB.getFolder(f.folder);
+      const subject = fo ? fo.title : '其他';
+      let g = out.find(x=>x.subject===subject && x.folderId===(fo&&fo.id));
+      if(!g){ g = { subject, folderId: fo&&fo.id, files: [] }; out.push(g); }
+      g.files.push({ file:f, chs });
+    });
+    return out;
+  }
+
+  function renderDrill(){
+    const el = document.getElementById('content');
+    if(!el) return;
+    if(typeof KB_ANIM !== 'undefined' && KB_ANIM.disposeAll) KB_ANIM.disposeAll();
+    KB_PENDING_ANIMS.length = 0;
+    KB.setActiveFile('drill');
+    KB.setActiveChapter(null);
+    const groups = subjectsWithQuiz();
+    if(!groups.length){
+      el.innerHTML = '<section class="chapter empty-state">'+
+        '<h2 class="empty-title">刷题</h2><p class="empty-text">暂无习题。</p></section>';
+    } else {
+      const secs = groups.map(g=>{
+        const cards = g.files.map(({file,chs})=>
+          '<div class="drill-file">'+esc(file.title)+'</div>'+
+          '<div class="drill-grid">'+
+          chs.map(({ch,cnt,st})=>{
+            const pct = st && st.done>0 ? Math.round(st.right/st.done*100) : null;
+            return '<a class="drill-card" href="#'+file.id+'/'+ch.id+'" data-drill-file="'+file.id+'" data-drill-ch="'+ch.id+'">'+
+              '<span class="dc-num">第 '+ch.num+' 章</span>'+
+              '<span class="dc-title">'+esc(ch.title)+'</span>'+
+              '<span class="dc-meta">'+cnt+' 题'+
+              (pct!==null?'<span class="dc-stat'+(st.done>=cnt?' done':'')+'">已练 '+st.done+'/'+cnt+' · '+pct+'%</span>':'')+
+              '</span></a>';
+          }).join('')+'</div>'
+        ).join('');
+        return '<section class="drill-subject"><h2 class="drill-sub-title">'+esc(g.subject)+'</h2>'+cards+'</section>';
+      }).join('');
+      el.innerHTML = '<section class="chapter"><div class="chapter-head">'+
+        '<h1 class="ch-title">刷题</h1>'+
+        '<p class="ch-summary">选择章节进入做题模式：自动跳到章末练习并直接展开。带进度徽标的章节可续练。</p>'+
+        '</div>'+secs+'</section>';
+    }
+    renderToc({ title:'刷题', chapters:[] }, null);
+    window.scrollTo({top:0, left:0, behavior:'auto'});
+    KB_UI.renderTree();
+  }
+  /* 刷题卡片点击：跳章 + 自动展开课后练习并滚动到位 */
+  function drillGo(fileId, chId){
+    const f = KB.getFile(fileId);
+    if(!f) return;
+    KB.render.renderChapter(f, chId);
+    KB_UI.renderTree();
+    /* 等渲染完成后展开 details 并滚到练习区 */
+    requestAnimationFrame(()=>{
+      const sec = document.querySelector('.quiz-section');
+      if(sec){
+        sec.open = true;
+        setTimeout(()=>sec.scrollIntoView({behavior:'smooth', block:'start'}), 60);
+      }
+      if(location.hash !== '#'+fileId+'/'+chId) history.replaceState(null,'','#'+fileId+'/'+chId);
+    });
+  }
+
   window.KB = window.KB || {};
-  KB.render = { renderChapter, flashBlock, initQuiz, renderWrongBook };
+  KB.render = { renderChapter, flashBlock, initQuiz, renderWrongBook, renderDueToday,
+                renderDrill, drillGo };
 })();
