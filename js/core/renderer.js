@@ -26,9 +26,24 @@
     return '<ul class="points">'+points.map(p=>'<li>'+inlineMarkup(p)+'</li>').join('')+'</ul>';
   }
   function blockHead(b){
-    /* 类型色点（纯 CSS 上色，无图标、无标签） */
+    /* 类型色点（纯 CSS 上色，无图标、无标签）+ 可选考试权重标签 */
     return '<div class="block-head"><span class="block-dot"></span>'+
-      '<div class="block-title">'+esc(b.title)+'</div></div>';
+      '<div class="block-title">'+esc(b.title)+'</div>'+examBadge(b)+'</div>';
+  }
+
+  /* ---- 考试权重标注：exam: { forms, score, freq } ----
+   * forms: 出题形式数组（选择 / 填空 / 简答 / 大题 / 综合）
+   * score: 分值描述（如 "约 2-4 分"、"常以 10+ 分大题出现"）
+   * freq : 频率（'高频' | '中频' | '偶考'）
+   * 三项均可省略，缺哪项不渲染哪项 */
+  function examBadge(b){
+    const e = b.exam;
+    if(!e || (!e.forms && !e.score && !e.freq)) return '';
+    const parts = [];
+    if(e.freq) parts.push('<span class="eb-freq f-'+({高频:'hi',中频:'mid',偶考:'lo'}[e.freq]||'mid')+'">'+esc(e.freq)+'</span>');
+    if(e.forms) parts.push('<span class="eb-item">'+esc((e.forms||[]).join(' · '))+'</span>');
+    if(e.score) parts.push('<span class="eb-item eb-score">'+esc(e.score)+'</span>');
+    return '<div class="exam-badge">'+parts.join('')+'</div>';
   }
 
   /* ---- 各类型渲染器 ---- */
@@ -102,9 +117,105 @@
       items+(b.note?'<div class="table-note">'+inlineMarkup(b.note)+'</div>':'')+'</div>';
   }
 
+  /* ===================== 习题块 ===================== */
+  /* 作答查表：block id + 题序 → 正确选项索引（DOM 不放明文答案，F12 不可见） */
+  const quizAnswerMap = {};
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function renderQuiz(b, mode){
+    const qs = b.questions||[];
+    const test = mode === 'test';   /* 测验模式：题序 + 选项乱序 */
+    let order = qs.map((_,i)=>i);
+    if(test) order = shuffle(order);
+    const list = order.map((src,shown)=>{
+      const q = qs[src];
+      let optIdx = q.options.map((_,i)=>i);
+      if(test) optIdx = shuffle(optIdx);
+      quizAnswerMap[b.id+'-'+shown] = optIdx.indexOf(String(q.answer).toLowerCase().charCodeAt(0)-97);
+      const opts = optIdx.map((oi,pos)=>
+        '<button class="qz-opt" data-q="'+shown+'" data-o="'+oi+'">'+
+        '<span class="qz-letter">'+String.fromCharCode(65+pos)+'</span>'+
+        '<span class="qz-text">'+inlineMarkup(q.options[oi])+'</span></button>'
+      ).join('');
+      return '<div class="qz-item" data-q="'+shown+'">'+
+        '<div class="qz-stem">'+(shown+1)+'. '+inlineMarkup(q.stem)+'</div>'+
+        '<div class="qz-opts">'+opts+'</div>'+
+        '<div class="qz-explain">'+inlineMarkup(q.explain||'')+'</div>'+
+        '</div>';
+    }).join('');
+    return blockHead(b)+'<div class="block-body">'+(b.summary?'<p>'+inlineMarkup(b.summary)+'</p>':'')+
+      '<div class="qz-mode-bar" data-quiz="'+b.id+'">'+
+      '<span class="qz-mode-note">'+(test?'测验模式：题目与选项已打乱':'复习模式：按目录顺序')+'</span>'+
+      '<button class="qz-mode-btn" data-mode="'+(test?'review':'test')+'">'+(test?'切换到复习模式':'切换到测验模式')+'</button>'+
+      '</div>'+
+      '<div class="qz-list" id="qlist-'+b.id+'">'+list+'</div>'+
+      '<div class="qz-score" id="score-'+b.id+'"></div></div>';
+  }
+  /* 习题判分：内容区事件委托（app.js initQuiz 调用） */
+  function initQuiz(){
+    const content = document.getElementById('content');
+    if(!content) return;
+    content.addEventListener('click', e=>{
+      /* 模式切换按钮：重新渲染该 quiz 块 */
+      const mbtn = e.target.closest('.qz-mode-btn');
+      if(mbtn){
+        const bar = mbtn.closest('.qz-mode-bar');
+        const blockEl = mbtn.closest('.block');
+        const bId = bar && bar.dataset.quiz;
+        const entry = bId ? KB.blockById(bId) : null;
+        if(entry && blockEl){
+          const tmp = document.createElement('div');
+          tmp.innerHTML = renderQuiz(entry, mbtn.dataset.mode);
+          const newBody = tmp.querySelector('.block-body');
+          if(newBody) blockEl.querySelector('.block-body').replaceWith(newBody);
+        }
+        return;
+      }
+      const opt = e.target.closest('.qz-opt');
+      if(!opt) return;
+      const item = opt.closest('.qz-item');
+      const block = opt.closest('.block');
+      if(!item || !block || item.classList.contains('answered')) return;
+      const bId = block.id;
+      const key = bId+'-'+item.dataset.q;
+      const ansIdx = quizAnswerMap[key];
+      if(ansIdx === undefined) return;
+      const picked = parseInt(opt.dataset.o,10);
+      item.classList.add('answered');
+      item.classList.add(picked===ansIdx ? 'correct' : 'wrong');
+      item.querySelectorAll('.qz-opt').forEach(el=>{
+        if(parseInt(el.dataset.o,10)===ansIdx) el.classList.add('is-answer');
+        if(el===opt && picked!==ansIdx) el.classList.add('is-picked');
+        el.disabled = true;
+      });
+      item.querySelector('.qz-explain').classList.add('show');
+      updateQuizScore(block);
+    });
+  }
+  function updateQuizScore(block){
+    if(!block) return;
+    const items = block.querySelectorAll('.qz-item');
+    const done = block.querySelectorAll('.qz-item.answered').length;
+    const right = block.querySelectorAll('.qz-item.correct').length;
+    const el = block.querySelector('[id^="score-"]');
+    if(!el) return;
+    if(done===0){ el.textContent=''; return; }
+    el.textContent = '已做 '+done+' / '+items.length+' 题 · 答对 '+right+' 题 · 正确率 '+(right/done*100).toFixed(0)+'%';
+    el.classList.add('show');
+  }
+
   const BlockRenderers = {
     concept: renderConcept, keypoint: renderKeypoint, formula: renderFormula,
-    code: renderCode, table: renderTable, animation: renderAnimation, error: renderError
+    code: renderCode, table: renderTable, animation: renderAnimation, error: renderError,
+    quiz: renderQuiz
   };
 
   /* ---- 右侧文章目录（md 风格竖排 TOC） ---- */
@@ -159,6 +270,25 @@
     const idx = file.chapters.indexOf(ch);
     const prev = idx>0 ? file.chapters[idx-1] : null;
     const next = idx<file.chapters.length-1 ? file.chapters[idx+1] : null;
+
+    /* 章末课后练习：按「教材文件 + 章号」找到对应习题章，默认收起，展开即练 */
+    let quizSection = '';
+    const qch = KB.quizChapterFor(file.id, ch.num);
+    if(qch){
+      const qBlocks = (qch.blocks||[]).map((b, bi)=>{
+        b.id = b.id || ('blk-'+file.id+'-'+ch.id+'-quiz'+bi);
+        const r = BlockRenderers[b.type];
+        return r ? '<article class="block t-'+b.type+'" id="'+b.id+'" data-block="'+b.id+'">'+r(b)+'</article>' : '';
+      }).join('');
+      const qCount = (qch.blocks||[]).reduce((s,b)=>s+((b.questions&&b.questions.length)||0),0);
+      quizSection =
+        '<details class="quiz-section">'+
+        '<summary><span class="qs-title">课后练习</span>'+
+        '<span class="qs-meta">'+qCount+' 题 · 点击展开，选完即时判分</span>'+
+        '<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></summary>'+
+        '<div class="qs-body">'+qBlocks+'</div></details>';
+    }
+
     const nav =
       '<div class="ch-nav">'+
       (prev?'<button class="ch-nav-btn" data-nav="'+prev.id+'"><span class="dir">← 上一章</span><span class="nm">'+esc(prev.title)+'</span></button>':'<button class="ch-nav-btn disabled"></button>')+
@@ -176,10 +306,8 @@
       '<span class="ch-num">第 '+ch.num+' 章 · '+esc(ch.titleEn||'')+'</span>'+
       '<h1 class="ch-title">'+esc(ch.title)+'</h1>'+
       (ch.summary?'<p class="ch-summary">'+inlineMarkup(ch.summary)+'</p>':'')+
-      '<div class="ch-meta">'+
-      (ch.blocks?'<span class="ch-meta-item"><b>'+ch.blocks.length+'</b> 个考点</span>':'')+
-      '</div></div>'+
-      '<div class="blocks">'+blocks+'</div>'+nav+'</section>';
+      '<div class="ch-meta"></div></div>'+
+      '<div class="blocks">'+blocks+'</div>'+quizSection+nav+'</section>';
 
     renderToc(file, ch.id);
 
@@ -213,5 +341,5 @@
   }
 
   window.KB = window.KB || {};
-  KB.render = { renderChapter, flashBlock };
+  KB.render = { renderChapter, flashBlock, initQuiz };
 })();

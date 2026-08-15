@@ -253,6 +253,16 @@ body.sidebar-collapsed .sidebar-expand{opacity:1;pointer-events:auto}
 @keyframes flashBg{0%,45%{background:#f2f7ff}100%{background:var(--surface)}}
 .block-title{font-size:17px;font-weight:600;line-height:1.4;padding-top:2px;letter-spacing:-.2px}
 .block-title .ic-note{font-size:11px;font-weight:500;color:var(--text-3);margin-left:7px}
+
+/* ---- 考试权重标注（考点标题右侧） ---- */
+.exam-badge{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-left:auto;padding-left:12px;flex-shrink:0}
+.eb-freq{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:10.5px;font-weight:600;letter-spacing:.5px}
+.eb-freq.f-hi{color:var(--red);border:1px solid var(--red);}
+.eb-freq.f-mid{color:var(--accent);border:1px solid var(--accent);}
+.eb-freq.f-lo{color:var(--text-3);border:1px solid var(--border);}
+.eb-item{font-size:11.5px;color:var(--text-3);padding:2px 0}
+.eb-score{color:var(--text-2);font-weight:500}
+@media (max-width:900px){.exam-badge{margin-left:0;flex-basis:100%}}
 .block-body{font-size:14.5px;color:var(--text);line-height:1.85}
 .block-body p{margin:0 0 9px}
 .block-body ul,.block-body ol{margin:0 0 9px;padding-left:22px}
@@ -359,6 +369,66 @@ td.stable-no{color:var(--red);font-weight:600}
 }
 .anim-status{margin-left:auto;font-size:11.5px;color:var(--text-3);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46%}
 .anim-status.done{color:var(--green);font-weight:600}
+
+/* ================= 习题 ================= */
+.t-quiz .block-dot{background:var(--accent)}
+.qz-mode-bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:9px 13px;
+  background:var(--surface-2);border-radius:8px}
+.qz-mode-note{font-size:12px;color:var(--text-3);font-weight:500}
+.qz-mode-btn{margin-left:auto;font-size:12px;font-weight:600;color:var(--accent);
+  background:var(--accent-soft);border:1px solid transparent;border-radius:7px;padding:5px 12px;
+  cursor:pointer;transition:all .14s var(--ease)}
+.qz-mode-btn:hover{border-color:var(--accent)}
+.qz-list{display:flex;flex-direction:column;gap:22px}
+.qz-item{border:1px solid var(--border);border-radius:10px;padding:15px 17px;transition:border-color .15s var(--ease)}
+.qz-item.answered{border-color:var(--border-strong)}
+.qz-item.correct{border-color:rgba(22,128,60,.4)}
+.qz-item.wrong{border-color:rgba(207,34,48,.4)}
+.qz-stem{font-size:14px;font-weight:600;line-height:1.7;margin-bottom:11px}
+.qz-opts{display:flex;flex-direction:column;gap:6px}
+.qz-opt{
+  display:flex;align-items:flex-start;gap:10px;text-align:left;width:100%;
+  padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#fff;
+  font-size:13.5px;line-height:1.6;color:var(--text);transition:all .13s var(--ease);
+}
+.qz-opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+.qz-opt:disabled{cursor:default;opacity:.75}
+.qz-opt.is-answer{border-color:var(--green);background:var(--green-soft);opacity:1}
+.qz-opt.is-picked{border-color:var(--red);background:var(--red-soft);opacity:1}
+.qz-letter{
+  flex-shrink:0;width:20px;height:20px;border-radius:6px;margin-top:1px;
+  background:var(--surface-3);color:var(--text-2);
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
+}
+.qz-opt.is-answer .qz-letter{background:var(--green);color:#fff}
+.qz-opt.is-picked .qz-letter{background:var(--red);color:#fff}
+.qz-item.correct .qz-stem::after,
+.qz-item.wrong .qz-stem::after{
+  margin-left:8px;font-size:11px;font-weight:700;vertical-align:1px;
+}
+.qz-item.correct .qz-stem::after{content:"答对";color:var(--green)}
+.qz-item.wrong .qz-stem::after{content:"答错";color:var(--red)}
+.qz-explain{display:none;margin-top:11px;padding:11px 14px;background:var(--surface-2);border-radius:8px;font-size:13px;color:var(--text-2);line-height:1.75}
+.qz-explain.show{display:block;animation:fadeSlide .18s var(--ease)}
+.qz-explain::before{content:"解析";display:inline-block;font-size:11px;font-weight:700;color:var(--accent);margin-right:8px}
+.qz-score{display:none;margin-top:16px;padding:11px 16px;border-radius:8px;background:var(--surface-2);
+  font-size:13px;font-weight:600;color:var(--text-2);text-align:center}
+.qz-score.show{display:block}
+
+/* ================= 章末课后练习折叠区 ================= */
+.quiz-section{margin-top:26px;border:1px solid var(--border);border-radius:12px;background:#fff;overflow:hidden}
+.quiz-section summary{
+  list-style:none;display:flex;align-items:center;gap:12px;cursor:pointer;
+  padding:16px 20px;user-select:none;transition:background .14s var(--ease);
+}
+.quiz-section summary::-webkit-details-marker{display:none}
+.quiz-section summary:hover{background:var(--surface-2)}
+.qs-title{font-size:15px;font-weight:700;color:var(--text)}
+.qs-meta{font-size:12px;color:var(--text-3);font-weight:500}
+.quiz-section summary .chev{margin-left:auto;flex-shrink:0;color:var(--text-3);transition:transform .2s var(--ease)}
+.quiz-section[open] summary .chev{transform:rotate(90deg)}
+.quiz-section[open] summary{border-bottom:1px solid var(--border)}
+.qs-body{padding:20px 20px 24px;background:var(--surface-2)}
 
 /* ================= 章导航 ================= */
 .ch-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}

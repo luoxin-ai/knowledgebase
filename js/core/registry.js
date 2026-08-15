@@ -40,7 +40,7 @@ window.KB = (function(){
     register(file){
       if(!file || !file.id) throw new Error('[KB] register 需要文件 id');
       files[file.id] = file;
-      if(file.folder){
+      if(file.folder && !file.hidden){
         if(!folders[file.folder]) this.defineFolder({ id:file.folder, title:file.folder });
         if(folders[file.folder].files.indexOf(file.id) < 0) folders[file.folder].files.push(file.id);
       }
@@ -48,10 +48,26 @@ window.KB = (function(){
     },
     getFile(id){ return files[id]; },
     listFiles(){ return Object.values(files); },
+    /* 侧边栏可见文件（hidden 的习题文件不显示，只作章末内嵌数据源） */
+    listVisibleFiles(){ return Object.values(files).filter(f=>!f.hidden); },
     /* 某文件夹下的所有文件（按注册顺序） */
     filesInFolder(folderId){
       const f = folders[folderId];
       return f ? f.files.map(id=>files[id]).filter(Boolean) : [];
+    },
+    /* 章末课后练习映射：教材章号 → 习题章
+       教材文件用 quizFiles: ['quiz-ds-a','quiz-ds-b'] 声明数据源；
+       各习题文件用 quizFor: { book:'ds', fromNum:1 } 声明自己覆盖教材的第几章起 */
+    quizChapterFor(bookId, num){
+      const target = files[bookId];
+      if(!target || !target.quizFiles) return null;
+      for(const qid of target.quizFiles){
+        const qf = files[qid];
+        if(!qf || !qf.quizFor || qf.quizFor.book !== bookId) continue;
+        const idx = num - (qf.quizFor.fromNum||1);
+        if(idx >= 0 && idx < (qf.chapters||[]).length) return qf.chapters[idx];
+      }
+      return null;
     },
     /* 判断激活文件是否属于某文件夹（含其子孙文件夹） */
     folderContainsActive(folderId){
@@ -84,10 +100,11 @@ window.KB = (function(){
     setActiveBlock(id){ state.activeBlock = id; },
     getActiveFile(){ return files[state.activeFile] || null; },
 
-    /* ---- 全库搜索数据源 ---- */
+    /* ---- 全库搜索数据源（hidden 文件如章末习题不入搜索，避免跳到脱离上下文的孤岛） ---- */
     allBlocks(){
       const out = [];
       this.listFiles().forEach(file=>{
+        if(file.hidden) return;
         (file.chapters||[]).forEach(ch=>{
           (ch.blocks||[]).forEach((b,bi)=>{
             out.push({ file, chapter:ch, block:b, index:bi });
@@ -95,6 +112,17 @@ window.KB = (function(){
         });
       });
       return out;
+    },
+    /* 块 id → 块数据（含 hidden 习题文件；quiz 模式切换重渲染时找回数据用） */
+    blockById(id){
+      for(const file of this.listFiles()){
+        for(const ch of (file.chapters||[])){
+          for(const b of (ch.blocks||[])){
+            if(b.id === id) return b;
+          }
+        }
+      }
+      return null;
     }
   };
 })();

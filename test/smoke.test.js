@@ -80,6 +80,7 @@ const ROOT = path.join(__dirname, '..');
 const files = [
   'js/core/registry.js',
   'data/11408/_index.js', 'data/11408/data-structure.js',
+  'data/11408/quiz-ds-a.js', 'data/11408/quiz-ds-b.js',
   'data/11408/computer-org.js', 'data/11408/operating-system.js', 'data/11408/computer-network.js',
   'data/11408/higher-math.js', 'data/11408/linear-algebra.js', 'data/11408/probability.js',
   'data/papers/_index.js', 'data/papers/kmp-paper.js',
@@ -110,8 +111,9 @@ ok('顶层目录：11408 + papers', JSON.stringify(roots) === JSON.stringify(['1
 const subs = KB.childFolders('11408').map(f=>f.id).sort();
 ok('11408 下 2 个子科目：408 + math', JSON.stringify(subs) === JSON.stringify(['408','math']), subs);
 const fileIds = KB.listFiles().map(f=>f.id).sort();
-ok('文件注册：8 个文件', JSON.stringify(fileIds) === JSON.stringify(['cn','co','ds','hm','kmp-paper','la','os','prob']), fileIds);
-ok('408 科目含 4 个文件（四门课）', KB.filesInFolder('408').length === 4);
+ok('文件注册：10 个文件', JSON.stringify(fileIds) === JSON.stringify(['cn','co','ds','hm','kmp-paper','la','os','prob','quiz-ds-a','quiz-ds-b']), fileIds);
+ok('侧边栏可见 8 个文件（习题 hidden）', KB.listVisibleFiles().length === 8, KB.listVisibleFiles().length);
+ok('408 科目含 4 个可见文件（四门课）', KB.filesInFolder('408').length === 4);
 ok('math 科目含 3 个文件（高数/线代/概率）', KB.filesInFolder('math').length === 3);
 ok('papers 文件夹含 1 个文件', KB.filesInFolder('papers').length === 1);
 ok('folderContainsActive 向上识别祖先', (function(){
@@ -126,10 +128,49 @@ console.log('\n[2] 块数据完整性');
 const all = KB.allBlocks();
 ok('全库块数量 ≥ 60', all.length >= 60, all.length);
 const typeSet = [...new Set(all.map(x=>x.block.type))].sort();
-ok('七种块类型齐全', JSON.stringify(typeSet) === JSON.stringify(['animation','code','concept','error','formula','keypoint','table']), typeSet);
+ok('七种可见块类型齐全（quiz 经章末注入渲染）', JSON.stringify(typeSet) === JSON.stringify(['animation','code','concept','error','formula','keypoint','table']), typeSet);
 let bad = 0;
 for(const {block} of all){ if(!block.title || !block.type) bad++; }
 ok('每块都有 title + type', bad === 0, bad);
+/* 习题块数据校验（hidden 文件不入 allBlocks，直接从注册表取）：200 题、4 选项、answer ∈ abcd、分布均衡 */
+const quizQs = ['quiz-ds-a','quiz-ds-b']
+  .flatMap(id => KB.getFile(id).chapters)
+  .flatMap(ch => ch.blocks)
+  .filter(b => b.type==='quiz')
+  .flatMap(b => b.questions||[]);
+ok('习题共 200 题', quizQs.length === 200, quizQs.length);
+ok('每题 4 个选项', quizQs.every(q=>Array.isArray(q.options) && q.options.length===4));
+ok('answer 均为 abcd', quizQs.every(q=>'abcd'.includes(String(q.answer).toLowerCase())));
+ok('每题都有解析', quizQs.every(q=>typeof q.explain==='string' && q.explain.length>=8));
+/* 解析中「选 X」与 answer 一致（拦截誊写错位）。
+   只认肯定的「选 X」，排除「错选/误选/会选/而选/就选」等否定或假设表述 */
+const mism = [];
+quizQs.forEach((q,i)=>{
+  const hits = String(q.explain).match(/(?:^|[^错误会就力而])选\s*([A-Da-d])/g);
+  if(hits && hits.length){
+    const last = hits[hits.length-1].match(/([A-Da-d])\s*$/)[1].toLowerCase();
+    if(last !== String(q.answer).toLowerCase()) mism.push((i+1)+':'+last+'≠'+q.answer);
+  }
+});
+ok('解析「选X」与 answer 一致', mism.length===0, mism.slice(0,6));
+const dist = quizQs.reduce((m,q)=>{ m[q.answer]=(m[q.answer]||0)+1; return m; },{});
+const dv = Object.values(dist);
+ok('答案分布均衡（每种 30~70）', dv.length===4 && dv.every(n=>n>=30 && n<=70), dist);
+/* 章末课后练习映射：数据结构 8 章每章都能找到对应习题章 */
+const quizMapOk = [1,2,3,4,5,6,7,8].every(n=>{
+  const qc = KB.quizChapterFor('ds', n);
+  return qc && qc.blocks && qc.blocks.some(b=>b.type==='quiz');
+});
+ok('数据结构 8 章均有对应课后练习', quizMapOk);
+ok('搜索数据源不含 hidden 习题', all.every(x=>!x.file.hidden));
+/* P8 数据校验：animation 块的 animType 必须在 factory 注册表中 */
+const registeredAnims = Object.keys(KB_ANIM.AnimationFactories);
+const badAnim = all.filter(x=>x.block.type==='animation' && registeredAnims.indexOf(x.block.animType)<0).map(x=>x.block.animType);
+ok('animType 全部已在 factory 注册', badAnim.length===0, badAnim);
+/* P8：文件 id 全局唯一 */
+const idCounts = {};
+KB.listFiles().forEach(f=>{ idCounts[f.id]=(idCounts[f.id]||0)+1; });
+ok('文件 id 全局唯一', Object.values(idCounts).every(n=>n===1), idCounts);
 const animTypes = all.filter(x=>x.block.type==='animation').map(x=>x.block.animType).sort();
 ok('11 类动画数据齐备', JSON.stringify(animTypes) ===
   JSON.stringify(['bubbleSort','graphTraversal','heapSort','huffman','kmp','mergeSort','pageReplace','processSchedule','quickSort','slidingWindow','treeTraversal']), animTypes);

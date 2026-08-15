@@ -11,6 +11,7 @@
 KB.register({
   id: 'ds',
   folder: '408',
+  quizFiles: ['quiz-ds-a','quiz-ds-b'],   /* 章末课后练习数据源,按章序对应 */
   type: 'book',
   title: '数据结构',
   cover: '📘',
@@ -23,6 +24,7 @@ KB.register({
       summary: '建立「逻辑结构 → 存储结构 → 运算」的分析框架，掌握时间/空间复杂度与 ADT。',
       blocks: [
         { type: 'concept', title: '数据结构三要素',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '==逻辑结构==：集合 / 线性 / 树 / 图（与存储无关）',
             '==存储结构==：顺序 / 链式 / 索引 / 散列（物理实现）',
@@ -36,6 +38,7 @@ KB.register({
           ]
         },
         { type: 'concept', title: '算法的定义与特性',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '算法是对特定问题求解步骤的描述，是==有限==的指令序列',
             '五大特性：有穷性 / 确定性 / 可行性 / 输入 / 输出',
@@ -49,6 +52,7 @@ KB.register({
           ]
         },
         { type: 'concept', title: '时间复杂度',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '大 O 记号表示==最坏情况下的渐近上界==',
             '加法规则取最高阶，乘法规则嵌套相乘',
@@ -63,6 +67,7 @@ KB.register({
           ]
         },
         { type: 'concept', title: '空间复杂度',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '算法运行所需==辅助空间==（不含输入本身）',
             '递归空间 = 递归深度（每层调用压栈）',
@@ -110,6 +115,7 @@ KB.register({
       summary: '顺序表随机存取 vs 链表动态增删，是后续所有数据结构的基础。',
       blocks: [
         { type: 'concept', title: '线性表的定义',
+          exam: { freq: '偶考', forms: ['选择题'], score: '约 2 分' },
           points: [
             '线性表 = n（n≥0）个==同类型==数据元素的有限序列',
             '除首尾外，每个元素有唯一直接前驱 / 后继',
@@ -122,6 +128,7 @@ KB.register({
           ]
         },
         { type: 'concept', title: '顺序表',
+          exam: { freq: '高频', forms: ['选择题', '大题'], score: '约 2-8 分' },
           points: [
             '用==一组地址连续==的存储单元，逻辑相邻即物理相邻',
             '随机存取：GetElem O(1)，按地址公式直接定位',
@@ -135,6 +142,7 @@ KB.register({
           ]
         },
         { type: 'concept', title: '链表（单 / 双 / 循环）',
+          exam: { freq: '高频', forms: ['选择题', '大题'], score: '约 2-15 分' },
           points: [
             '用指针表示逻辑关系，物理存储任意，==不支持随机存取==',
             '单链表：data + next；双链表：+ prior',
@@ -148,6 +156,7 @@ KB.register({
           ]
         },
         { type: 'concept', title: '静态链表',
+          exam: { freq: '偶考', forms: ['选择题'], score: '约 2 分' },
           points: [
             '用==数组==实现链表，结点含 data + next（游标），物理连续',
             '0 号结点作头结点；游标 -1 表尾、-2 表空闲',
@@ -176,6 +185,7 @@ KB.register({
           ]
         },
         { type: 'concept', title: '单链表的建立与前插技巧',
+          exam: { freq: '高频', forms: ['大题'], score: '算法题常考' },
           points: [
             '==头插法==：每次插表头，天然逆置；先 L->next=NULL 防野指针',
             '==尾插法==：加尾指针 r，O(n)；否则每次从头找尾 O(n²)',
@@ -189,6 +199,7 @@ KB.register({
           ]
         },
         { type: 'code', title: '单链表反转（头插法）',
+          exam: { freq: '高频', forms: ['大题'], score: '约 10-15 分' },
           summary: '三指针法原地反转单链表，O(n) 时间、O(1) 空间，408 最高频链表代码题。',
           lang: 'C',
           code: `/* 单链表反转：三指针原地反转 */
@@ -214,6 +225,7 @@ struct LNode *reverseList(struct LNode *head){
           ]
         },
         { type: 'code', title: '顺序表插入',
+          exam: { freq: '中频', forms: ['大题'], score: '约 8-10 分' },
           summary: '插入操作从后往前移动元素，注意边界判断。',
           lang: 'C',
           code: `/* 顺序表在第 i 个位置插入 e（i 从 1 开始） */
@@ -248,6 +260,7 @@ int listInsert(int a[], int *n, int i, int e){
           ]
         },
         { type: 'keypoint', title: '链表解题两大套路',
+          exam: { freq: '高频', forms: ['大题'], score: '算法题核心套路' },
           points: [
             '==快慢指针==：找中点 / 判环 / 找倒数第 k 个',
             '==虚拟头结点==（dummy）：统一头结点删除等边界',
@@ -268,6 +281,7 @@ int listInsert(int a[], int *n, int i, int e){
       summary: '栈 LIFO、队列 FIFO 是两类受限线性表；循环队列判空判满与卡特兰数是必考点。',
       blocks: [
         { type: 'concept', title: '栈（后进先出）',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
             '只允许在==栈顶==插入 / 删除，LIFO',
             'n 个不同元素出栈序列数 = 卡特兰数 C(2n,n)/(n+1)',
@@ -281,6 +295,7 @@ int listInsert(int a[], int *n, int i, int e){
           ]
         },
         { type: 'concept', title: '队列与循环队列',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
             '队尾入队、队头出队，FIFO',
             '循环队列：==队空 front==rear，队满 (rear+1)%MaxSize==front==',
@@ -353,6 +368,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '栈的应用：表达式求值',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
             '中缀 → 后缀（逆波兰）：操作数直接输出，运算符按优先级入栈',
             '后缀求值：遇操作数入栈，遇运算符弹两操作数计算',
@@ -380,6 +396,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '双端队列',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '双端队列：==两端==都可插入、删除',
             '输入受限：仅一端插入、两端删除；输出受限：两端插入、仅一端删除',
@@ -393,6 +410,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '数组的存储结构（行优先 / 列优先）',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '行优先：按行号从小到大、同行按列号依次存放',
             '地址公式：LOC(i,j) = LOC(0,0) + (i×n + j)×L',
@@ -407,6 +425,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'keypoint', title: '特殊矩阵压缩存储',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '对称矩阵只存下三角（含主对角），共 n(n+1)/2 个元素',
             '下标映射：k = i(i-1)/2 + j-1（i≥j，从 1 起）',
@@ -442,6 +461,7 @@ bool isMatch(char *s){
       summary: '二叉树性质、遍历、线索化、哈夫曼树，是 408 分值最重的章节之一。',
       blocks: [
         { type: 'concept', title: '树的定义与基本性质',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '树 = n（n≥0）个结点的有限集合，n=0 为空树',
             '==总结点数 = 总度数 + 1==（根无双亲，其余每点恰一条入边）',
@@ -456,6 +476,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '二叉树性质（必背）',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '第 i 层至多 2^(i-1) 个结点；高度 h 至多 2^h - 1 个',
             '==n0 = n2 + 1==（叶子数 = 度为 2 结点数 + 1）',
@@ -469,6 +490,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '满二叉树与完全二叉树',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '满二叉树：高 h 恰有 2^h-1 结点，==无度 1 结点==',
             '完全二叉树：与满二叉树编号一一对应，最多一个度 1 结点且是左孩子',
@@ -483,6 +505,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '遍历与还原二叉树',
+          exam: { freq: '高频', forms: ['选择题', '大题'], score: '约 2-10 分' },
           points: [
             '先序（根左右）/ 中序（左根右）/ 后序（左右根）/ 层次',
             '==中序定左右==：先序 / 后序定根，中序分左右',
@@ -512,6 +535,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '线索二叉树',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '用==空链域==存放前驱 / 后继线索',
             'ltag = 0 表示左孩子，= 1 表示前驱线索',
@@ -525,6 +549,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '树 / 森林与二叉树的转换',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
             '转换规则：==左孩子右兄弟==',
             '树转出的二叉树根**没有右子树**',
@@ -549,6 +574,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'keypoint', title: '二叉树必考公式',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '所有树题先列方程：n = n0+n1+n2 = n1+2n2+1',
             '完全二叉树 n1 ∈ {0, 1}',
@@ -570,6 +596,7 @@ bool isMatch(char *s){
       summary: '图的存储、遍历、最小生成树、最短路径、拓扑与关键路径五大板块。',
       blocks: [
         { type: 'concept', title: '图的基本概念',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '无向完全图 n(n-1)/2 条边，有向完全图 n(n-1) 条',
             '==握手定理==：无向图所有顶点度之和 = 2×边数',
@@ -583,6 +610,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '图的存储：邻接矩阵 / 邻接表',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
             '邻接矩阵：A[i][j]=1 有边，空间 O(n²)',
             '邻接表：顶点表 + 边表，空间 O(n+e)',
@@ -623,6 +651,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '最小生成树 MST',
+          exam: { freq: '高频', forms: ['选择题', '简答'], score: '约 2-4 分' },
           points: [
             '==Prim==：加点法，O(n²)，适合稠密图',
             '==Kruskal==：加边法，O(e log e)，适合稀疏图',
@@ -636,6 +665,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '并查集',
+          exam: { freq: '中频', forms: ['选择题', '大题'], score: '约 2-8 分' },
           points: [
             '用==树（父指针数组）==表示不相交集合，根代表该集合',
             'Find 查根 + Union 合并；**路径压缩 + 按秩合并**后近似 O(α(n))',
@@ -649,6 +679,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '最短路径',
+          exam: { freq: '高频', forms: ['选择题', '简答'], score: '约 2-4 分' },
           points: [
             '==Dijkstra==：单源最短路径，**不能处理负权边**，O(n²)',
             '==Floyd==：任意两点，可处理负权但不可有负环，O(n³)',
@@ -662,6 +693,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '拓扑排序与关键路径',
+          exam: { freq: '高频', forms: ['选择题', '简答'], score: '约 2-4 分' },
           points: [
             '拓扑排序：每次删除==入度为 0==的顶点（AOV 网）',
             '关键路径：AOE 网中 ve == vl 的顶点所在路径（最长路径）',
@@ -696,6 +728,7 @@ bool isMatch(char *s){
       summary: '顺序/折半、BST、AVL、B 树、哈希五类查找结构，ASL 计算贯穿始终。',
       blocks: [
         { type: 'concept', title: '顺序查找与折半查找',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
             '顺序查找 ASL 成功 = (n+1)/2，失败 = n+1',
             '折半查找仅适用==有序顺序表==，ASL ≈ log₂(n+1)-1',
@@ -709,6 +742,7 @@ bool isMatch(char *s){
           ]
         },
         { type: 'concept', title: '分块查找（索引顺序查找）',
+          exam: { freq: '偶考', forms: ['选择题'], score: '约 2 分' },
           points: [
             '块内==无序==、块间==有序==，另建索引表（每块最大关键字 + 首地址）',
             '先折半/顺序查索引定位块，再块内顺序查找',
@@ -745,6 +779,7 @@ int binarySearch(int a[], int n, int key){
           ]
         },
         { type: 'concept', title: '二叉排序树 BST',
+          exam: { freq: '高频', forms: ['选择题', '大题'], score: '约 2-8 分' },
           points: [
             '左子树 < 根 < 右子树；中序遍历得==递增序列==',
             '查找平均 O(log n)，最坏退化为链表 O(n)',
@@ -758,6 +793,7 @@ int binarySearch(int a[], int n, int key){
           ]
         },
         { type: 'concept', title: '平衡二叉树 AVL',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
             '平衡因子 |BF| = |左高 - 右高| ≤ 1',
             '四种失衡旋转：==LL / RR / LR / RL==',
@@ -772,6 +808,7 @@ int binarySearch(int a[], int n, int key){
           ]
         },
         { type: 'concept', title: 'B 树与 B+ 树',
+          exam: { freq: '高频', forms: ['选择题', '简答'], score: '约 2-4 分' },
           points: [
             'm 阶 B 树：非根结点关键字数 ∈ [⌈m/2⌉-1, m-1]',
             '所有==叶结点（失败结点）在同一层==',
@@ -785,6 +822,7 @@ int binarySearch(int a[], int n, int key){
           ]
         },
         { type: 'concept', title: '哈希表',
+          exam: { freq: '高频', forms: ['选择题', '大题'], score: '约 2-8 分' },
           points: [
             '哈希函数：除留余数法 H(key) = key % p（p 取不大于表长的质数）',
             '冲突处理：==开放定址法==（线性/二次探测）与==链地址法==',
@@ -889,6 +927,7 @@ int binarySearch(int a[], int n, int key){
           ]
         },
         { type: 'code', title: '快速排序完整实现',
+          exam: { freq: '高频', forms: ['大题'], score: '约 10-15 分' },
           summary: '挖坑法划分 + 递归，408 代码题必背。',
           lang: 'C',
           code: `/* 一趟划分：挖坑法 */
@@ -922,6 +961,7 @@ void quickSort(int a[], int low, int high){
           ]
         },
         { type: 'code', title: '堆调整与建堆',
+          exam: { freq: '高频', forms: ['选择题', '大题'], score: '约 2-10 分' },
           summary: '大根堆向下调整 sift + 从最后一个非叶结点向前建堆。',
           lang: 'C',
           code: `/* 大根堆向下调整：把 i 结点下沉到合适位置 */
@@ -951,6 +991,7 @@ void buildHeap(int a[], int n){
           ]
         },
         { type: 'keypoint', title: '快排最坏情况分析',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '最坏发生在每次划分**极不平衡**（如已有序）',
             '递归深度最坏 O(n) → 空间最坏 O(n)',
@@ -963,6 +1004,7 @@ void buildHeap(int a[], int n){
           ]
         },
         { type: 'concept', title: '外部排序',
+          exam: { freq: '中频', forms: ['选择题', '简答'], score: '约 2-4 分' },
           points: [
             '步骤：生成初始归并段 → ==多路归并==',
             '归并趟数 = ⌈log_k r⌉（r 个归并段，k 路归并）',
@@ -997,6 +1039,7 @@ void buildHeap(int a[], int n){
       summary: '朴素匹配 O(nm) vs KMP O(n+m)，next 数组手算是必考。',
       blocks: [
         { type: 'concept', title: '串的定义与存储',
+          exam: { freq: '偶考', forms: ['选择题'], score: '约 2 分' },
           points: [
             '串 = 零个或多个字符组成的有限序列，n 为串长，n=0 为空串',
             '==位序从 1 起==；空格占 1B，不是空串',
@@ -1011,6 +1054,7 @@ void buildHeap(int a[], int n){
           ]
         },
         { type: 'concept', title: '串与模式匹配',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
             '串 = 零个或多个字符组成的有限序列',
             '朴素匹配最坏 O(nm)，主串指针回溯',
@@ -1024,6 +1068,7 @@ void buildHeap(int a[], int n){
           ]
         },
         { type: 'code', title: 'next 数组与 KMP 匹配',
+          exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           summary: 'next[j] = p[0..j-1] 的最长相等真前后缀长度；next[0] = -1 作哨兵。',
           lang: 'C',
           code: `/* 求 next 数组（下标从 0 起） */
@@ -1084,6 +1129,7 @@ int kmp(char s[], char p[], int n, int m){
           ]
         },
         { type: 'keypoint', title: 'nextval 优化',
+          exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
             '若 p[j] == p[next[j]]，则 nextval[j] = nextval[next[j]]',
             '否则 nextval[j] = next[j]',

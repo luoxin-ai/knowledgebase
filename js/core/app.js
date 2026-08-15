@@ -66,19 +66,20 @@
   }
 
   function init(){
-    if(!KB.listFiles().length) return;
+    if(!KB.listVisibleFiles().length) return;
     KB_UI.renderTree();
     initTree();
     initNav();
     initToc();
     if(KB.search && KB.search.init) KB.search.init();
+    if(KB.render && KB.render.initQuiz) KB.render.initQuiz();
     if(KB_UI.initProgressBar) KB_UI.initProgressBar();
     if(KB_UI.initScrollSpy) KB_UI.initScrollSpy();
     if(KB_UI.initCollapse) KB_UI.initCollapse();
     if(KB_UI.initDrawer) KB_UI.initDrawer();
 
-    /* 默认加载第一个文件 */
-    loadFile(KB.listFiles()[0].id);
+    /* 默认加载第一个可见文件 */
+    loadFile(KB.listVisibleFiles()[0].id);
 
     /* resize 防抖：所有动画统一重适配 */
     let t;

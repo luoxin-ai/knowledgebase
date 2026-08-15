@@ -8,6 +8,8 @@
 window.KB_MANIFEST = [
   'data/11408/_index.js',
   'data/11408/data-structure.js',
+  'data/11408/quiz-ds-a.js',
+  'data/11408/quiz-ds-b.js',
   'data/11408/computer-org.js',
   'data/11408/operating-system.js',
   'data/11408/computer-network.js',
