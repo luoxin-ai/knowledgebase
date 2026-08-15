@@ -719,12 +719,12 @@
           '<div class="drill-grid">'+
           chs.map(({ch,cnt,st})=>{
             const pct = st && st.done>0 ? Math.round(st.right/st.done*100) : null;
-            return '<a class="drill-card" href="#'+file.id+'/'+ch.id+'" data-drill-file="'+file.id+'" data-drill-ch="'+ch.id+'">'+
+            return '<div class="drill-card" role="button" tabindex="0" data-drill-file="'+file.id+'" data-drill-ch="'+ch.id+'">'+
               '<span class="dc-num">第 '+ch.num+' 章</span>'+
               '<span class="dc-title">'+esc(ch.title)+'</span>'+
               '<span class="dc-meta">'+cnt+' 题'+
               (pct!==null?'<span class="dc-stat'+(st.done>=cnt?' done':'')+'">已练 '+st.done+'/'+cnt+' · '+pct+'%</span>':'')+
-              '</span></a>';
+              '</span></div>';
           }).join('')+'</div>'
         ).join('');
         return '<section class="drill-subject"><h2 class="drill-sub-title">'+esc(g.subject)+'</h2>'+cards+'</section>';
@@ -742,17 +742,20 @@
   function drillGo(fileId, chId){
     const f = KB.getFile(fileId);
     if(!f) return;
+    if(location.hash !== '#'+fileId+'/'+chId) history.replaceState(null,'','#'+fileId+'/'+chId);
     KB.render.renderChapter(f, chId);
     KB_UI.renderTree();
-    /* 等渲染完成后展开 details 并滚到练习区 */
-    requestAnimationFrame(()=>{
+    /* 展开练习区：等章节 DOM + 动画布局稳定后，直接定位到练习区顶部 */
+    setTimeout(()=>{
       const sec = document.querySelector('.quiz-section');
-      if(sec){
-        sec.open = true;
-        setTimeout(()=>sec.scrollIntoView({behavior:'smooth', block:'start'}), 60);
-      }
-      if(location.hash !== '#'+fileId+'/'+chId) history.replaceState(null,'','#'+fileId+'/'+chId);
-    });
+      if(!sec) return;
+      sec.open = true;
+      /* 再等展开动画完成，用绝对定位滚动，避免 scrollIntoView 受布局抖动影响 */
+      setTimeout(()=>{
+        const y = sec.getBoundingClientRect().top + window.pageYOffset - 16;
+        window.scrollTo({ top:y, behavior:'auto' });
+      }, 120);
+    }, 80);
   }
 
   window.KB = window.KB || {};
