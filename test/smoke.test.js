@@ -85,7 +85,6 @@ const files = [
   'data/11408/quiz-hm.js', 'data/11408/quiz-la.js', 'data/11408/quiz-prob.js',
   'data/11408/computer-org.js', 'data/11408/operating-system.js', 'data/11408/computer-network.js',
   'data/11408/higher-math.js', 'data/11408/linear-algebra.js', 'data/11408/probability.js',
-  'data/papers/_index.js', 'data/papers/kmp-paper.js',
   'data/politics/_index.js', 'data/politics/maoyuan.js',
   'data/politics/quiz-maoyuan-single.js', 'data/politics/quiz-maoyuan-multi.js',
   'data/english/_index.js', 'data/english/writing.js',
@@ -111,19 +110,18 @@ function ok(name, cond, extra){
 /* ---------------- 1. 注册表结构 ---------------- */
 console.log('\n[1] 注册表结构');
 const folderIds = KB.listFolders().map(f=>f.id).sort();
-ok('文件夹注册：11408/408/math/papers/politics/english', JSON.stringify(folderIds) === JSON.stringify(['11408','408','english','math','papers','politics']), folderIds);
+ok('文件夹注册：11408/408/math/politics/english', JSON.stringify(folderIds) === JSON.stringify(['11408','408','english','math','politics']), folderIds);
 const roots = KB.rootFolders().map(f=>f.id).sort();
-ok('顶层目录：11408 + papers', JSON.stringify(roots) === JSON.stringify(['11408','papers']), roots);
+ok('顶层目录：仅 11408', JSON.stringify(roots) === JSON.stringify(['11408']), roots);
 const subs = KB.childFolders('11408').map(f=>f.id).sort();
 ok('11408 下 4 个子科目：408 + math + politics + english', JSON.stringify(subs) === JSON.stringify(['408','english','math','politics']), subs);
 ok('math 标题为 301 数学一', KB.getFolder('math').title === '301 数学一', KB.getFolder('math').title);
 ok('politics/english 挂在 11408 下', KB.getFolder('politics').parent==='11408' && KB.getFolder('english').parent==='11408');
 const fileIds = KB.listFiles().map(f=>f.id).sort();
-ok('文件注册：22 个文件', fileIds.length===22, fileIds);
-ok('侧边栏可见 12 个文件（习题 hidden）', KB.listVisibleFiles().length === 12, KB.listVisibleFiles().length);
+ok('文件注册：21 个文件', fileIds.length===21, fileIds);
+ok('侧边栏可见 11 个文件（习题 hidden）', KB.listVisibleFiles().length === 11, KB.listVisibleFiles().length);
 ok('408 科目含 4 个可见文件（四门课）', KB.filesInFolder('408').length === 4);
 ok('math 科目含 3 个文件（高数/线代/概率）', KB.filesInFolder('math').length === 3);
-ok('papers 文件夹含 1 个文件', KB.filesInFolder('papers').length === 1);
 ok('folderContainsActive 向上识别祖先', (function(){
   KB.setActiveFile('ds');
   const r = KB.folderContainsActive('408') && KB.folderContainsActive('11408') && !KB.folderContainsActive('math');

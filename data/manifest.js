@@ -22,8 +22,6 @@ window.KB_MANIFEST = [
   'data/11408/quiz-hm.js',
   'data/11408/quiz-la.js',
   'data/11408/quiz-prob.js',
-  'data/papers/_index.js',
-  'data/papers/kmp-paper.js',
   'data/politics/_index.js',
   'data/politics/maoyuan.js',
   'data/politics/quiz-maoyuan-single.js',
