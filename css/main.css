@@ -502,6 +502,18 @@ td.stable-no{color:var(--red);font-weight:600}
 .dwo-card.all{border-style:dashed}
 .dwo-card .dwo-name{font-size:12.5px;font-weight:600;color:var(--text)}
 .dwo-card .dwo-count{font-size:12px;font-weight:700;color:var(--red,#cf2230)}
+/* 科目分组内「暂无习题」区：新增无题内容(论文/笔记)自动出现在此 */
+.drill-noquiz{
+  margin-top:10px;padding:11px 15px;border-radius:10px;
+  background:var(--surface-2);border:1px dashed var(--border-strong);
+  display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;
+  font-size:12px;color:var(--text-3);
+}
+.dnq-title{font-weight:700;color:var(--text-2)}
+.dnq-item{color:var(--text-2);font-weight:500}
+.dnq-item::before{content:"· ";color:var(--text-3)}
+.dnq-item:first-of-type::before{content:""}
+.dnq-hint{margin-left:auto;font-size:11px;color:var(--text-3)}
 /* 刷题页内嵌的科目错题卡 */
 .drill-wrongcard{
   display:flex;align-items:center;gap:10px;margin-top:10px;padding:11px 15px;border-radius:10px;

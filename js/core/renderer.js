@@ -689,17 +689,22 @@
       return { ch, cnt, st };
     });
   }
-  /* 科目(=folder)维度的聚合：subject 标题 + 该科目下所有教材章节 */
+  /* 科目(=folder)维度的聚合：subject 标题 + 该科目下所有教材章节
+   * 每个组还收集「无习题」文件(如新增的论文/笔记,没配 quizFiles)——
+   * 它们不消失在刷题页,而是显示在「暂无习题」区,配好题后自动移入上方列表 */
   function subjectsWithQuiz(){
     const out = [];
     KB.listVisibleFiles().forEach(f=>{
       const chs = quizChaptersOf(f.id);
-      if(!chs.length) return;
       const fo = KB.getFolder(f.folder);
       const subject = fo ? fo.title : '其他';
       let g = out.find(x=>x.subject===subject && x.folderId===(fo&&fo.id));
-      if(!g){ g = { subject, folderId: fo&&fo.id, files: [] }; out.push(g); }
-      g.files.push({ file:f, chs });
+      if(!g){ g = { subject, folderId: fo&&fo.id, files: [], noQuiz: [] }; out.push(g); }
+      if(chs.length){
+        g.files.push({ file:f, chs });
+      } else {
+        g.noQuiz.push({ file:f, chCount:(f.chapters||[]).length });
+      }
     });
     return out;
   }
@@ -742,18 +747,19 @@
           '</div></div>';
       }
       const secs = groups.map(g=>{
-        /* 该科目错题数：刷题页内嵌「错题重做」卡片，点击进入分科错题卷 */
+        /* 该科目错题数：刷题页内嵌「错题重做」卡片，点击进入分科错题卷；
+           纯无题科目(如只挂了论文)不显示错题卡 */
         const wc = wrongList.filter(it=>{
           const fo = KB.getFolder(it.file.folder);
           return fo && fo.id===g.folderId;
         }).length;
-        const wrongCard = wc>0
+        const wrongCard = g.files.length ? (wc>0
           ? '<div class="drill-wrongcard" role="button" tabindex="0" data-wrong-folder="'+g.folderId+'">'+
             '<span class="dw-title">错题重做</span>'+
             '<span class="dw-meta">'+wc+' 道待重做 · 答对自动移出</span>'+
             '<span class="dw-go">重做 →</span></div>'
           : '<div class="drill-wrongcard empty"><span class="dw-title">错题重做</span>'+
-            '<span class="dw-meta">暂无错题，继续保持</span></div>';
+            '<span class="dw-meta">暂无错题，继续保持</span></div>') : '';
         const cards = g.files.map(({file,chs})=>
           '<div class="drill-file">'+esc(file.title)+'</div>'+
           '<div class="drill-grid">'+
@@ -767,8 +773,14 @@
               '</span></div>';
           }).join('')+'</div>'
         ).join('');
+        /* 无习题文件(新增论文/笔记等)：灰色区展示,不静默消失 */
+        const noQuizHtml = g.noQuiz.length
+          ? '<div class="drill-noquiz"><span class="dnq-title">暂无习题</span>'+
+            g.noQuiz.map(nq=>'<span class="dnq-item">'+esc(nq.file.title)+(nq.chCount?'（'+nq.chCount+' 章）':'')+'</span>').join('')+
+            '<span class="dnq-hint">新增内容自动出现在此，配好章末习题后移入上方</span></div>'
+          : '';
         return '<section class="drill-subject"><h2 class="drill-sub-title">'+esc(g.subject)+'</h2>'+
-          wrongCard+cards+'</section>';
+          wrongCard+cards+noQuizHtml+'</section>';
       }).join('');
       el.innerHTML = '<section class="chapter"><div class="chapter-head">'+
         '<h1 class="ch-title">刷题</h1>'+
