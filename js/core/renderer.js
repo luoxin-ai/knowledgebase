@@ -497,12 +497,13 @@
           statTxt = '<span class="qs-stat'+(st.done>=st.total?' full':'')+'">上次 '+st.done+'/'+st.total+' · 正确率 '+pct+'%</span>';
         }
       }
-      return
+      return (
         '<details class="quiz-section">'+
         '<summary><span class="qs-title">'+esc(quizLabel)+'</span>'+
         '<span class="qs-meta">'+qCount+' 题'+(hasMulti?'（含多选）':'')+' · 点击展开，选完即时判分</span>'+statTxt+
         '<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></summary>'+
-        '<div class="qs-body">'+qBlocks+'</div></details>';
+        '<div class="qs-body">'+qBlocks+'</div></details>'
+      );
       }).join('');
     }
 
@@ -557,8 +558,9 @@
     setTimeout(()=>node.classList.remove('flash'), 1500);
   }
 
-  /* 错题本页面：聚合全部错题渲染成一张卷，答对自动移出（localStorage 由判分回调维护） */
-  function renderWrongBook(){
+  /* 错题本页面：聚合全部错题渲染成一张卷，答对自动移出（localStorage 由判分回调维护）
+   * folderId 可选：传科目 id 时只渲染该科目错题（刷题页分科入口）；不传则全部错题 */
+  function renderWrongBook(folderId){
     const el = document.getElementById('content');
     if(!el) return;
     /* 销毁上一章遗留动画实例，避免 innerHTML 替换后 resize 命中已脱离 DOM 的实例 */
@@ -566,12 +568,17 @@
     KB_PENDING_ANIMS.length = 0;
     KB.setActiveFile('wrongbook');
     KB.setActiveChapter(null);
-    const list = (window.KB_PROGRESS ? KB_PROGRESS.wrongList() : []);
+    const all = (window.KB_PROGRESS ? KB_PROGRESS.wrongList() : []);
+    const list = folderId ? all.filter(it=>{
+      const fo = KB.getFolder(it.file.folder);
+      return fo && fo.id===folderId;
+    }) : all;
+    const subj = folderId ? (KB.getFolder(folderId)||{}).title : '';
     let body = '';
     if(!list.length){
       body = '<section class="chapter empty-state">'+
-        '<h2 class="empty-title">错题本</h2>'+
-        '<p class="empty-text">还没有错题记录。</p>'+
+        '<h2 class="empty-title">'+(subj?esc(subj)+' · ':'')+'错题本</h2>'+
+        '<p class="empty-text">'+(subj?'该科目':'')+'还没有错题记录。</p>'+
         '<p class="empty-sub">做题答错的题会自动收进来，重做答对后自动移出。</p></section>';
     } else {
       /* 按「科目 folder → 文件」两级分组渲染 quiz 块 */
@@ -599,19 +606,14 @@
         html += '<article class="block t-quiz" id="'+tb.id+'">'+renderQuiz(tb,'review')+'</article>';
       });
       body = '<section class="chapter"><div class="chapter-head">'+
-        '<h1 class="ch-title">错题重做</h1>'+
-        '<p class="ch-summary">共 '+list.length+' 道错题，按科目分组。答对后自动移出错题本；想清空全部进度请清浏览器 localStorage 的 kb: 前缀键。</p>'+
+        '<h1 class="ch-title">'+(subj?esc(subj)+' · ':'')+'错题重做</h1>'+
+        '<p class="ch-summary">共 '+list.length+' 道错题。答对后自动移出错题本；想清空全部进度请清浏览器 localStorage 的 kb: 前缀键。</p>'+
         '</div><div class="blocks">'+html+'</div></section>';
     }
     el.innerHTML = body;
     renderToc({ title:'错题本', chapters:[] }, null);
     window.scrollTo({top:0, left:0, behavior:'auto'});
     KB_UI.renderTree();
-    /* 答对移出后刷新入口计数 */
-    if(window.KB_PROGRESS && list.length){
-      const orig = KB_PROGRESS.recordAnswer;
-      /* 下次点击判分时由 initQuiz 调 recordAnswer；本页只负责展示，计数实时性靠 renderTree 刷新 */
-    }
   }
 
   /* 虚拟块表：错题本/今日待复习页的临时 quiz 块（id 不在注册表），
@@ -714,6 +716,18 @@
         '<h2 class="empty-title">刷题</h2><p class="empty-text">暂无习题。</p></section>';
     } else {
       const secs = groups.map(g=>{
+        /* 该科目错题数：刷题页内嵌「错题重做」入口，点击进入分科错题卷 */
+        const wc = (window.KB_PROGRESS ? window.KB_PROGRESS.wrongList() : []).filter(it=>{
+          const fo = KB.getFolder(it.file.folder);
+          return fo && fo.id===g.folderId;
+        }).length;
+        const wrongCard = wc>0
+          ? '<div class="drill-wrongcard" role="button" tabindex="0" data-wrong-folder="'+g.folderId+'">'+
+            '<span class="dw-title">错题重做</span>'+
+            '<span class="dw-meta">'+wc+' 道待重做 · 答对自动移出</span>'+
+            '<span class="dw-go">重做 →</span></div>'
+          : '<div class="drill-wrongcard empty"><span class="dw-title">错题重做</span>'+
+            '<span class="dw-meta">暂无错题，继续保持</span></div>';
         const cards = g.files.map(({file,chs})=>
           '<div class="drill-file">'+esc(file.title)+'</div>'+
           '<div class="drill-grid">'+
@@ -727,7 +741,8 @@
               '</span></div>';
           }).join('')+'</div>'
         ).join('');
-        return '<section class="drill-subject"><h2 class="drill-sub-title">'+esc(g.subject)+'</h2>'+cards+'</section>';
+        return '<section class="drill-subject"><h2 class="drill-sub-title">'+esc(g.subject)+'</h2>'+
+          wrongCard+cards+'</section>';
       }).join('');
       el.innerHTML = '<section class="chapter"><div class="chapter-head">'+
         '<h1 class="ch-title">刷题</h1>'+

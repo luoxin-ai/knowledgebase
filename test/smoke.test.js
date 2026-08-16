@@ -273,6 +273,20 @@ for(const file of KB.listFiles()){
 }
 ok('全库 ' + totalRendered + ' 块无重复 id', dup === 0, dup);
 
+/* 章末练习区：有习题映射的章节渲染必须含 quiz-section(防止 return 换行 ASI 等回归) */
+let quizSecOk = 0, quizSecBad = 0;
+for(const file of KB.listFiles()){
+  for(const ch of file.chapters){
+    const qc = KB.quizChapterFor(file.id, ch.num);
+    if(!qc || !(qc.blocks||[]).some(b=>b.type==='quiz')) continue;
+    KB_PENDING_ANIMS.length = 0;
+    KB.render.renderChapter(file, ch.id, { silent: true });
+    const html = doc.getElementById('content')._innerHTML;
+    if(html.includes('quiz-section') && html.includes('qz-opt')) quizSecOk++; else quizSecBad++;
+  }
+}
+ok('有习题的章节均渲染出 quiz-section（' + quizSecOk + ' 章）', quizSecBad === 0, quizSecBad);
+
 /* ---------------- 4. 动画引擎 ---------------- */
 console.log('\n[4] 动画引擎');
 const isSortedAsc = a => { for(let i=1;i<a.length;i++) if(a[i-1]>a[i]) return false; return true; };

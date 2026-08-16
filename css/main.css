@@ -487,6 +487,18 @@ td.stable-no{color:var(--red);font-weight:600}
 /* ================= 刷题模式 ================= */
 .drill-subject{margin-top:26px}
 .drill-sub-title{font-size:17px;font-weight:700;color:var(--text);margin:8px 0 4px}
+/* 刷题页内嵌的科目错题卡 */
+.drill-wrongcard{
+  display:flex;align-items:center;gap:10px;margin-top:10px;padding:11px 15px;border-radius:10px;
+  background:var(--red-soft,rgba(224,49,49,.05));border:1px solid var(--red,rgba(224,49,49,.35));
+  cursor:pointer;transition:all .14s var(--ease);
+}
+.drill-wrongcard:hover{border-color:var(--red,#e03131);box-shadow:0 3px 10px rgba(224,49,49,.1)}
+.drill-wrongcard.empty{opacity:.55;cursor:default}
+.drill-wrongcard.empty:hover{box-shadow:none}
+.drill-wrongcard .dw-title{font-size:13px;font-weight:700;color:var(--red,#e03131)}
+.drill-wrongcard .dw-meta{font-size:12px;color:var(--text-2)}
+.drill-wrongcard .dw-go{margin-left:auto;font-size:12px;font-weight:600;color:var(--red,#e03131)}
 .drill-file{font-size:12.5px;font-weight:600;color:var(--text-3);margin:12px 0 8px}
 .drill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
 .drill-card{

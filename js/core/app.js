@@ -125,6 +125,13 @@
     const content = document.getElementById('content');
     if(content){
       content.addEventListener('click', e=>{
+        /* 刷题页内嵌的科目错题卡：进入该科目错题卷 */
+        const wcard = e.target.closest('[data-wrong-folder]');
+        if(wcard){
+          e.preventDefault();
+          if(KB.render && KB.render.renderWrongBook) KB.render.renderWrongBook(wcard.dataset.wrongFolder);
+          return;
+        }
         const card = e.target.closest('[data-drill-file]');
         if(!card) return;
         e.preventDefault();
