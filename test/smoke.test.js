@@ -88,12 +88,12 @@ const files = [
   'data/politics/_index.js', 'data/politics/maoyuan.js',
   'data/politics/quiz-maoyuan-single.js', 'data/politics/quiz-maoyuan-multi.js',
   'data/politics/maozedong.js', 'data/politics/quiz-maozedong-single.js', 'data/politics/quiz-maozedong-multi.js',
+  'data/politics/sixiang.js', 'data/politics/quiz-sixiang-single.js', 'data/politics/quiz-sixiang-multi.js',
   'data/politics/shigang.js', 'data/politics/quiz-shigang-single.js', 'data/politics/quiz-shigang-multi.js',
   'data/politics/sixiu.js', 'data/politics/quiz-sixiu-single.js', 'data/politics/quiz-sixiu-multi.js',
   'data/english/_index.js', 'data/english/writing.js',
-  'data/english/vocab.js', 'data/english/reading-simu.js',
+  'data/english/reading-simu.js',
   'data/english/cloze.js', 'data/english/newtype.js', 'data/english/translation.js',
-  'data/english/vocab-highfreq.js',
   'js/core/markup.js', 'js/core/highlight.js', 'js/core/renderer.js',
   'js/core/sidebar.js', 'js/core/search.js',
   'js/core/progress.js',
@@ -136,8 +136,8 @@ ok('11408 下 4 个子科目：408 + math + politics + english', JSON.stringify(
 ok('math 标题为 301 数学一', KB.getFolder('math').title === '301 数学一', KB.getFolder('math').title);
 ok('politics/english 挂在 11408 下', KB.getFolder('politics').parent==='11408' && KB.getFolder('english').parent==='11408');
 const fileIds = KB.listFiles().map(f=>f.id).sort();
-ok('文件注册：34 个文件', fileIds.length===34, fileIds);
-ok('侧边栏可见 18 个文件（习题 hidden）', KB.listVisibleFiles().length === 18, KB.listVisibleFiles().length);
+ok('文件注册：35 个文件', fileIds.length===35, fileIds);
+ok('侧边栏可见 17 个文件（习题 hidden）', KB.listVisibleFiles().length === 17, KB.listVisibleFiles().length);
 ok('408 科目含 4 个可见文件（四门课）', KB.filesInFolder('408').length === 4);
 ok('math 科目含 3 个文件（高数/线代/概率）', KB.filesInFolder('math').length === 3);
 ok('folderContainsActive 向上识别祖先', (function(){

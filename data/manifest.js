@@ -29,6 +29,9 @@ window.KB_MANIFEST = [
   'data/politics/maozedong.js',
   'data/politics/quiz-maozedong-single.js',
   'data/politics/quiz-maozedong-multi.js',
+  'data/politics/sixiang.js',
+  'data/politics/quiz-sixiang-single.js',
+  'data/politics/quiz-sixiang-multi.js',
   'data/politics/shigang.js',
   'data/politics/quiz-shigang-single.js',
   'data/politics/quiz-shigang-multi.js',
@@ -36,11 +39,9 @@ window.KB_MANIFEST = [
   'data/politics/quiz-sixiu-single.js',
   'data/politics/quiz-sixiu-multi.js',
   'data/english/_index.js',
-  'data/english/writing.js',
-  'data/english/vocab.js',
-  'data/english/reading-simu.js',
   'data/english/cloze.js',
+  'data/english/reading-simu.js',
   'data/english/newtype.js',
   'data/english/translation.js',
-  'data/english/vocab-highfreq.js'
+  'data/english/writing.js'
 ];
