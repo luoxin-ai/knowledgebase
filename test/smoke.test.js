@@ -245,6 +245,15 @@ ok('搜索数据源不含 hidden 习题', all.every(x=>!x.file.hidden));
   KB_PROGRESS.recordAnswer('__tc-f1__','2',true);
   ok('连对到最高档移出错题本', !KB_PROGRESS.wrongQids().includes('__tc-f1__'));
   ok('dueCount 归零', KB_PROGRESS.dueCount()===0);
+  /* 孤儿错题清理：模块删除/改名后残留 qid（如已删词汇模块 en-vh-、习思想拆分前的 mzd-）
+     不能 lookup 的错题应被自动清理，避免「计数有、页面空」的幽灵错题 */
+  localStorage.setItem('kb:wrong', JSON.stringify(['en-vh-1','mzd-s-6', '__tc-f1__']));
+  localStorage.setItem('kb:ans:__tc-f1__', JSON.stringify({pick:'a',correct:false,ts:Date.now()-2*86400000}));
+  const cnt = KB_PROGRESS.dueCount();
+  const left = JSON.parse(localStorage.getItem('kb:wrong'));
+  ok('孤儿 qid 被清理且计数一致', cnt===1 && left.length===1 && left[0]==='__tc-f1__', {cnt,left});
+  localStorage.setItem('kb:wrong', '[]');
+  ok('dueCount 与 dueList 同口径', KB_PROGRESS.dueCount()===KB_PROGRESS.dueList().length);
   /* __typecheck__ 为 hidden 文件，不影响后续断言（listFiles 走 visible 过滤） */
 }
 /* P8 数据校验：animation 块的 animType 必须在 factory 注册表中 */

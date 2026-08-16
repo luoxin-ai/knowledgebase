@@ -65,7 +65,10 @@ window.KB_PROGRESS = (function(){
   function dueList(){
     return read(KEY_WRONG, []).filter(isDue).map(lookup).filter(Boolean);
   }
-  function dueCount(){ return read(KEY_WRONG, []).filter(isDue).length; }
+  /* 计数与 dueList 同口径：只统计能查到的到期错题，避免孤儿 qid 造成数字虚高 */
+  function dueCount(){
+    return read(KEY_WRONG, []).filter(isDue).map(lookup).filter(Boolean).length;
+  }
 
   /* ---- 题目索引：qid → { file, chapter, block, question, qIndex } ---- */
   let qIndex = null;
@@ -81,6 +84,16 @@ window.KB_PROGRESS = (function(){
         });
       });
     });
+    pruneOrphans();
+  }
+  /* 清理孤儿错题 qid：模块删除/重构改名（如词汇模块移除、习思想拆分）后，
+     kb:wrong 里残留的 qid 无法 lookup，会造成「计数有、页面空」的幽灵错题。
+     仅当索引就绪时调用，避免误删。 */
+  function pruneOrphans(){
+    const wrong = read(KEY_WRONG, []);
+    if(!wrong.length) return;
+    const keep = wrong.filter(qid => !!qIndex[qid]);
+    if(keep.length !== wrong.length) write(KEY_WRONG, keep);
   }
   function lookup(qid){
     if(!qIndex) buildIndex();
