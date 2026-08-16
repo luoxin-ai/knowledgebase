@@ -18,17 +18,13 @@ window.KB_UI = (function(){
     root.querySelectorAll('.ti.folder.open').forEach(el=>{
       if(!KB.folderContainsActive(el.dataset.folder)) manual.add(el.dataset.folder);
     });
-    /* 错题本入口：有错题时显示计数 */
+    /* 复习入口：错题重做已并入刷题页（刷题按钮 → 科目分组错题卡），
+       侧边栏只留「今日待复习」（遗忘曲线时间提醒，性质不同） */
     let wrongBtn = '';
     if(window.KB_PROGRESS){
-      const n = KB_PROGRESS.wrongQids().length;
-      wrongBtn = '<div class="ti wrongbook'+(KB.state.activeFile==='wrongbook'?' active':'')+'" data-file="wrongbook">'+
-        '<div class="ti-head"><span class="ti-name">错题重做</span>'+
-        (n>0?'<span class="wb-count">'+n+'</span>':'')+'</div></div>';
-      /* 今日待复习入口：遗忘曲线调度到期数（无到期不显示） */
       const due = KB_PROGRESS.dueCount();
       if(due > 0){
-        wrongBtn += '<div class="ti wrongbook'+(KB.state.activeFile==='duetoday'?' active':'')+'" data-file="duetoday">'+
+        wrongBtn = '<div class="ti wrongbook'+(KB.state.activeFile==='duetoday'?' active':'')+'" data-file="duetoday">'+
           '<div class="ti-head"><span class="ti-name">今日待复习</span>'+
           '<span class="wb-count due">'+due+'</span></div></div>';
       }

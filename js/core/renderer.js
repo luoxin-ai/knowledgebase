@@ -561,6 +561,7 @@
   /* 错题本页面：聚合全部错题渲染成一张卷，答对自动移出（localStorage 由判分回调维护）
    * folderId 可选：传科目 id 时只渲染该科目错题（刷题页分科入口）；不传则全部错题 */
   function renderWrongBook(folderId){
+    if(folderId === 'all') folderId = undefined;   /* 刷题页「全部错题」卡 */
     const el = document.getElementById('content');
     if(!el) return;
     /* 销毁上一章遗留动画实例，避免 innerHTML 替换后 resize 命中已脱离 DOM 的实例 */
@@ -715,9 +716,34 @@
       el.innerHTML = '<section class="chapter empty-state">'+
         '<h2 class="empty-title">刷题</h2><p class="empty-text">暂无习题。</p></section>';
     } else {
+      /* 顶部「错题本」总览：全部错题数 + 各科错题卡 + 全部错题入口 */
+      const wrongList = (window.KB_PROGRESS ? window.KB_PROGRESS.wrongList() : []);
+      let wrongOverview = '';
+      if(wrongList.length){
+        const byFolder = {};
+        wrongList.forEach(it=>{
+          const fo = KB.getFolder(it.file.folder);
+          const sid = fo ? fo.id : 'other';
+          byFolder[sid] = (byFolder[sid]||0) + 1;
+        });
+        const folderCards = Object.keys(byFolder).map(sid=>{
+          const fo = KB.getFolder(sid);
+          return '<div class="dwo-card" role="button" tabindex="0" data-wrong-folder="'+sid+'">'+
+            '<span class="dwo-name">'+esc(fo?fo.title:'其他')+'</span>'+
+            '<span class="dwo-count">'+byFolder[sid]+' 道</span></div>';
+        }).join('');
+        wrongOverview =
+          '<div class="drill-wrong-overview">'+
+          '<div class="dwo-head"><span class="dwo-title">错题本</span>'+
+          '<span class="dwo-total">共 '+wrongList.length+' 道待重做</span></div>'+
+          '<div class="dwo-grid">'+folderCards+
+          '<div class="dwo-card all" role="button" tabindex="0" data-wrong-folder="all">'+
+          '<span class="dwo-name">全部错题</span><span class="dwo-count">'+wrongList.length+' 道</span></div>'+
+          '</div></div>';
+      }
       const secs = groups.map(g=>{
-        /* 该科目错题数：刷题页内嵌「错题重做」入口，点击进入分科错题卷 */
-        const wc = (window.KB_PROGRESS ? window.KB_PROGRESS.wrongList() : []).filter(it=>{
+        /* 该科目错题数：刷题页内嵌「错题重做」卡片，点击进入分科错题卷 */
+        const wc = wrongList.filter(it=>{
           const fo = KB.getFolder(it.file.folder);
           return fo && fo.id===g.folderId;
         }).length;
@@ -746,8 +772,8 @@
       }).join('');
       el.innerHTML = '<section class="chapter"><div class="chapter-head">'+
         '<h1 class="ch-title">刷题</h1>'+
-        '<p class="ch-summary">选择章节进入做题模式：自动跳到章末练习并直接展开。带进度徽标的章节可续练。</p>'+
-        '</div>'+secs+'</section>';
+        '<p class="ch-summary">错题重做与章节练习都在这里。选章节进做题模式（自动展开章末练习），或先清掉错题。</p>'+
+        '</div>'+wrongOverview+secs+'</section>';
     }
     renderToc({ title:'刷题', chapters:[] }, null);
     window.scrollTo({top:0, left:0, behavior:'auto'});
