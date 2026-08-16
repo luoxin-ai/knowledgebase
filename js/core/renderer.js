@@ -434,6 +434,31 @@
       '<nav class="toc-list">'+items+'</nav>';
   }
 
+  /* 刷题页右侧目录：两级（科目 → 文件），点击页面内平滑滚动到对应锚点 */
+  function renderDrillToc(groups, wrongCount){
+    const toc = document.getElementById('toc');
+    if(!toc) return;
+    let html = '<div class="toc-head">刷题</div><nav class="toc-list">';
+    if(wrongCount > 0){
+      html += '<a class="toc-item" data-scroll="drill-wrong" href="#drill-wrong">'+
+        '<span class="toc-num">'+wrongCount+'</span><span class="toc-t">错题本</span></a>';
+    }
+    groups.forEach(g=>{
+      const gid = 'drill-sub-'+(g.folderId||'other');
+      html += '<div class="toc-group" data-scroll="'+gid+'">'+esc(g.subject)+'</div>';
+      g.files.forEach(({file})=>{
+        html += '<a class="toc-item sub" data-scroll="drill-file-'+file.id+'" href="#drill-file-'+file.id+'">'+
+          '<span class="toc-t">'+esc(file.title)+'</span></a>';
+      });
+      g.noQuiz.forEach(nq=>{
+        html += '<a class="toc-item sub noquiz" data-scroll="drill-noquiz-'+(g.folderId||'other')+'" '+
+          'href="#drill-noquiz-'+(g.folderId||'other')+'">'+
+          '<span class="toc-t">'+esc(nq.file.title)+'</span></a>';
+      });
+    });
+    toc.innerHTML = html + '</nav>';
+  }
+
   /* ---- 章节渲染 ---- */
   function renderChapter(file, chapterId, opts){
     opts = opts||{};
@@ -717,12 +742,12 @@
     KB.setActiveFile('drill');
     KB.setActiveChapter(null);
     const groups = subjectsWithQuiz();
+    const wrongList = (window.KB_PROGRESS ? window.KB_PROGRESS.wrongList() : []);
     if(!groups.length){
       el.innerHTML = '<section class="chapter empty-state">'+
         '<h2 class="empty-title">刷题</h2><p class="empty-text">暂无习题。</p></section>';
     } else {
       /* 顶部「错题本」总览：全部错题数 + 各科错题卡 + 全部错题入口 */
-      const wrongList = (window.KB_PROGRESS ? window.KB_PROGRESS.wrongList() : []);
       let wrongOverview = '';
       if(wrongList.length){
         const byFolder = {};
@@ -738,7 +763,7 @@
             '<span class="dwo-count">'+byFolder[sid]+' 道</span></div>';
         }).join('');
         wrongOverview =
-          '<div class="drill-wrong-overview">'+
+          '<div class="drill-wrong-overview" id="drill-wrong">'+
           '<div class="dwo-head"><span class="dwo-title">错题本</span>'+
           '<span class="dwo-total">共 '+wrongList.length+' 道待重做</span></div>'+
           '<div class="dwo-grid">'+folderCards+
@@ -761,7 +786,7 @@
           : '<div class="drill-wrongcard empty"><span class="dw-title">错题重做</span>'+
             '<span class="dw-meta">暂无错题，继续保持</span></div>') : '';
         const cards = g.files.map(({file,chs})=>
-          '<div class="drill-file">'+esc(file.title)+'</div>'+
+          '<div class="drill-file" id="drill-file-'+file.id+'">'+esc(file.title)+'</div>'+
           '<div class="drill-grid">'+
           chs.map(({ch,cnt,st})=>{
             const pct = st && st.done>0 ? Math.round(st.right/st.done*100) : null;
@@ -775,11 +800,11 @@
         ).join('');
         /* 无习题文件(新增论文/笔记等)：灰色区展示,不静默消失 */
         const noQuizHtml = g.noQuiz.length
-          ? '<div class="drill-noquiz"><span class="dnq-title">暂无习题</span>'+
+          ? '<div class="drill-noquiz" id="drill-noquiz-'+(g.folderId||'other')+'"><span class="dnq-title">暂无习题</span>'+
             g.noQuiz.map(nq=>'<span class="dnq-item">'+esc(nq.file.title)+(nq.chCount?'（'+nq.chCount+' 章）':'')+'</span>').join('')+
             '<span class="dnq-hint">新增内容自动出现在此，配好章末习题后移入上方</span></div>'
           : '';
-        return '<section class="drill-subject"><h2 class="drill-sub-title">'+esc(g.subject)+'</h2>'+
+        return '<section class="drill-subject" id="drill-sub-'+(g.folderId||'other')+'"><h2 class="drill-sub-title">'+esc(g.subject)+'</h2>'+
           wrongCard+cards+noQuizHtml+'</section>';
       }).join('');
       el.innerHTML = '<section class="chapter"><div class="chapter-head">'+
@@ -787,7 +812,7 @@
         '<p class="ch-summary">错题重做与章节练习都在这里。选章节进做题模式（自动展开章末练习），或先清掉错题。</p>'+
         '</div>'+wrongOverview+secs+'</section>';
     }
-    renderToc({ title:'刷题', chapters:[] }, null);
+    renderDrillToc(groups, wrongList.length);
     window.scrollTo({top:0, left:0, behavior:'auto'});
     KB_UI.renderTree();
   }

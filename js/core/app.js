@@ -106,6 +106,14 @@
     const toc = document.getElementById('toc');
     if(!toc) return;
     toc.addEventListener('click', e=>{
+      /* 刷题页目录：页面内锚点平滑滚动（错题本 / 科目 / 文件） */
+      const sc = e.target.closest('[data-scroll]');
+      if(sc){
+        e.preventDefault();
+        const node = document.getElementById(sc.dataset.scroll);
+        if(node) node.scrollIntoView({behavior:'smooth', block:'start'});
+        return;
+      }
       const item = e.target.closest('.toc-item[data-nav]');
       if(!item) return;
       e.preventDefault();
