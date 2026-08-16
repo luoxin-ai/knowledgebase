@@ -233,4 +233,156 @@
   KB_ANIM.QuickSortAnimation  = QuickSortAnimation;
   KB_ANIM.HeapSortAnimation   = HeapSortAnimation;
   KB_ANIM.MergeSortAnimation  = MergeSortAnimation;
+
+  /* ==================== 直接插入排序 ==================== */
+  class InsertionSortAnimation extends AnimationBase {
+    generateSteps(){
+      const arr=[...this.config.data], n=arr.length;
+      const sortedSet=new Set(); this.steps=[];
+      for(let i=1;i<n;i++){
+        const key=arr[i];
+        this.steps.push({type:'key',arr:[...arr],compare:[i],sortedSet:new Set(sortedSet),
+          desc:'取第 '+i+' 个元素 '+key+' 为待插入关键字'});
+        let j=i-1;
+        while(j>=0 && arr[j]>key){
+          this.steps.push({type:'compare',arr:[...arr],compare:[j,i],sortedSet:new Set(sortedSet),
+            desc:'比较 '+arr[j]+' > '+key+'，'+arr[j]+' 后移'});
+          arr[j+1]=arr[j];
+          this.steps.push({type:'shift',arr:[...arr],swap:[j+1],compare:[j],sortedSet:new Set(sortedSet),
+            desc:arr[j]+' 后移到位置 '+(j+1)});
+          j--;
+        }
+        if(j+1!==i){
+          arr[j+1]=key;
+          this.steps.push({type:'insert',arr:[...arr],compare:[j+1],sortedSet:new Set(sortedSet),
+            desc:'插入 '+key+' 到位置 '+(j+1)});
+        }
+        sortedSet.add(i);
+        this.steps.push({type:'mark',arr:[...arr],sortedSet:new Set(sortedSet),
+          desc:'前 '+(i+1)+' 个元素有序'});
+      }
+      for(let k=0;k<n;k++) sortedSet.add(k);
+      this.steps.push({type:'done',arr:[...arr],sortedSet:new Set(sortedSet),desc:'✓ 排序完成'});
+    }
+    render(){
+      const st=this.steps[Math.min(this.currentStep,this.steps.length-1)];
+      const arr=st?st.arr:this.config.data;
+      drawSortBars(this,arr,{title:'直接插入排序 · 逐个插入有序区',compare:st&&st.compare||[],swap:st&&st.swap||[],sortedSet:st&&st.sortedSet||new Set()});
+    }
+  }
+
+  /* ==================== 希尔排序 ==================== */
+  class ShellSortAnimation extends AnimationBase {
+    generateSteps(){
+      const arr=[...this.config.data], n=arr.length;
+      const sortedSet=new Set(); this.steps=[];
+      const rec=(type,extra)=>this.steps.push(Object.assign({type,arr:[...arr],sortedSet:new Set(sortedSet)},extra));
+      for(let d=Math.floor(n/2); d>0; d=Math.floor(d/2)){
+        rec('gap',{gap:d,desc:'增量 d='+d+'：相距 d 的元素分到一组'});
+        for(let i=d;i<n;i++){
+          const key=arr[i];
+          let j=i-d;
+          while(j>=0 && arr[j]>key){
+            rec('compare',{gap:d,compare:[j,i],desc:'组内比较 '+arr[j]+' > '+key});
+            arr[j+d]=arr[j];
+            rec('shift',{gap:d,swap:[j+d],compare:[j],desc:arr[j]+' 后移 '+d+' 位'});
+            j-=d;
+          }
+          if(j+d!==i){
+            arr[j+d]=key;
+            rec('insert',{gap:d,compare:[j+d],desc:'插入 '+key});
+          }
+        }
+        rec('gapDone',{gap:d,desc:'增量 d='+d+' 一趟完成'});
+      }
+      for(let k=0;k<n;k++) sortedSet.add(k);
+      rec('done',{desc:'✓ 排序完成'});
+    }
+    render(){
+      const st=this.steps[Math.min(this.currentStep,this.steps.length-1)];
+      const arr=st?st.arr:this.config.data;
+      drawSortBars(this,arr,{title:'希尔排序 · 分组插入',
+        subtitle:st&&st.gap!==undefined?('当前增量 d='+st.gap):'',
+        compare:st&&st.compare||[],swap:st&&st.swap||[],sortedSet:st&&st.sortedSet||new Set()});
+    }
+  }
+
+  /* ==================== 简单选择排序 ==================== */
+  class SelectionSortAnimation extends AnimationBase {
+    generateSteps(){
+      const arr=[...this.config.data], n=arr.length;
+      const sortedSet=new Set(); this.steps=[];
+      for(let i=0;i<n-1;i++){
+        let min=i;
+        this.steps.push({type:'min',arr:[...arr],compare:[i],sortedSet:new Set(sortedSet),
+          desc:'第 '+(i+1)+' 趟：假设位置 '+i+' 最小'});
+        for(let j=i+1;j<n;j++){
+          this.steps.push({type:'scan',arr:[...arr],compare:[min,j],sortedSet:new Set(sortedSet),
+            desc:'比较 '+arr[min]+' 与 '+arr[j]});
+          if(arr[j]<arr[min]){ min=j;
+            this.steps.push({type:'newmin',arr:[...arr],compare:[min],sortedSet:new Set(sortedSet),
+              desc:arr[j]+' 更小，更新最小位置 '+min}); }
+        }
+        if(min!==i){
+          const a=arr[i],b=arr[min];
+          [arr[i],arr[min]]=[arr[min],arr[i]];
+          this.steps.push({type:'swap',arr:[...arr],swap:[i,min],sortedSet:new Set(sortedSet),
+            desc:'交换 '+a+' 与 '+b});
+        }
+        sortedSet.add(i);
+        this.steps.push({type:'mark',arr:[...arr],sortedSet:new Set(sortedSet),
+          desc:'位置 '+i+' 已确定'});
+      }
+      for(let k=0;k<n;k++) sortedSet.add(k);
+      this.steps.push({type:'done',arr:[...arr],sortedSet:new Set(sortedSet),desc:'✓ 排序完成'});
+    }
+    render(){
+      const st=this.steps[Math.min(this.currentStep,this.steps.length-1)];
+      const arr=st?st.arr:this.config.data;
+      drawSortBars(this,arr,{title:'简单选择排序 · 每趟选最小',compare:st&&st.compare||[],swap:st&&st.swap||[],sortedSet:st&&st.sortedSet||new Set()});
+    }
+  }
+
+  /* ==================== 基数排序 ==================== */
+  class RadixSortAnimation extends AnimationBase {
+    generateSteps(){
+      const arr=[...this.config.data];
+      const sortedSet=new Set(); this.steps=[];
+      const rec=(type,extra)=>this.steps.push(Object.assign({type,arr:[...arr],sortedSet:new Set(sortedSet)},extra));
+      const max=Math.max.apply(null,arr);
+      const d=String(max).length;
+      for(let k=0;k<d;k++){
+        const digit=Math.pow(10,k);
+        rec('pass',{digit:k+1,d:digit,desc:'第 '+(k+1)+' 趟：按'+['个','十','百','千'][k]+'位分配收集（稳定）'});
+        /* 计数排序稳定实现：按当前位入桶再收集 */
+        const buckets=[]; for(let b=0;b<10;b++) buckets[b]=[];
+        arr.forEach((v,i)=>{
+          const bit=Math.floor(v/digit)%10;
+          buckets[bit].push(v);
+          rec('bucket',{digit:k+1,d:digit,compare:[i],desc:'元素 '+v+' 的'+['个','十','百','千'][k]+'位 = '+bit+'，入桶 '+bit});
+        });
+        const out=[];
+        buckets.forEach((b,bi)=>b.forEach(v=>{
+          out.push(v);
+          rec('collect',{digit:k+1,d:digit,swap:[out.length-1],desc:'从桶 '+bi+' 收集 '+v});
+        }));
+        for(let i=0;i<arr.length;i++) arr[i]=out[i];
+        rec('passDone',{digit:k+1,d:digit,desc:'第 '+(k+1)+' 趟完成，按当前位有序'});
+      }
+      for(let k=0;k<arr.length;k++) sortedSet.add(k);
+      rec('done',{desc:'✓ 排序完成'});
+    }
+    render(){
+      const st=this.steps[Math.min(this.currentStep,this.steps.length-1)];
+      const arr=st?st.arr:this.config.data;
+      drawSortBars(this,arr,{title:'基数排序 · 按位分配收集（LSD）',
+        subtitle:st&&st.digit!==undefined?('当前按第 '+st.digit+' 位排序'):'',
+        compare:st&&st.compare||[],swap:st&&st.swap||[],sortedSet:st&&st.sortedSet||new Set()});
+    }
+  }
+
+  KB_ANIM.InsertionSortAnimation = InsertionSortAnimation;
+  KB_ANIM.ShellSortAnimation     = ShellSortAnimation;
+  KB_ANIM.SelectionSortAnimation = SelectionSortAnimation;
+  KB_ANIM.RadixSortAnimation     = RadixSortAnimation;
 })();

@@ -5,8 +5,9 @@
  * 按 index.html 的加载顺序装载全部 JS，验证：
  *   1. 注册表：文件夹 / 文件 / 块结构完整性
  *   2. 渲染管线：每章可渲染出 block HTML
- *   3. 动画引擎：8 类动画可实例化、步进到完成、模式切换正确
+ *   3. 动画引擎：19 类动画可实例化、步进到完成、模式切换正确
  *   4. 数据正确性：排序结果有序、KMP 命中位置正确
+ *   5. 文档数字：README 题数/块数/分布与实况一致（防漂移）
  * 运行：node test/smoke.test.js
  * ================================================================ */
 'use strict';
@@ -265,8 +266,8 @@ const idCounts = {};
 KB.listFiles().forEach(f=>{ idCounts[f.id]=(idCounts[f.id]||0)+1; });
 ok('文件 id 全局唯一', Object.values(idCounts).every(n=>n===1), idCounts);
 const animTypes = all.filter(x=>x.block.type==='animation').map(x=>x.block.animType).sort();
-ok('15 类动画数据齐备', JSON.stringify(animTypes) ===
-  JSON.stringify(['bubbleSort','cacheMap','graphTraversal','heapSort','huffman','kmp','matrixMul','mergeSort','pageReplace','pipeline','processSchedule','quickSort','riemann','slidingWindow','treeTraversal']), animTypes);
+ok('19 类动画数据齐备', JSON.stringify(animTypes) ===
+  JSON.stringify(['bubbleSort','cacheMap','graphTraversal','heapSort','huffman','insertionSort','kmp','matrixMul','mergeSort','pageReplace','pipeline','processSchedule','quickSort','radixSort','riemann','selectionSort','shellSort','slidingWindow','treeTraversal']), animTypes);
 
 /* ---------------- 3. 渲染管线 ---------------- */
 console.log('\n[3] 渲染管线');
@@ -360,6 +361,36 @@ ok('记忆标记', m.includes('mk-mem'));
 ok('行内代码', m.includes('mk-code'));
 ok('口诀块', m.includes('mk-mnemonic'));
 ok('警示块', m.includes('mk-warn'));
+
+/* ---------------- 6. 文档数字防漂移（README ↔ 实况） ---------------- */
+console.log('\n[6] 文档数字一致性（README ↔ 实况）');
+{
+  const readme = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
+  /* 排除第 2 节注册的题型自检夹具 __typecheck__（1 quiz 块 + 4 题），只统计真实内容 */
+  const allBlkInc = KB.listFiles().filter(f=>f.id!=='__typecheck__')
+    .flatMap(f=>f.chapters).flatMap(c=>c.blocks||[]);
+  const typeCount = t => allBlkInc.filter(b=>b.type===t).length;
+  const totalQ = allBlkInc.filter(b=>b.type==='quiz').flatMap(b=>b.questions||[]).length;
+  const rnum = re => { const m = readme.match(re); return m ? +m[1] : null; };
+  ok('README「全库 N 题」与实况一致', rnum(/全库\s*(\d+)\s*题/) === totalQ, { readme: rnum(/全库\s*(\d+)\s*题/), actual: totalQ });
+  ok('README「N 个知识块」与实况一致', rnum(/(\d+)\s*个知识块/) === allBlkInc.length, { readme: rnum(/(\d+)\s*个知识块/), actual: allBlkInc.length });
+  const distM = readme.match(/概念\s*(\d+)\s*\/\s*考点\s*(\d+)\s*\/\s*表格\s*(\d+)\s*\/\s*易错\s*(\d+)\s*\/\s*公式\s*(\d+)\s*\/\s*代码\s*(\d+)\s*\/\s*动画\s*(\d+)\s*\/\s*习题\s*(\d+)/);
+  const distActual = ['concept','keypoint','table','error','formula','code','animation','quiz'].map(typeCount);
+  ok('README 块类型分布与实况一致', !!distM && distM.slice(1).map(Number).join(',') === distActual.join(','), { readme: distM && distM.slice(1), actual: distActual });
+  ok('README「N 个 Canvas 动画」与实况一致', rnum(/(\d+)\s*个\s*Canvas\s*动画/) === typeCount('animation'), { readme: rnum(/(\d+)\s*个\s*Canvas\s*动画/), actual: typeCount('animation') });
+  const subjMap = [['数据结构','ds'],['计算机组成原理','co'],['操作系统','os'],['计算机网络','cn'],['高等数学','hm'],['线性代数','la'],['概率论与数理统计','prob']];
+  for(const [name,id] of subjMap){
+    const m = readme.match(new RegExp('\\| '+name+' \\|[^\\n]*?\\|[^\\n]*?\\|\\s*(\\d+)\\s*\\|'));
+    const actual = KB.getFile(id).chapters.reduce((s,c)=>s+(c.blocks||[]).length,0);
+    ok('README 科目表「'+name+'」块数与实况一致', !!m && +m[1] === actual, { readme: m && +m[1], actual });
+  }
+  const structMap = [['data-structure.js','ds'],['computer-org.js','co'],['operating-system.js','os'],['computer-network.js','cn'],['higher-math.js','hm'],['linear-algebra.js','la'],['probability.js','prob']];
+  for(const [fname,id] of structMap){
+    const m = readme.match(new RegExp(fname.replace(/\./g,'\\.')+'\\s+# [^\\n]*（\\d+ 章 (\\d+) 块）'));
+    const actual = KB.getFile(id).chapters.reduce((s,c)=>s+(c.blocks||[]).length,0);
+    ok('README 结构注释「'+fname+'」块数与实况一致', !!m && +m[1] === actual, { readme: m && +m[1], actual });
+  }
+}
 
 /* ---------------- 汇总 ---------------- */
 console.log('\n========================================');
