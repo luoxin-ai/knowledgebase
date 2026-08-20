@@ -23,6 +23,8 @@ KB.register({
       id: 'ch1', num: 1, title: '绪论', titleEn: 'Introduction',
       summary: '建立「逻辑结构 → 存储结构 → 运算」的分析框架，掌握时间/空间复杂度与 ADT。',
       blocks: [
+        { type: 'diagram', ref: 'ds-ch1-overview', title: '绪论 · 主记忆图',
+          summary: '一分为二：数据结构抓「逻辑/存储/运算」三要素，算法抓「时间/空间」两复杂度，全章据此展开。' },
         { type: 'concept', title: '数据结构三要素',
           exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -114,6 +116,8 @@ KB.register({
       id: 'ch2', num: 2, title: '线性表', titleEn: 'Linear List',
       summary: '顺序表随机存取 vs 链表动态增删，是后续所有数据结构的基础。',
       blocks: [
+        { type: 'diagram', ref: 'ds-ch2-overview', title: '线性表 · 主记忆图',
+          summary: '一条主线贯穿全章：顺序表拿「随机存取 O(1)」换「插删 O(n)」，链表正好相反，取舍即考点。' },
         { type: 'concept', title: '线性表的定义',
           exam: { freq: '偶考', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -280,6 +284,8 @@ int listInsert(int a[], int *n, int i, int e){
       id: 'ch3', num: 3, title: '栈、队列与数组', titleEn: 'Stack, Queue & Array',
       summary: '栈 LIFO、队列 FIFO 是两类受限线性表；循环队列判空判满与卡特兰数是必考点。',
       blocks: [
+        { type: 'diagram', ref: 'ds-ch3-overview', title: '栈、队列与数组 · 主记忆图',
+          summary: '两类受限线性表（栈 LIFO、队列 FIFO）加一块数组压缩存储，记住各自「受限在哪」即抓住全章。' },
         { type: 'concept', title: '栈（后进先出）',
           exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
@@ -460,6 +466,8 @@ bool isMatch(char *s){
       id: 'ch4', num: 4, title: '树与二叉树', titleEn: 'Tree & Binary Tree',
       summary: '二叉树性质、遍历、线索化、哈夫曼树，是 408 分值最重的章节之一。',
       blocks: [
+        { type: 'diagram', ref: 'ds-ch4-overview', title: '树与二叉树 · 主记忆图',
+          summary: '四梁八柱：遍历还原、线索化、树/森林转换、哈夫曼树，全部建立在「二叉树五性质」之上。' },
         { type: 'concept', title: '树的定义与基本性质',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -595,6 +603,8 @@ bool isMatch(char *s){
       id: 'ch5', num: 5, title: '图', titleEn: 'Graph',
       summary: '图的存储、遍历、最小生成树、最短路径、拓扑与关键路径五大板块。',
       blocks: [
+        { type: 'diagram', ref: 'ds-ch5-overview', title: '图 · 主记忆图',
+          summary: '存储与遍历是底座，向上撑起四大应用：最小生成树、最短路径、拓扑排序、关键路径。' },
         { type: 'concept', title: '图的基本概念',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -742,6 +752,8 @@ bool isMatch(char *s){
       id: 'ch6', num: 6, title: '查找', titleEn: 'Search',
       summary: '顺序/折半、BST、AVL、B 树、哈希五类查找结构，ASL 计算贯穿始终。',
       blocks: [
+        { type: 'diagram', ref: 'ds-tree-evolution', title: '查找结构演进：由优缺点驱动的选型链',
+          summary: 'BST 失衡退化 → AVL 严格平衡 → 红黑树近似平衡 → B/B+ 多路适配外存，先见森林再见树木。' },
         { type: 'concept', title: '顺序查找与折半查找',
           exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
@@ -807,6 +819,8 @@ int binarySearch(int a[], int n, int key){
             { h: '退化问题', body: '依次插入 1,2,3,...,n → BST 退化为单链，查找 O(n)。这就是引入 AVL 的原因。' }
           ]
         },
+        { type: 'diagram', ref: 'ds-bst', title: '二叉排序树（BST）结构示意',
+          summary: '左子树 < 根 < 右子树：结构性质本身即理解本体，遍历动画只讲过程、不重复。' },
         { type: 'concept', title: '平衡二叉树 AVL',
           exam: { freq: '高频', forms: ['选择题'], score: '约 2-4 分' },
           points: [
@@ -822,6 +836,10 @@ int binarySearch(int a[], int n, int key){
             { h: '口诀', body: '[[口诀]] 左左右旋、右右左旋、左右先左后右、右左先右后左。' }
           ]
         },
+        { type: 'diagram', ref: 'ds-avl-ll', title: 'AVL · LL 型旋转', summary: '失衡（左链）时右单旋恢复平衡。' },
+        { type: 'diagram', ref: 'ds-avl-rr', title: 'AVL · RR 型旋转', summary: '失衡（右链）时左单旋恢复平衡。' },
+        { type: 'diagram', ref: 'ds-avl-lr', title: 'AVL · LR 型旋转', summary: '先左后右双旋。' },
+        { type: 'diagram', ref: 'ds-avl-rl', title: 'AVL · RL 型旋转', summary: '先右后左双旋。' },
         { type: 'concept', title: '红黑树',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -903,6 +921,8 @@ int binarySearch(int a[], int n, int key){
       id: 'ch7', num: 7, title: '排序', titleEn: 'Sorting',
       summary: '八大排序的原理、特性、实现、优缺点与动画逐讲；外部排序收尾，总览对比表作总结。',
       blocks: [
+        { type: 'diagram', ref: 'ds-sort-overview', title: '排序五大类族谱',
+          summary: '插入 / 交换 / 选择 / 归并 / 基数五大类，先见森林再见树木（每类原理/特性/实现/优缺点/动图见各块）。' },
         /* ============ 1. 直接插入排序 ============ */
         { type: 'concept', title: '直接插入排序：原理与特性',
           exam: { freq: '高频', forms: ['选择题', '大题'], score: '约 2-8 分' },
@@ -1227,6 +1247,8 @@ void selectSort(int a[], int n){
             { h: '对比', body: '与冒泡相比：选择每趟只做 1 次交换，冒泡可能做多次——移动更省。' }
           ]
         },
+        { type: 'diagram', ref: 'ds-heap-view', title: '堆：数组下标 ↔ 完全二叉树',
+          summary: '堆的本质是数组，按下标 i 与 2i/2i+1 的父子关系映射为完全二叉树——理解堆结构的关键。' },
 
         /* ============ 7. 堆排序 ============ */
         { type: 'concept', title: '堆排序：原理与特性',
@@ -1473,6 +1495,8 @@ void radixSort(int a[], int n, int k){
       id: 'ch8', num: 8, title: '串', titleEn: 'String & KMP',
       summary: '朴素匹配 O(nm) vs KMP O(n+m)，next 数组手算是必考。',
       blocks: [
+        { type: 'diagram', ref: 'ds-ch8-overview', title: '串 · 主记忆图',
+          summary: '一个优化串起全章：朴素匹配的主串回退是病根，KMP 用 next 数组让主指针不回退，nextval 再优化。' },
         { type: 'concept', title: '串的定义与存储',
           exam: { freq: '偶考', forms: ['选择题'], score: '约 2 分' },
           points: [

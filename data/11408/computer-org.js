@@ -12,6 +12,8 @@ KB.register({
       id: 'ch1', num: 1, title: '计算机系统概述', titleEn: 'Overview',
       summary: '建立计算机系统的层次观与性能评价体系，理解冯·诺依曼结构与各项性能指标的含义。',
       blocks: [
+        { type: 'diagram', ref: 'co-ch1-overview', title: '计算机系统概述 · 主记忆图',
+          summary: '全章两支：冯·诺依曼机（存储程序+五大部件）与性能指标（CPI/主频/MIPS），层次观贯穿始终。' },
         { type: 'concept', title: '计算机系统的层次结构',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -40,6 +42,8 @@ KB.register({
             { h: '现代改进', body: '现代计算机改为**以存储器为中心**，CPU 与 I/O 设备可直接交换数据，减轻运算器负担。[[警示]] 早期冯·诺依曼机以运算器为中心，现代以存储器为中心，考试注意题干年代描述。' }
           ]
         },
+        { type: 'diagram', ref: 'co-von-neumann', title: '冯·诺依曼机结构',
+          summary: '五大部件与数据流/控制流连接关系，文字是罗列、图是整体结构。' },
         { type: 'keypoint', title: '主要性能指标',
           exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           summary: '机器字长、主频、CPI、MIPS/MFLOPS 是评价性能的核心量化指标。',
@@ -106,6 +110,8 @@ KB.register({
       id: 'ch2', num: 2, title: '数据的表示与运算', titleEn: 'Data Representation',
       summary: '掌握进制转换、四种机器数、IEEE 754 浮点、补码运算与溢出判断、校验码与移位运算。',
       blocks: [
+        { type: 'diagram', ref: 'co-ch2-overview', title: '数据的表示与运算 · 主记忆图',
+          summary: '四条主线：定点数（四种码）、浮点数（IEEE754）、运算与 ALU、校验码；补码统一加减是核心。' },
         { type: 'concept', title: '进制与数制转换',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -302,6 +308,8 @@ KB.register({
       id: 'ch3', num: 3, title: '存储系统', titleEn: 'Memory Hierarchy',
       summary: '理解存储层次、主存编址扩展、Cache 映射与替换、虚拟存储与快表 TLB 的计算与原理。',
       blocks: [
+        { type: 'diagram', ref: 'co-ch3-overview', title: '存储系统 · 主记忆图',
+          summary: '一条存储链自上而下：Cache→主存→虚拟存储→外存，每级之间靠「映射/页表」衔接，目标是速度逼近 Cache、容量逼近外存。' },
         { type: 'concept', title: '存储层次结构',
           exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -316,6 +324,8 @@ KB.register({
             { h: '层次间交换', body: 'Cache-主存之间以**块**为单位交换（由硬件完成，对程序员透明）；主存-辅存之间以**页/段**为单位交换（由操作系统管理，对程序员部分可见）。' }
           ]
         },
+        { type: 'diagram', ref: 'co-mem-hierarchy', title: '存储层次结构',
+          summary: '寄存器→Cache→主存→辅存→外存，速度/成本与容量反向梯度，层次有效靠局部性。' },
         { type: 'formula', title: '主存编址与芯片扩展',
           exam: { freq: '高频', forms: ['选择题', '大题'], score: '约 2-4 分' },
           summary: '地址线根数、数据线宽度与芯片数量的计算是存储扩展核心。',
@@ -372,6 +382,8 @@ KB.register({
             { h: 'Cache 性能来源', body: 'Cache 命中时访问时间远小于主存，只要命中率高，平均访问时间接近 Cache 访问时间。' }
           ]
         },
+        { type: 'diagram', ref: 'co-cache-addr', title: 'Cache 地址位段划分',
+          summary: '32 位主存地址 = 标记 + 行索引 + 块内偏移（以直接映射为例），位段划分是理解 Cache 的唯一清晰方式。' },
         { type: 'animation', title: 'Cache 地址映射动画',
           summary: '观察主存地址如何按直接 / 组相联 / 全相联映射到 Cache 行,tag 比对命中或装入。',
           animType: 'cacheMap',
@@ -473,6 +485,8 @@ int lru_replace(int set, int way_num, long stamp){
       id: 'ch4', num: 4, title: '指令系统', titleEn: 'Instruction Set',
       summary: '掌握指令格式、各种寻址方式的有效地址计算，以及 CISC 与 RISC 的本质区别。',
       blocks: [
+        { type: 'diagram', ref: 'co-ch4-overview', title: '指令系统 · 主记忆图',
+          summary: '三大块：指令格式、寻址方式（灵魂是算有效地址 EA）、CISC/RISC 风格之别。' },
         { type: 'concept', title: '指令格式',
           exam: { freq: '中频', forms: ['选择题', '大题'], score: '约 2-4 分' },
           points: [
@@ -488,6 +502,8 @@ int lru_replace(int set, int way_num, long stamp){
             { h: '扩展操作码示例', body: '设指令字长 16 位，地址码各 4 位。若操作码 4 位，可设计 15 条三地址指令（0000~1110），1111 作扩展标志，再接 4 位又可设计 15 条二地址指令，依次类推。' }
           ]
         },
+        { type: 'diagram', ref: 'co-instr-fmt', title: '指令格式位段划分',
+          summary: '操作码 + 地址码 位段划分；定长/扩展操作码、地址码数目都在位段上体现。' },
         { type: 'table', title: '常见寻址方式对比',
           headers: ['寻址方式', '有效地址 EA / 操作数', '访存次数', '特点与用途'],
           rows: [
@@ -565,6 +581,8 @@ int lru_replace(int set, int way_num, long stamp){
       id: 'ch5', num: 5, title: '中央处理器', titleEn: 'CPU',
       summary: '掌握 CPU 组成、指令周期与数据通路、硬布线/微程序控制、五段流水线与三类冒险。',
       blocks: [
+        { type: 'diagram', ref: 'co-ch5-overview', title: '中央处理器 · 主记忆图',
+          summary: '四梁：指令周期、数据通路、控制器（硬布线/微程序）、流水线（三类冒险），CPU=运算器+控制器。' },
         { type: 'concept', title: 'CPU 的功能与组成',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -580,6 +598,8 @@ int lru_replace(int set, int way_num, long stamp){
             { h: '寄存器功能速记', body: '[[口诀]] PC 指下一条，IR 装当前；ACC 累加结果，MQ 乘商专用；PSW 存标志。' }
           ]
         },
+        { type: 'diagram', ref: 'co-cpu-composition', title: 'CPU 的功能与组成',
+          summary: 'CPU = 运算器 + 控制器 + 内部总线；ALU/ACC/PSW 与 PC/IR/时序电路各司其职。' },
         { type: 'concept', title: '指令周期',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -609,6 +629,8 @@ int lru_replace(int set, int way_num, long stamp){
             { h: '通路设计要点', body: '设计数据通路需考虑：哪些部件需交互、控制信号如何产生、如何避免总线冲突。取指与执行共用通路需靠时序错开。' }
           ]
         },
+        { type: 'diagram', ref: 'co-datapath', title: '简化数据通路（取指周期）',
+          summary: '取指数据流 PC→MAR→主存→MDR→IR/ALU，一次性结构图走 raw 逃生舱。' },
         { type: 'table', title: '硬布线控制器 vs 微程序控制器',
           headers: ['特征', '硬布线控制器', '微程序控制器'],
           rows: [
@@ -725,6 +747,8 @@ WB   : Reg[rd] <- ALUout 或 LMD;            /* 结果写回寄存器 */
       id: 'ch6', num: 6, title: '总线与输入输出系统', titleEn: 'Bus and I/O',
       summary: '掌握总线分类与仲裁、三种 I/O 方式对比、中断处理流程与 DMA 传送过程。',
       blocks: [
+        { type: 'diagram', ref: 'co-ch6-overview', title: '总线与 I/O 系统 · 主记忆图',
+          summary: '两条主线：总线（分类/仲裁/定时）与 I/O 控制方式（程序查询→中断→DMA→通道，CPU 介入递减）。' },
         { type: 'concept', title: '总线分类',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -740,6 +764,8 @@ WB   : Reg[rd] <- ALUout 或 LMD;            /* 结果写回寄存器 */
             { h: '例题', body: '总线宽度 32 位，频率 100MHz，则带宽 = 4B × 100MHz = 400MB/s。' }
           ]
         },
+        { type: 'diagram', ref: 'co-bus-topology', title: '总线拓扑对比',
+          summary: '单总线 / 双总线 / 三总线拓扑对比，挂接差异一目了然。' },
         { type: 'concept', title: '总线仲裁',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [

@@ -14,6 +14,8 @@ KB.register({
       titleEn: 'Introduction to Operating Systems',
       summary: '操作系统是计算机系统中最基本的系统软件,本章掌握其概念、四大特征、发展分类与运行环境。',
       blocks: [
+        { type: 'diagram', ref: 'os-ch1-overview', title: '操作系统概述 · 主记忆图',
+          summary: '四维定位 OS：四大特征、五大功能、运行环境（内核态/系统调用/中断）、发展分类。' },
         {
           type: 'concept',
           title: '操作系统的概念与基本特征',
@@ -214,6 +216,8 @@ KB.register({
       titleEn: 'Processes and Threads',
       summary: '进程是资源分配的基本单位、线程是调度的基本单位,本章覆盖进程状态、调度、同步互斥与死锁四大核心。',
       blocks: [
+        { type: 'diagram', ref: 'os-ch2-overview', title: '进程管理 · 知识骨架',
+          summary: '进程是资源分配与调度的基本单位；概念、状态、调度、同步互斥、通信、死锁六大支柱。' },
         {
           type: 'concept',
           title: '进程的概念、特征与组成',
@@ -264,6 +268,8 @@ KB.register({
             }
           ]
         },
+        { type: 'diagram', ref: 'os-proc-states', title: '进程五状态转换',
+          summary: '新建→就绪→运行；运行↔就绪（调度/抢占）；运行→阻塞→就绪；运行→终止。' },
         {
           type: 'table',
           title: '线程与进程对比',
@@ -412,6 +418,8 @@ KB.register({
             }
           ]
         },
+        { type: 'diagram', ref: 'os-deadlock-rag', title: '死锁资源分配图（环 = 死锁）',
+          summary: '进程请求资源、资源分配给进程，构成有向图；存在环即循环等待，死锁成立。' },
         {
           type: 'code',
           title: '哲学家进餐问题(死锁版与三种解法)',
@@ -543,6 +551,8 @@ KB.register({
       titleEn: 'Memory Management',
       summary: '从连续分配到分页、分段、段页式,再到虚拟内存与页面置换,本章是内存地址转换与扩充的核心。',
       blocks: [
+        { type: 'diagram', ref: 'os-ch3-overview', title: '内存管理 · 主记忆图',
+          summary: '演进主线：连续分配→离散（分页/分段/段页式）→虚拟内存→页面置换，地址转换与置换算法是两大计算点。' },
         {
           type: 'concept',
           title: '内存管理的功能与地址转换',
@@ -799,6 +809,8 @@ KB.register({
       titleEn: 'File Management',
       summary: '文件管理围绕逻辑结构、目录、物理分配、空闲空间与磁盘调度展开,实现按名存取与高效读写。',
       blocks: [
+        { type: 'diagram', ref: 'os-ch4-overview', title: '文件管理 · 主记忆图',
+          summary: '围绕「按名存取」：逻辑结构、目录、物理分配（含 UNIX 混合索引计算）、磁盘调度四大块。' },
         {
           type: 'concept',
           title: '文件与文件系统',
@@ -1043,6 +1055,8 @@ KB.register({
       titleEn: 'Input/Output Management',
       summary: 'I/O 管理围绕设备分类、四种控制方式、缓冲区技术与设备分配展开,SPOOLing 是核心虚拟设备技术。',
       blocks: [
+        { type: 'diagram', ref: 'os-ch5-overview', title: 'I/O 管理 · 主记忆图',
+          summary: '两条主线：I/O 控制方式（查询→中断→DMA→通道，CPU 介入递减）与 I/O 软件层次；SPOOLing 是核心虚拟设备技术。' },
         {
           type: 'concept',
           title: 'I/O 设备与 I/O 控制器',

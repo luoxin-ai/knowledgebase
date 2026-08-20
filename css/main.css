@@ -604,3 +604,27 @@ td.stable-no{color:var(--red);font-weight:600}
   .code-line .ln{display:none}
   .anim-status{max-width:34%}
 }
+/* ================= SVG 图示块 ================= */
+.t-diagram .block-body{padding-top:2px}
+.dg-wrap{width:100%;overflow-x:auto;margin:6px 0 2px}
+.dg-svg{width:100%;height:auto;display:block;max-width:680px;margin:0 auto}
+.dg-missing{color:var(--red);font-size:13px;background:var(--red-soft);border-radius:6px;padding:8px 12px;margin:0}
+.dg-svg text{font-family:"PingFang SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,sans-serif}
+/* 边 */
+.dg-edge{fill:none;stroke:var(--text-3);stroke-width:1.6}
+.dg-edge.dashed{stroke-dasharray:5 4}
+.dg-edge-label{fill:var(--text-2);font-size:11px;text-anchor:middle}
+/* 节点 */
+.dg-node .dg-shape{stroke-width:1.6}
+.dg-label{font-size:13px;font-weight:600;text-anchor:middle;dominant-baseline:middle}
+.dg-note{fill:var(--text-2);font-size:11px;text-anchor:middle}
+.dg-note.small{font-size:10px;fill:var(--text-3)}
+/* 分区容器（架构分区背景框） */
+.dg-container-box{stroke-width:1.2}
+.dg-container-label{font-size:12px;font-weight:600;text-anchor:middle;fill:var(--text-2)}
+/* 语义色（tone → CSS 变量，主题化） */
+.tone-blue  .dg-shape{fill:var(--accent-soft);stroke:var(--accent)}   .tone-blue  .dg-label{fill:var(--accent)}
+.tone-green .dg-shape{fill:var(--green-soft); stroke:var(--green)}    .tone-green .dg-label{fill:var(--green)}
+.tone-red   .dg-shape{fill:var(--red-soft);   stroke:var(--red)}      .tone-red   .dg-label{fill:var(--red)}
+.tone-amber .dg-shape{fill:var(--amber-soft); stroke:var(--amber)}    .tone-amber .dg-label{fill:var(--amber)}
+.tone-gray  .dg-shape{fill:var(--surface-3);  stroke:var(--border-strong)} .tone-gray .dg-label{fill:var(--text-2)}

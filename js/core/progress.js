@@ -102,15 +102,19 @@ window.KB_PROGRESS = (function(){
 
   /* ---- 章掌握度：某教材文件的章 → { done, right, total } ---- */
   function chapterStats(bookId, num){
-    const qch = KB.quizChapterFor(bookId, num);
-    if(!qch) return null;
+    /* 审计 M1：改用复数 quizChaptersFor，覆盖「单选+多选」等多个习题文件命中的章节，
+       与渲染端 renderChapter 口径一致；原 quizChapterFor 只取首个，双习题科(如马原)题量对不上 */
+    const qchs = KB.quizChaptersFor(bookId, num);
+    if(!qchs.length) return null;
     let done=0, right=0, total=0;
-    (qch.blocks||[]).forEach(b=>{
-      (b.questions||[]).forEach(q=>{
-        if(!q.qid) return;
-        total++;
-        const a = getAnswer(q.qid);
-        if(a){ done++; if(a.correct) right++; }
+    qchs.forEach(qch=>{
+      (qch.blocks||[]).forEach(b=>{
+        (b.questions||[]).forEach(q=>{
+          if(!q.qid) return;
+          total++;
+          const a = getAnswer(q.qid);
+          if(a){ done++; if(a.correct) right++; }
+        });
       });
     });
     return { done, right, total };

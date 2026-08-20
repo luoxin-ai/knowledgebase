@@ -71,7 +71,10 @@
   /* ---- URL 路由：#<fileId>/<chId>，刷新恢复位置、链接可分享 ---- */
   function writeHash(fileId, chId){
     if(location.hash === '#'+fileId+'/'+chId) return;
-    history.replaceState(null, '', '#'+fileId+'/'+chId);
+    /* file:// 是 opaque origin，history.replaceState 会抛 SecurityError 中断初始化；
+       兜底改用 location.hash（file:// 下始终安全），路由仍可工作 */
+    try { history.replaceState(null, '', '#'+fileId+'/'+chId); }
+    catch(e){ try { location.hash = '#'+fileId+'/'+chId; } catch(_){} }
   }
   function parseHash(){
     const m = (location.hash||'').match(/^#([\w-]+)\/([\w-]+)/);
@@ -149,6 +152,11 @@
   }
 
   function init(){
+    /* 审计 L3：幂等守卫。init 由 loader.js 在数据加载完成后调用，理论上只一次；
+       若因热重载/多次调用而重复执行，下面会重复 addEventListener → 事件重复触发、双倍渲染。
+       加标志位确保只初始化一次 */
+    if(init._done) return;
+    init._done = true;
     if(!KB.listVisibleFiles().length) return;
     KB_UI.renderTree();
     initTree();

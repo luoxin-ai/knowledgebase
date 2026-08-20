@@ -9,24 +9,33 @@
 
   function highlightLine(code){
     if(!code) return '';
-    const src = esc(code);
-    /* 四个捕获组：注释 / 字符串 / 关键字 / 数字
-       此前关键字用 (?:C_KEYWORDS) 非捕获组，导致 replace 回调第 5 个参数
-       (offset) 被误当成数字，关键字被替换成行内偏移数字；现改为捕获组，
-       回调参数 c/s/k/n 与组号一一对应，offset 不再被误用 */
+    /* 审计 L5：修复「字符串字面量丢高亮」。此前先 esc(code) 把双引号变成 &quot;，
+       再跑正则找字面量 '"...'" —— 已无字面引号，字符串组永远不匹配，字符串常量失去高亮。
+       现改为对原始 code 正则扫描：匹配到的片段先 esc 再包 span；片段之间的普通文本也 esc，
+       既恢复字符串高亮，又保证 < > & 等字符不会突破 HTML。 */
     const re = new RegExp(
       '(\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/)|("(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\')|' +
       '\\b('+C_KEYWORDS+')\\b|' +
       '\\b(0[xX][0-9a-fA-F]+|\\d+\\.?\\d*)\\b',
       'g'
     );
-    return src.replace(re, (m, c, s, k, n)=>{
-      if(c) return '<span class="tok-c">'+c+'</span>';
-      if(s) return '<span class="tok-s">'+s+'</span>';
-      if(k) return '<span class="tok-k">'+k+'</span>';
-      if(n) return '<span class="tok-n">'+n+'</span>';
-      return m;
-    });
+    let out = '';
+    let last = 0;
+    let m;
+    while((m = re.exec(code)) !== null){
+      /* 匹配前的普通文本：转义后输出 */
+      if(m.index > last) out += esc(code.slice(last, m.index));
+      const text = m[0];
+      if(m[1]) out += '<span class="tok-c">'+esc(text)+'</span>';
+      else if(m[2]) out += '<span class="tok-s">'+esc(text)+'</span>';
+      else if(m[3]) out += '<span class="tok-k">'+esc(text)+'</span>';
+      else if(m[4]) out += '<span class="tok-n">'+esc(text)+'</span>';
+      /* 防御零宽匹配死循环 */
+      if(m.index === re.lastIndex) re.lastIndex++;
+      last = m.index + text.length;
+    }
+    if(last < code.length) out += esc(code.slice(last));
+    return out;
   }
 
   /** 渲染带行号 + 复制按钮的代码块 */

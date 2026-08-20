@@ -33,6 +33,11 @@
   }
 
   function boot(){
+    /* 审计 L2：幂等守卫。boot 在 readyState!=='loading' 时同步执行、否则挂 DOMContentLoaded；
+       极端情况下(如脚本被重复注入)两者满足其一前可能触发两次，重复加载数据脚本会重复 register。
+       加标志位确保 boot 全链路只跑一次 */
+    if(boot._done) return;
+    boot._done = true;
     var list = window.KB_MANIFEST || [];
     loadAll(list).then(function(){
       if(window.KB_APP && typeof KB_APP.init === 'function'){

@@ -80,11 +80,14 @@ global.document = doc;
 const ROOT = path.join(__dirname, '..');
 const files = [
   'js/core/registry.js',
-  'data/11408/_index.js', 'data/11408/data-structure.js',
+  'js/svg/registry.js', 'js/svg/generators.js',
+  'data/11408/_index.js', 'data/11408/data-structure.js', 'data/11408/diagrams-ds.js',
   'data/11408/quiz-ds-a.js', 'data/11408/quiz-ds-b.js',
   'data/11408/quiz-co.js', 'data/11408/quiz-os.js', 'data/11408/quiz-cn.js',
   'data/11408/quiz-hm.js', 'data/11408/quiz-la.js', 'data/11408/quiz-prob.js',
-  'data/11408/computer-org.js', 'data/11408/operating-system.js', 'data/11408/computer-network.js',
+  'data/11408/computer-org.js', 'data/11408/diagrams-co.js',
+  'data/11408/operating-system.js', 'data/11408/diagrams-os.js',
+  'data/11408/computer-network.js', 'data/11408/diagrams-cn.js',
   'data/11408/higher-math.js', 'data/11408/linear-algebra.js', 'data/11408/probability.js',
   'data/politics/_index.js', 'data/politics/maoyuan.js',
   'data/politics/quiz-maoyuan-single.js', 'data/politics/quiz-maoyuan-multi.js',
@@ -152,8 +155,8 @@ ok('folderContainsActive 向上识别祖先', (function(){
 console.log('\n[2] 块数据完整性');
 const all = KB.allBlocks();
 ok('全库块数量 ≥ 60', all.length >= 60, all.length);
-const typeSet = [...new Set(all.map(x=>x.block.type))].sort();
-ok('可见块类型集合（vocab/reading 直接以 quiz 块入库）', JSON.stringify(typeSet) === JSON.stringify(['animation','code','concept','error','formula','keypoint','quiz','table']), typeSet);
+  const typeSet = [...new Set(all.map(x=>x.block.type))].sort();
+  ok('可见块类型集合（含 diagram）', JSON.stringify(typeSet) === JSON.stringify(['animation','code','concept','diagram','error','formula','keypoint','quiz','table']), typeSet);
 let bad = 0;
 for(const {block} of all){ if(!block.title || !block.type) bad++; }
 ok('每块都有 title + type', bad === 0, bad);
@@ -390,6 +393,75 @@ console.log('\n[6] 文档数字一致性（README ↔ 实况）');
     const actual = KB.getFile(id).chapters.reduce((s,c)=>s+(c.blocks||[]).length,0);
     ok('README 结构注释「'+fname+'」块数与实况一致', !!m && +m[1] === actual, { readme: m && +m[1], actual });
   }
+}
+
+/* ---------------- 7. 图示（diagram）校验 ---------------- */
+console.log('\n[7] 图示（diagram）校验');
+const diag = KB_DIAG.list();
+ok('注册图示 41 张', diag.length === 41, diag.length);
+const HEX = /#[0-9a-fA-F]{3,6}/;
+const diagBad = [];
+diag.forEach(d=>{
+  if(d.svg){ /* raw 逃生舱：三条铁律 */
+    if(!/viewBox=/.test(d.svg) || !/role="img"/.test(d.svg) || !/<title>/.test(d.svg)) diagBad.push(d.id + ':raw 缺 viewBox/role/title');
+    if(/https?:\/\//.test(d.svg)) diagBad.push(d.id + ':raw 含外部引用');
+    if(HEX.test(d.svg)) diagBad.push(d.id + ':raw 写死 hex 色值');
+  } else if(d.svgType === 'graph'){
+    const ids = new Set((d.data.nodes||[]).map(n=>n.id));
+    (d.data.containers||[]).forEach(c=>ids.add(c.id)); /* 容器也可作边端点 */
+    (d.data.edges||[]).forEach(e=>{ if(!ids.has(e.from) || !ids.has(e.to)) diagBad.push(d.id + ':edge 引用缺失节点 ' + e.from + '/' + e.to); });
+  } else if(d.svgType === 'bitfield'){
+    const sum = (d.data.segs||[]).reduce((s,x)=>s + x.bits, 0);
+    if(sum !== d.data.totalBits) diagBad.push(d.id + ':bitfield 位数 ' + sum + '≠' + d.data.totalBits);
+  } else {
+    diagBad.push(d.id + ':未知 svgType');
+  }
+});
+ok('图示 schema 全部合法', diagBad.length === 0, diagBad);
+let unresolved = 0;
+KB.allBlocks().forEach(({block})=>{ if(block.type==='diagram' && !KB_DIAG.get(block.ref)) unresolved++; });
+ok('教材 diagram 块 ref 全部可解析', unresolved === 0, unresolved);
+KB_PENDING_ANIMS.length = 0;
+KB.render.renderChapter(KB.getFile('ds'), 'ch6', { silent:true });
+const ch6 = doc.getElementById('content')._innerHTML;
+ok('含 diagram 块的章节渲染出 图示 SVG（dg-svg）', ch6.includes('dg-svg'));
+ok('ds/ch6 图示数量 = 6（章首演进 + BST + 4 旋转）', (ch6.match(/class="dg-svg"/g)||[]).length === 6);
+
+/* ---------------- 8. 审计修复回归（H1/M1/M2/L5） ---------------- */
+console.log('\n[8] 审计修复回归');
+/* M1：章掌握度跨「单选+多选」多个习题文件聚合，与渲染端 renderChapter 口径一致 */
+{
+  const mySingle = KB.getFile('quiz-maoyuan-single');
+  const myMulti  = KB.getFile('quiz-maoyuan-multi');
+  const ch1Single = (mySingle.chapters||[]).find(c=>c.num===1);
+  const ch1Multi  = (myMulti.chapters||[]).find(c=>c.num===1);
+  const singleQ = (ch1Single?ch1Single.blocks:[]).filter(b=>b.type==='quiz').reduce((s,b)=>s+(b.questions||[]).length,0);
+  const multiQ  = (ch1Multi?ch1Multi.blocks:[]).filter(b=>b.type==='quiz').reduce((s,b)=>s+(b.questions||[]).length,0);
+  const st = KB_PROGRESS.chapterStats('maoyuan', 1);
+  ok('M1 chapterStats 聚合单选+多选(两文件该章题数之和)', st && st.total === singleQ + multiQ, { total: st&&st.total, singleQ, multiQ });
+  ok('M1 chapterStats 不再只取首个(>单文件题数)', st && st.total > singleQ, { total: st&&st.total, singleQ });
+}
+/* M2：动画连点 play() 守卫，不开启第二条 rAF 循环（否则双倍速） */
+{
+  let rafCount = 0;
+  const origRaf = global.requestAnimationFrame;
+  global.requestAnimationFrame = ()=>{ rafCount++; return 0; };
+  try{
+    const anim = KB_ANIM.AnimationFactories.bubbleSort(makeCanvas(), { data:[3,1,2] });
+    rafCount = 0;
+    anim.play(); anim.play(); anim.play();   /* 连点三次，仅第一次应开循环 */
+    ok('M2 连点 play() 只启动一条 rAF 循环（无双倍速）', rafCount === 1, rafCount);
+    ok('M2 播放态保持 isPlaying=true', anim.isPlaying === true);
+  } finally { global.requestAnimationFrame = origRaf; }
+}
+/* L5：字符串字面量高亮（旧实现先 esc 再匹配 → 引号变 &quot; → 字符串组永远不命中 → 丢高亮） */
+{
+  const line = KB.highlight.highlightLine('char* s = "hello world";');
+  ok('L5 字符串字面量被高亮(tok-s)', line.includes('tok-s') && line.includes('hello world'), line);
+  const kw = KB.highlight.highlightLine('int x = 42;');
+  ok('L5 关键字(tok-k)与数字(tok-n)仍高亮', kw.includes('tok-k') && kw.includes('tok-n'), kw);
+  const html = KB.highlight.highlightLine('if(a < b && c > 0){}');
+  ok('L5 尖括号/& 被转义不破 HTML', html.includes('&lt;') && html.includes('&gt;') && html.includes('&amp;&amp;'), html);
 }
 
 /* ---------------- 汇总 ---------------- */

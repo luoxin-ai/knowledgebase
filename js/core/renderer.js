@@ -116,6 +116,23 @@
     return blockHead(b)+'<div class="block-body">'+(b.summary?'<p>'+inlineMarkup(b.summary)+'</p>':'')+
       items+(b.note?'<div class="table-note">'+inlineMarkup(b.note)+'</div>':'')+'</div>';
   }
+  function renderDiagram(b){
+    const d = (typeof KB_DIAG !== 'undefined') ? KB_DIAG.get(b.ref) : null;
+    if(!d){
+      return blockHead(b)+'<div class="block-body"><p class="dg-missing">图示未找到：'+(b.ref||'')+'</p></div>';
+    }
+    let svg = '';
+    if(d.svg){
+      svg = d.svg;
+    } else if(typeof KB_SVG !== 'undefined' && KB_SVG[d.svgType]){
+      svg = KB_SVG[d.svgType](d.data || {});
+    } else {
+      svg = '<p class="dg-missing">图示类型未实现：'+(b.svgType||'')+'</p>';
+    }
+    return blockHead(b)+'<div class="block-body">'+
+      (b.summary?'<p>'+inlineMarkup(b.summary)+'</p>':'')+
+      '<div class="dg-wrap">'+svg+'</div>'+renderDetails(b.details)+'</div>';
+  }
 
   /* ===================== 习题块 ===================== */
   /* 作答查表：block id + 题序 → 正确选项索引（DOM 不放明文答案，F12 不可见） */
@@ -169,11 +186,14 @@
       let optIdx = q.options.map((_,i)=>i);
       if(test) optIdx = shuffle(optIdx);
       if(multi){
-        /* 多选：answer 如 'abd' → 各字母选项索引集合 */
-        const ansSet = new Set(String(q.answer).toLowerCase().split('').map(ch=>optIdx.indexOf(ch.charCodeAt(0)-97)));
+        /* 审计 H1：ansSet 存「原始选项索引」，与下方 data-o(原始索引)、判分坐标系一致；
+           原先写 optIdx.indexOf(...) 得到的是洗牌后的展示序，会与点击事件的原始索引错配 → 乱序必误判 */
+        const ansSet = new Set(String(q.answer).toLowerCase().split('').map(ch=>ch.charCodeAt(0)-97));
         quizAnswerMap[b.id+'-'+shown] = ansSet;
       }else{
-        quizAnswerMap[b.id+'-'+shown] = optIdx.indexOf(String(q.answer).toLowerCase().charCodeAt(0)-97);
+        /* 审计 H1：quizAnswerMap 存「原始正确索引」，与点击时 data-o(原始索引) 同源，
+           复习/测验两种模式均判对；原 optIdx.indexOf(...) 在乱序时把展示序当答案，导致必错 */
+        quizAnswerMap[b.id+'-'+shown] = String(q.answer).toLowerCase().charCodeAt(0)-97;
       }
       const opts = optIdx.map((oi,pos)=>
         '<button class="qz-opt" data-q="'+shown+'" data-o="'+oi+'">'+
@@ -418,7 +438,7 @@
   const BlockRenderers = {
     concept: renderConcept, keypoint: renderKeypoint, formula: renderFormula,
     code: renderCode, table: renderTable, animation: renderAnimation, error: renderError,
-    quiz: renderQuiz
+    diagram: renderDiagram, quiz: renderQuiz
   };
 
   /* ---- 右侧文章目录（md 风格竖排 TOC） ---- */
@@ -565,7 +585,8 @@
          用令牌校验，仅最后一次 renderChapter 的 rAF 才真正初始化 */
       animToken++;
       const tk = animToken;
-      requestAnimationFrame(()=>{ if(tk === animToken) KB_ANIM.initAnimations(); });
+      /* 审计 L4：KB_ANIM 此前裸引，若加载时序异常会抛 ReferenceError 中断动画初始化；加 typeof 守卫 */
+      requestAnimationFrame(()=>{ if(tk === animToken && typeof KB_ANIM !== 'undefined' && KB_ANIM.initAnimations) KB_ANIM.initAnimations(); });
     }
     if(typeof KB_UI !== 'undefined' && KB_UI.initCopyButtons){
       KB_UI.initCopyButtons();
@@ -704,13 +725,15 @@
   function quizChaptersOf(fileId){
     const f = KB.getFile(fileId);
     if(!f) return [];
+    /* 审计 M1：同 renderChapter，改用复数 quizChaptersFor，覆盖双习题文件章节 */
     return (f.chapters||[]).filter(ch=>{
-      const qc = KB.quizChapterFor(fileId, ch.num);
-      return qc && (qc.blocks||[]).some(b=>b.type==='quiz');
+      const qcs = KB.quizChaptersFor(fileId, ch.num);
+      return qcs.length && qcs.some(qc=>(qc.blocks||[]).some(b=>b.type==='quiz'));
     }).map(ch=>{
       const st = window.KB_PROGRESS ? KB_PROGRESS.chapterStats(fileId, ch.num) : null;
-      const qc = KB.quizChapterFor(fileId, ch.num);
-      const cnt = (qc.blocks||[]).reduce((s,b)=>s+((b.questions&&b.questions.length)||0),0);
+      const qcs = KB.quizChaptersFor(fileId, ch.num);
+      /* cnt 跨多个习题文件(单选+多选)累加，与渲染端一致 */
+      const cnt = qcs.reduce((s,qc)=>s+(qc.blocks||[]).reduce((s2,b)=>s2+((b.questions&&b.questions.length)||0),0),0);
       return { ch, cnt, st };
     });
   }
@@ -820,7 +843,11 @@
   function drillGo(fileId, chId){
     const f = KB.getFile(fileId);
     if(!f) return;
-    if(location.hash !== '#'+fileId+'/'+chId) history.replaceState(null,'','#'+fileId+'/'+chId);
+    /* file:// opaque origin：replaceState 抛 SecurityError，兜底用 location.hash */
+    if(location.hash !== '#'+fileId+'/'+chId){
+      try { history.replaceState(null,'','#'+fileId+'/'+chId); }
+      catch(e){ try { location.hash = '#'+fileId+'/'+chId; } catch(_){} }
+    }
     KB.render.renderChapter(f, chId);
     KB_UI.renderTree();
     /* 展开练习区：等章节 DOM + 动画布局稳定后，直接定位到练习区顶部 */

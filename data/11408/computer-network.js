@@ -22,6 +22,8 @@ KB.register({
       id: 'ch1', num: 1, title: '体系结构', titleEn: 'Architecture',
       summary: '分层思想贯穿全书，牢记七层/四层模型、各层协议与数据单位。',
       blocks: [
+        { type: 'diagram', ref: 'cn-layer-overview', title: '计算机网络 · 五层体系结构总览',
+          summary: '自顶向下：应用层 / 传输层 / 网络层 / 数据链路层 / 物理层，各层协议与数据单位见纵列。' },
         { type: 'concept', title: '网络分层思想',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -127,6 +129,8 @@ KB.register({
       id: 'ch2', num: 2, title: '物理层', titleEn: 'Physical Layer',
       summary: '核心是两条极限定理与编码方式，还有三种交换方式的对比。',
       blocks: [
+        { type: 'diagram', ref: 'cn-ch2-overview', title: '物理层 · 主记忆图',
+          summary: '两大定理（奈奎斯特/香农）定速率上限，外加通信基础、三种交换方式、信道复用。' },
         { type: 'concept', title: '通信基础：码元、波特率、比特率',
           exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -244,6 +248,8 @@ KB.register({
       id: 'ch3', num: 3, title: '数据链路层', titleEn: 'Data Link Layer',
       summary: '成帧、差错检测、流量控制与介质访问控制是本章四大支柱。',
       blocks: [
+        { type: 'diagram', ref: 'cn-ch3-overview', title: '数据链路层 · 主记忆图',
+          summary: '四大支柱：组帧、差错控制（CRC）、流量/可靠（滑动窗口 GBN/SR）、介质访问（CSMA/CD、CA）。' },
         { type: 'concept', title: '数据链路层功能',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -405,6 +411,8 @@ void crc(char *M, char *G, int r, char *FCS) {
       id: 'ch4', num: 4, title: '网络层', titleEn: 'Network Layer',
       summary: 'IP 数据报、子网划分与 CIDR、路由协议是本章核心，计算题密集。',
       blocks: [
+        { type: 'diagram', ref: 'cn-ch4-overview', title: '网络层 · 主记忆图',
+          summary: '灵魂是「转发」：IP 数据报与分片、IP 编址（子网/CIDR/IPv6）、路由协议（RIP/OSPF/BGP）、辅助协议（ARP/ICMP）。' },
         { type: 'concept', title: '网络层功能',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -540,6 +548,8 @@ void crc(char *M, char *G, int r, char *FCS) {
       id: 'ch5', num: 5, title: '传输层', titleEn: 'Transport Layer',
       summary: 'TCP 的三次握手、四次挥手、流量控制与拥塞控制是重中之重。',
       blocks: [
+        { type: 'diagram', ref: 'cn-ch5-overview', title: '传输层 · 主记忆图',
+          summary: '以 TCP 为核心辐射三支：连接管理（三次握手/四次挥手）、流量控制（滑动窗口）、拥塞控制（慢启动等四算法）；UDP 作对照。' },
         { type: 'concept', title: '传输层功能与端口',
           exam: { freq: '中频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -611,6 +621,8 @@ void crc(char *M, char *G, int r, char *FCS) {
             { h: '警示', body: '[[警示]] 为什么握手 3 次、挥手 4 次？因为建立时服务器把 SYN 和 ACK 合并发送；释放时两个方向要**分开**关闭，服务器收到 FIN 后可能仍有数据要发，ACK 与 FIN 分开。' }
           ]
         },
+        { type: 'diagram', ref: 'cn-tcp-states', title: 'TCP 连接状态机',
+          summary: '三次握手建连、四次挥手断连：CLOSED→…→ESTABLISHED→…→TIME_WAIT→CLOSED。' },
         { type: 'concept', title: 'TCP 流量控制：滑动窗口',
           exam: { freq: '高频', forms: ['选择题'], score: '约 2 分' },
           points: [
@@ -680,6 +692,8 @@ void on_3_dup_ack() {                         /* 收到 3 个重复 ACK(快重�
       id: 'ch6', num: 6, title: '应用层', titleEn: 'Application Layer',
       summary: 'DNS、HTTP、FTP、电子邮件、DHCP 各自的工作流程与端口是考点。',
       blocks: [
+        { type: 'diagram', ref: 'cn-ch6-overview', title: '应用层 · 主记忆图',
+          summary: '五大应用协议（DNS/HTTP/电子邮件/DHCP，另记 FTP 20/21）+ C/S 与 P2P 模型，工作流程与端口号是考点。' },
         { type: 'concept', title: '应用层模型：C/S 与 P2P',
           exam: { freq: '偶考', forms: ['选择题'], score: '约 2 分' },
           points: [

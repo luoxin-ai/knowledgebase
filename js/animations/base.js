@@ -50,6 +50,9 @@
 
     /* ---- 状态机 ---- */
     play(){
+      /* 审计 M2：连点播放若无 isPlaying 守卫会再开一条 rAF 循环，两条循环并发推进 currentStep → 双倍速。
+         已播放中直接返回；仅当动画已结束(currentStep 到尾)或暂停时允许（重新）启动 */
+      if(this.isPlaying) return;
       if(this.currentStep >= this.steps.length) this.reset();
       this.isPlaying = true;
       this.lastStepTime = performance.now();
