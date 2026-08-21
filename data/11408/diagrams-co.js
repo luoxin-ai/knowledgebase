@@ -54,26 +54,43 @@
       edges:[ {from:'con',to:'alu',arrow:false},{from:'con',to:'bus',arrow:false},{from:'bus',to:'alu',arrow:false} ],
       notes:[ {x:340,y:60,text:'CPU = 运算器 + 控制器 + 内部总线（寄存器组）',small:false} ] } });
 
-  /* ——— 总线拓扑对比 ——— */
-  R({ id:'co-bus-topology', svgType:'graph', title:'总线拓扑对比',
-    data:{ width:680, height:320,
+  /* ——— 总线拓扑对比：单/双/三总线的"总线数量 + 连接关系"都不同 ——— */
+  R({ id:'co-bus-topology', svgType:'graph', title:'总线拓扑对比（单/双/三总线）',
+    data:{ width:680, height:300, title:'总线拓扑对比（单/双/三总线）',
       nodes:[
-        {id:'c1',shape:'rect',x:70, y:70, w:80,h:40,label:'CPU',tone:'blue'},
-        {id:'m1',shape:'rect',x:70, y:170,w:80,h:40,label:'主存',tone:'blue'},
-        {id:'i1',shape:'rect',x:70, y:270,w:80,h:40,label:'I/O',tone:'blue'},
-        {id:'c2',shape:'rect',x:290,y:70, w:80,h:40,label:'CPU',tone:'blue'},
-        {id:'m2',shape:'rect',x:290,y:170,w:80,h:40,label:'主存',tone:'blue'},
-        {id:'i2',shape:'rect',x:290,y:270,w:80,h:40,label:'I/O',tone:'blue'},
-        {id:'c3',shape:'rect',x:510,y:70, w:80,h:40,label:'CPU',tone:'blue'},
-        {id:'m3',shape:'rect',x:510,y:170,w:80,h:40,label:'主存',tone:'blue'},
-        {id:'i3',shape:'rect',x:510,y:270,w:80,h:40,label:'I/O',tone:'blue'}
+        /* 单总线：CPU/主存/I/O 全部挂到同一条系统总线 */
+        {id:'a_cpu',shape:'rect',x:95, y:72, w:64,h:38,label:'CPU',tone:'blue'},
+        {id:'a_mem',shape:'rect',x:95, y:162,w:64,h:38,label:'主存',tone:'blue'},
+        {id:'a_io', shape:'rect',x:95, y:252,w:64,h:38,label:'I/O',tone:'blue'},
+        {id:'a_bus',shape:'rect',x:170,y:162,w:90, h:12,label:'系统总线',tone:'gray'},
+        /* 双总线：CPU 同时连存储总线与 I/O 总线，主存/I/O 各占其一 */
+        {id:'b_cpu',shape:'rect',x:300,y:72, w:64,h:38,label:'CPU',tone:'blue'},
+        {id:'b_mem',shape:'rect',x:300,y:162,w:64,h:38,label:'主存',tone:'blue'},
+        {id:'b_io', shape:'rect',x:300,y:252,w:64,h:38,label:'I/O',tone:'blue'},
+        {id:'b_bus1',shape:'rect',x:375,y:117,w:90,h:12,label:'存储总线',tone:'gray'},
+        {id:'b_bus2',shape:'rect',x:375,y:207,w:90,h:12,label:'I/O总线',tone:'gray'},
+        /* 三总线：存储总线(CPU-主存)+I/O总线(CPU-I/O)+DMA总线(主存-I/O) 构成三角形 */
+        {id:'c_cpu',shape:'rect',x:505,y:72, w:64,h:38,label:'CPU',tone:'blue'},
+        {id:'c_mem',shape:'rect',x:505,y:162,w:64,h:38,label:'主存',tone:'blue'},
+        {id:'c_io', shape:'rect',x:505,y:252,w:64,h:38,label:'I/O',tone:'blue'},
+        {id:'c_bus1',shape:'rect',x:580,y:117,w:90,h:12,label:'存储总线',tone:'gray'},
+        {id:'c_bus2',shape:'rect',x:580,y:207,w:90,h:12,label:'I/O总线',tone:'gray'},
+        {id:'c_bus3',shape:'rect',x:616,y:207,w:12,h:90,label:'',tone:'gray'}
       ],
       edges:[
-        {from:'c1',to:'m1',dashed:true},{from:'m1',to:'i1',dashed:true},
-        {from:'c2',to:'m2',dashed:true},{from:'c2',to:'i2',dashed:true},
-        {from:'c3',to:'m3',dashed:true},{from:'m3',to:'i3',dashed:true}
+        {from:'a_cpu',to:'a_bus'},{from:'a_mem',to:'a_bus'},{from:'a_io',to:'a_bus'},
+        {from:'b_cpu',to:'b_bus1'},{from:'b_mem',to:'b_bus1'},
+        {from:'b_cpu',to:'b_bus2'},{from:'b_io',to:'b_bus2'},
+        {from:'c_cpu',to:'c_bus1'},{from:'c_mem',to:'c_bus1'},
+        {from:'c_cpu',to:'c_bus2'},{from:'c_io',to:'c_bus2'},
+        {from:'c_mem',to:'c_bus3'},{from:'c_io',to:'c_bus3'}
       ],
-      notes:[ {x:70,y:30,text:'单总线',small:false},{x:290,y:30,text:'双总线',small:false},{x:510,y:30,text:'三总线',small:false} ] } });
+      notes:[
+        {x:95, y:38,text:'单总线',small:false},
+        {x:300,y:38,text:'双总线',small:false},
+        {x:505,y:38,text:'三总线',small:false},
+        {x:616,y:268,text:'DMA总线',small:true}
+      ] } });
 
   /* ——— Cache 地址位段（bitfield） ——— */
   R({ id:'co-cache-addr', svgType:'bitfield', title:'Cache 地址位段（直接映射）',
