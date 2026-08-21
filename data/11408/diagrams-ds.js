@@ -10,7 +10,7 @@
 
   /* ——— AVL 四种旋转（转前失衡 → 转后平衡，左右并排） ——— */
   R({ id:'ds-avl-ll', svgType:'graph', title:'AVL · LL 型旋转（右单旋）',
-    data:{ width:680, height:260,
+    data:{ title:'AVL · LL 型旋转（右单旋）', width:680, height:260,
       nodes:[
         {id:'a1',shape:'circle',x:150,y:60,label:'3',tone:'red',r:20},
         {id:'a2',shape:'circle',x:150,y:140,label:'2',r:20},
@@ -25,7 +25,7 @@
                {x:470,y:104,text:'平衡',small:true} ] } });
 
   R({ id:'ds-avl-rr', svgType:'graph', title:'AVL · RR 型旋转（左单旋）',
-    data:{ width:680, height:260,
+    data:{ title:'AVL · RR 型旋转（左单旋）', width:680, height:260,
       nodes:[
         {id:'a1',shape:'circle',x:150,y:60,label:'1',tone:'red',r:20},
         {id:'a2',shape:'circle',x:150,y:140,label:'2',r:20},
@@ -40,7 +40,7 @@
                {x:470,y:104,text:'平衡',small:true} ] } });
 
   R({ id:'ds-avl-lr', svgType:'graph', title:'AVL · LR 型旋转（先左后右双旋）',
-    data:{ width:680, height:260,
+    data:{ title:'AVL · LR 型旋转（先左后右双旋）', width:680, height:260,
       nodes:[
         {id:'a3',shape:'circle',x:150,y:60,label:'3',tone:'red',r:20},
         {id:'a1',shape:'circle',x:100,y:140,label:'1',r:20},
@@ -55,7 +55,7 @@
                {x:470,y:104,text:'平衡',small:true} ] } });
 
   R({ id:'ds-avl-rl', svgType:'graph', title:'AVL · RL 型旋转（先右后左双旋）',
-    data:{ width:680, height:260,
+    data:{ title:'AVL · RL 型旋转（先右后左双旋）', width:680, height:260,
       nodes:[
         {id:'a1',shape:'circle',x:150,y:60,label:'1',tone:'red',r:20},
         {id:'a3',shape:'circle',x:200,y:140,label:'3',r:20},
@@ -71,7 +71,7 @@
 
   /* ——— 二叉排序树结构性质 ——— */
   R({ id:'ds-bst', svgType:'graph', title:'二叉排序树（BST）结构',
-    data:{ width:680, height:250,
+    data:{ title:'二叉排序树（BST）结构', width:680, height:250,
       nodes:[
         {id:'n50',shape:'circle',x:340,y:50,label:'50',r:20},
         {id:'n30',shape:'circle',x:230,y:130,label:'30',r:20},
@@ -88,7 +88,7 @@
 
   /* ——— 堆：数组 ↔ 完全二叉树双视图 ——— */
   R({ id:'ds-heap-view', svgType:'graph', title:'堆：数组下标 ↔ 完全二叉树',
-    data:{ width:680, height:320,
+    data:{ title:'堆：数组下标 ↔ 完全二叉树', width:680, height:320,
       nodes:[
         {id:'a1',shape:'rect',x:138,y:80,w:56,h:36,label:'9',tone:'blue'},
         {id:'a2',shape:'rect',x:248,y:80,w:56,h:36,label:'7',tone:'blue'},
@@ -104,11 +104,12 @@
       edges:[ {from:'a1',to:'t9',dashed:true,arrow:false},{from:'a2',to:'t7',dashed:true,arrow:false},
                {from:'a3',to:'t8',dashed:true,arrow:false},{from:'a4',to:'t5',dashed:true,arrow:false},
                {from:'a5',to:'t6',dashed:true,arrow:false} ],
-      notes:[ {x:340,y:30,text:'数组下标 i ↔ 完全二叉树（左孩子 2i，右孩子 2i+1）'} ] } });
+      notes:[ {x:340,y:30,text:'大顶堆：父 ≥ 子（小顶堆则父 ≤ 子）——堆序性质'},
+               {x:340,y:58,text:'数组下标 i ↔ 完全二叉树（左孩子 2i、右孩子 2i+1，1-based）',small:true} ] } });
 
   /* ——— 查找结构演进（章首心智地图） ——— */
   R({ id:'ds-tree-evolution', svgType:'graph', title:'查找结构演进：由优缺点驱动的选型链',
-    data:{ width:680, height:230,
+    data:{ title:'查找结构演进：由优缺点驱动的选型链', width:680, height:230,
       nodes:[
         {id:'bst',shape:'rect',x:90, y:120,w:110,h:56,label:'BST',tone:'red'},
         {id:'avl',shape:'rect',x:250,y:120,w:110,h:56,label:'AVL',tone:'amber'},
@@ -122,7 +123,7 @@
 
   /* ——— 排序五大类族谱（章首） ——— */
   R({ id:'ds-sort-overview', svgType:'graph', title:'排序五大类族谱',
-    data:{ width:680, height:230,
+    data:{ title:'排序五大类族谱', width:680, height:230,
       nodes:[
         {id:'root',shape:'rect',x:340,y:40, w:120,h:44,label:'内部排序',tone:'blue'},
         {id:'ins', shape:'rect',x:100,y:140,w:90, h:40,label:'插入类',tone:'blue'},
@@ -253,5 +254,53 @@
         {id:'kmp2',shape:'rect',x:510,y:165,w:230,h:34,label:'O(n+m)',tone:'green'}
       ],
       edges:[ {from:'cbf',to:'ckmp',label:'消除主串回溯'} ],
-      notes:[ {x:340,y:262,text:'next[j]=最长相等前后缀长度+1；nextval 进一步优化——手算 next 是必考',small:true} ] } });
+      notes:[         {x:340,y:262,text:'next[j]=最长相等前后缀长度+1；nextval 进一步优化——手算 next 是必考',small:true} ] } });
+
+  /* ——— 第6章 查找：三大查找路线（章末主记忆图） ——— */
+  R({ id:'ds-ch6-overview', svgType:'graph', title:'查找 · 主记忆图',
+    data:{ width:680, height:300, title:'查找 · 主记忆图',
+      containers:[
+        {id:'cseq', tone:'green',x:100,y:150,w:180,h:150,label:'线性表查找'},
+        {id:'ctree',tone:'blue', x:340,y:150,w:180,h:150,label:'树表查找'},
+        {id:'chash',tone:'amber',x:580,y:150,w:170,h:150,label:'散列查找'}
+      ],
+      nodes:[
+        {id:'seq1',shape:'rect',x:100,y:118,w:140,h:34,label:'顺序/折半/分块',tone:'green'},
+        {id:'seq2',shape:'rect',x:100,y:162,w:140,h:34,label:'ASL 成功/失败',tone:'green'},
+        {id:'tree1',shape:'rect',x:340,y:118,w:140,h:34,label:'BST→AVL→红黑→B',tone:'blue'},
+        {id:'tree2',shape:'rect',x:340,y:162,w:140,h:34,label:'平衡因子·旋转',tone:'blue'},
+        {id:'hash1',shape:'rect',x:580,y:118,w:140,h:34,label:'构造+冲突处理',tone:'amber'},
+        {id:'hash2',shape:'rect',x:580,y:162,w:140,h:34,label:'装填因子 α',tone:'amber'}
+      ],
+      edges:[ {from:'cseq',to:'ctree',label:'结构升级'},{from:'ctree',to:'chash',label:'外存/散列'} ],
+      notes:[ {x:340,y:40,text:'ASL 平均查找长度（成功/失败）是贯穿所有查找的统一度量',small:false},
+               {x:100,y:246,text:'顺序 O(n)/折半 O(log n)',small:true},
+               {x:340,y:246,text:'树高决定效率',small:true},
+               {x:580,y:246,text:'冲突≠失败，α 影响效率',small:true} ] } });
+
+  /* ——— 第7章 排序：五大类 + 稳定性（章末主记忆图） ——— */
+  R({ id:'ds-ch7-overview', svgType:'graph', title:'排序 · 主记忆图',
+    data:{ width:680, height:320, title:'排序 · 主记忆图',
+      containers:[
+        {id:'cins', tone:'green',x:70, y:160,w:130,h:150,label:'插入类'},
+        {id:'cexc', tone:'amber',x:205,y:160,w:130,h:150,label:'交换类'},
+        {id:'csel', tone:'blue', x:340,y:160,w:130,h:150,label:'选择类'},
+        {id:'cmer', tone:'green',x:475,y:160,w:130,h:150,label:'归并类'},
+        {id:'crad', tone:'gray', x:610,y:160,w:130,h:150,label:'基数类'}
+      ],
+      nodes:[
+        {id:'ins1',shape:'rect',x:70, y:130,w:110,h:32,label:'直接/折半/希尔',tone:'green'},
+        {id:'ins2',shape:'rect',x:70, y:174,w:110,h:32,label:'稳定',tone:'green'},
+        {id:'exc1',shape:'rect',x:205,y:130,w:110,h:32,label:'冒泡/快排',tone:'amber'},
+        {id:'exc2',shape:'rect',x:205,y:174,w:110,h:32,label:'快排不稳定',tone:'amber'},
+        {id:'sel1',shape:'rect',x:340,y:130,w:110,h:32,label:'简单/堆',tone:'blue'},
+        {id:'sel2',shape:'rect',x:340,y:174,w:110,h:32,label:'都不稳定',tone:'blue'},
+        {id:'mer1',shape:'rect',x:475,y:130,w:110,h:32,label:'二路归并',tone:'green'},
+        {id:'mer2',shape:'rect',x:475,y:174,w:110,h:32,label:'稳定',tone:'green'},
+        {id:'rad1',shape:'rect',x:610,y:130,w:110,h:32,label:'多关键字',tone:'gray'},
+        {id:'rad2',shape:'rect',x:610,y:174,w:110,h:32,label:'稳定',tone:'gray'}
+      ],
+      edges:[],
+      notes:[ {x:340,y:42,text:'稳定 / 时间(最好·最坏·平均) / 空间 是三大比较维度',small:false},
+               {x:340,y:302,text:'堆排属选择类；快排平均最优但最坏 O(n²) 且不稳定；归并稳定但需 O(n) 辅助空间',small:true} ] } });
 })();

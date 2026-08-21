@@ -34,7 +34,7 @@
 
   /* ——— TCP 连接状态机 ——— */
   R({ id:'cn-tcp-states', svgType:'graph', title:'TCP 连接状态机',
-    data:{ width:680, height:440,
+    data:{ title:'TCP 连接状态机', width:680, height:440,
       nodes:[
         {id:'c0',shape:'rect',x:340,y:30, w:110,h:34,label:'CLOSED',tone:'gray'},
         {id:'c1',shape:'rect',x:340,y:80, w:110,h:34,label:'SYN_SENT',tone:'blue'},

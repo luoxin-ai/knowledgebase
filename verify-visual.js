@@ -55,7 +55,6 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     });
     seenTitles.add(r.title);
     totalSvg += r.n;
-    totalSvg += r.n;
     if (r.boxBlack || r.labelInvis) {
       badBox += r.boxBlack; badLabel += r.labelInvis;
       bad.push(`${file}/${ch}: box黑=${r.boxBlack} label不可见=${r.labelInvis}`);

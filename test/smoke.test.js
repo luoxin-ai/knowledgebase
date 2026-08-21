@@ -398,7 +398,7 @@ console.log('\n[6] 文档数字一致性（README ↔ 实况）');
 /* ---------------- 7. 图示（diagram）校验 ---------------- */
 console.log('\n[7] 图示（diagram）校验');
 const diag = KB_DIAG.list();
-ok('注册图示 41 张', diag.length === 41, diag.length);
+ok('注册图示 45 张', diag.length === 45, diag.length);
 const HEX = /#[0-9a-fA-F]{3,6}/;
 const diagBad = [];
 diag.forEach(d=>{
@@ -425,7 +425,7 @@ KB_PENDING_ANIMS.length = 0;
 KB.render.renderChapter(KB.getFile('ds'), 'ch6', { silent:true });
 const ch6 = doc.getElementById('content')._innerHTML;
 ok('含 diagram 块的章节渲染出 图示 SVG（dg-svg）', ch6.includes('dg-svg'));
-ok('ds/ch6 图示数量 = 6（章首演进 + BST + 4 旋转）', (ch6.match(/class="dg-svg"/g)||[]).length === 6);
+ok('ds/ch6 图示数量 = 7（章首主记忆图 + 演进 + BST + 4 旋转）', (ch6.match(/class="dg-svg"/g)||[]).length === 7);
 
 /* ---------------- 8. 审计修复回归（H1/M1/M2/L5） ---------------- */
 console.log('\n[8] 审计修复回归');

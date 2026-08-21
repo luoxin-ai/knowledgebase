@@ -752,6 +752,8 @@ bool isMatch(char *s){
       id: 'ch6', num: 6, title: '查找', titleEn: 'Search',
       summary: '顺序/折半、BST、AVL、B 树、哈希五类查找结构，ASL 计算贯穿始终。',
       blocks: [
+        { type: 'diagram', ref: 'ds-ch6-overview', title: '查找 · 主记忆图',
+          summary: '线性表查找 / 树表查找 / 散列查找三大路线，ASL 平均查找长度是贯穿统一度量。' },
         { type: 'diagram', ref: 'ds-tree-evolution', title: '查找结构演进：由优缺点驱动的选型链',
           summary: 'BST 失衡退化 → AVL 严格平衡 → 红黑树近似平衡 → B/B+ 多路适配外存，先见森林再见树木。' },
         { type: 'concept', title: '顺序查找与折半查找',
@@ -921,6 +923,8 @@ int binarySearch(int a[], int n, int key){
       id: 'ch7', num: 7, title: '排序', titleEn: 'Sorting',
       summary: '八大排序的原理、特性、实现、优缺点与动画逐讲；外部排序收尾，总览对比表作总结。',
       blocks: [
+        { type: 'diagram', ref: 'ds-ch7-overview', title: '排序 · 主记忆图',
+          summary: '五大类按稳定性/时间复杂度/空间区分；快排平均最优但不稳定，归并稳定需 O(n) 辅助。' },
         { type: 'diagram', ref: 'ds-sort-overview', title: '排序五大类族谱',
           summary: '插入 / 交换 / 选择 / 归并 / 基数五大类，先见森林再见树木（每类原理/特性/实现/优缺点/动图见各块）。' },
         /* ============ 1. 直接插入排序 ============ */

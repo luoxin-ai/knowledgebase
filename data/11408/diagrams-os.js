@@ -7,7 +7,7 @@
 
   /* ——— 进程五状态转换 ——— */
   R({ id:'os-proc-states', svgType:'graph', title:'进程五状态转换',
-    data:{ width:680, height:280,
+    data:{ title:'进程五状态转换', width:680, height:280,
       nodes:[
         {id:'new',  shape:'rect',x:100, y:150,w:100,h:44,label:'新建',tone:'blue'},
         {id:'ready',shape:'rect',x:280, y:70, w:100,h:44,label:'就绪',tone:'blue'},
@@ -27,7 +27,7 @@
 
   /* ——— 死锁资源分配图 ——— */
   R({ id:'os-deadlock-rag', svgType:'graph', title:'死锁资源分配图（环 = 死锁）',
-    data:{ width:680, height:280,
+    data:{ title:'死锁资源分配图（环 = 死锁）', width:680, height:280,
       nodes:[
         {id:'P1',shape:'circle',x:220,y:140,label:'P1',tone:'blue',r:22},
         {id:'P2',shape:'circle',x:420,y:140,label:'P2',tone:'blue',r:22},
@@ -137,5 +137,28 @@
         {id:'soft2',shape:'rect',x:510,y:165,w:240,h:32,label:'缓冲/SPOOLing',tone:'green'}
       ],
       edges:[ {from:'cctl',to:'csoft',label:'控制方式落在软件层次'} ],
-      notes:[ {x:340,y:284,text:'缓冲平滑速度差；SPOOLing 把独占设备改造为共享虚拟设备',small:true} ] } });
+      notes:[         {x:340,y:284,text:'缓冲平滑速度差；SPOOLing 把独占设备改造为共享虚拟设备',small:true} ] } });
+
+  /* ——— 进程调度算法对比 ——— */
+  R({ id:'os-sched-cmp', svgType:'graph', title:'进程调度算法对比',
+    data:{ width:680, height:320, title:'进程调度算法对比',
+      containers:[
+        {id:'cf',   tone:'gray', x:100,y:160,w:140,h:150,label:'FCFS 先来先服务'},
+        {id:'csjf', tone:'blue', x:290,y:160,w:140,h:150,label:'SJF 短作业优先'},
+        {id:'crr',  tone:'green',x:480,y:160,w:140,h:150,label:'时间片轮转 RR'},
+        {id:'cprio',tone:'red',  x:610,y:160,w:130,h:150,label:'优先级调度'}
+      ],
+      nodes:[
+        {id:'f1', shape:'rect',x:100,y:130,w:120,h:32,label:'先来先服务',tone:'gray'},
+        {id:'f2', shape:'rect',x:100,y:174,w:120,h:32,label:'利于长作业',tone:'gray'},
+        {id:'sj1',shape:'rect',x:290,y:130,w:120,h:32,label:'短者优先',tone:'blue'},
+        {id:'sj2',shape:'rect',x:290,y:174,w:120,h:32,label:'平均周转优',tone:'blue'},
+        {id:'rr1',shape:'rect',x:480,y:130,w:120,h:32,label:'时间片轮转',tone:'green'},
+        {id:'rr2',shape:'rect',x:480,y:174,w:120,h:32,label:'响应快·公平',tone:'green'},
+        {id:'p1', shape:'rect',x:610,y:130,w:110,h:32,label:'抢占/非抢占',tone:'red'},
+        {id:'p2', shape:'rect',x:610,y:174,w:110,h:32,label:'饥饿风险',tone:'red'}
+      ],
+      edges:[],
+      notes:[ {x:340,y:42,text:'核心指标：周转时间 / 带权周转 / 响应时间；非抢占 vs 抢占决定公平性',small:false},
+               {x:340,y:302,text:'HRRN(响应比=(等待+服务)/服务) 兼顾长短作业；多级反馈队列 优先级+时间片 综合最优',small:true} ] } });
 })();

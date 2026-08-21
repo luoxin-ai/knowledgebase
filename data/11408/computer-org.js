@@ -615,6 +615,8 @@ int lru_replace(int set, int way_num, long stamp){
             { h: '中断周期', body: '执行周期结束后若检测到中断请求，则进入中断周期：保存断点（程序断点入栈）、关中断、转中断服务程序入口。' }
           ]
         },
+        { type: 'diagram', ref: 'co-instr-cycle', title: '指令周期状态转换（取指/间址/执行/中断）',
+          summary: '指令周期 = 取指 + (间址) + 执行 + (中断)；间址仅间接寻址需要，中断按请求出现。' },
         { type: 'concept', title: '数据通路',
           exam: { freq: '中频', forms: ['选择题', '大题'], score: '约 2-4 分' },
           points: [

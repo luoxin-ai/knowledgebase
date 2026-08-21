@@ -270,6 +270,8 @@ KB.register({
         },
         { type: 'diagram', ref: 'os-proc-states', title: '进程五状态转换',
           summary: '新建→就绪→运行；运行↔就绪（调度/抢占）；运行→阻塞→就绪；运行→终止。' },
+        { type: 'diagram', ref: 'os-sched-cmp', title: '进程调度算法对比',
+          summary: 'FCFS / SJF / 时间片轮转 / 优先级四类；核心指标周转与响应时间，抢占与否决定公平性。' },
         {
           type: 'table',
           title: '线程与进程对比',

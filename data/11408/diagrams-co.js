@@ -9,7 +9,7 @@
 
   /* ——— 冯·诺依曼机结构 ——— */
   R({ id:'co-von-neumann', svgType:'graph', title:'冯·诺依曼机结构',
-    data:{ width:680, height:400,
+    data:{ title:'冯·诺依曼机结构', width:680, height:400,
       nodes:[
         {id:'frame',shape:'rect',x:340,y:160,w:240,h:160,label:'',tone:'blue'},
         {id:'in', shape:'rect',x:70, y:160,w:90, h:50,label:'输入设备',tone:'gray'},
@@ -31,7 +31,7 @@
 
   /* ——— 存储层次结构（金字塔） ——— */
   R({ id:'co-mem-hierarchy', svgType:'graph', title:'存储层次结构',
-    data:{ width:680, height:290,
+    data:{ title:'存储层次结构', width:680, height:290,
       nodes:[
         {id:'r0',shape:'rect',x:340,y:50, w:140,h:34,label:'寄存器',tone:'blue'},
         {id:'r1',shape:'rect',x:340,y:95, w:210,h:34,label:'Cache',tone:'blue'},
@@ -44,7 +44,7 @@
 
   /* ——— CPU 的功能与组成 ——— */
   R({ id:'co-cpu-composition', svgType:'graph', title:'CPU 的功能与组成',
-    data:{ width:680, height:320,
+    data:{ title:'CPU 的功能与组成', width:680, height:320,
       nodes:[
         {id:'frame',shape:'rect',x:340,y:140,w:320,h:150,label:'',tone:'blue'},
         {id:'alu',shape:'rect',x:180,y:120,w:130,h:50,label:'运算器\nALU·ACC·PSW',tone:'blue'},
@@ -94,14 +94,14 @@
 
   /* ——— Cache 地址位段（bitfield） ——— */
   R({ id:'co-cache-addr', svgType:'bitfield', title:'Cache 地址位段（直接映射）',
-    data:{ totalBits:32, bitLabels:true,
+    data:{ title:'Cache 地址位段（直接映射）', totalBits:32, bitLabels:true,
       segs:[ {name:'标记',bits:22,tone:'blue',note:'tag'},
              {name:'行索引',bits:8,tone:'amber',note:'行/组号'},
              {name:'块内偏移',bits:2,tone:'green',note:'块大小 4B'} ] } });
 
   /* ——— 指令格式位段（bitfield） ——— */
   R({ id:'co-instr-fmt', svgType:'bitfield', title:'指令格式位段',
-    data:{ totalBits:32, bitLabels:true,
+    data:{ title:'指令格式位段', totalBits:32, bitLabels:true,
       segs:[ {name:'操作码',bits:6,tone:'blue',note:'op'},
              {name:'源寄存器',bits:5,tone:'amber',note:'rs'},
              {name:'目的寄存器',bits:5,tone:'amber',note:'rd'},
@@ -246,5 +246,23 @@
         {id:'io2', shape:'rect',x:510,y:164,w:240,h:32,label:'CPU 介入递减 效率递增',tone:'amber'}
       ],
       edges:[ {from:'cbus',to:'cio',label:'总线是 I/O 的通路'} ],
-      notes:[ {x:340,y:284,text:'中断=被动响应外设请求；DMA=成块传送不打扰 CPU；通道=专用处理机',small:true} ] } });
+      notes:[         {x:340,y:284,text:'中断=被动响应外设请求；DMA=成块传送不打扰 CPU；通道=专用处理机',small:true} ] } });
+
+  /* ——— 指令周期状态转换（取指/间址/执行/中断） ——— */
+  R({ id:'co-instr-cycle', svgType:'graph', title:'指令周期状态转换（取指/间址/执行/中断）',
+    data:{ width:680, height:300, title:'指令周期状态转换（取指/间址/执行/中断）',
+      nodes:[
+        {id:'fi', shape:'rect',x:340,y:60, w:120,h:44,label:'取指 FI',tone:'blue'},
+        {id:'ind',shape:'rect',x:180,y:165,w:120,h:44,label:'间址 IND',tone:'amber'},
+        {id:'ex', shape:'rect',x:500,y:165,w:120,h:44,label:'执行 EX',tone:'green'},
+        {id:'int',shape:'rect',x:340,y:270,w:120,h:44,label:'中断 INT',tone:'red'}
+      ],
+      edges:[
+        {from:'fi',to:'ind',label:'间接寻址',curve:0.20},
+        {from:'fi',to:'ex', label:'直接寻址',curve:0.20},
+        {from:'ind',to:'ex', label:'执行',curve:0.20},
+        {from:'ex',to:'int',label:'有中断请求',curve:0.20},
+        {from:'int',to:'fi', label:'返回用户程序',curve:0.25}
+      ],
+      notes:[ {x:340,y:30,text:'指令周期 = 取指 + (间址) + 执行 + (中断)；间址/中断按需出现',small:false} ] } });
 })();
